@@ -1,168 +1,257 @@
-import io
-import json
 import zipfile
 from pathlib import Path
 
 import pandas as pd
 import requests
 
-BASE_URL = "https://services9.arcgis.com/8rJ42n9yWry0I4K4/arcgis/rest/services/GTFS/FeatureServer"
+BASE_URL = (
+    "https://services9.arcgis.com/8rJ42n9yWry0I4K4/"
+    "arcgis/rest/services/GTFS/FeatureServer"
+)
 
 OUTPUT_DIR = Path("output")
 OUTPUT_DIR.mkdir(exist_ok=True)
+
+SKIP_LAYERS = {
+    "linevariantelements"
+}
 
 session = requests.Session()
 
 
 def get_json(url, params=None):
-    response = session.get(url, params=params)
+    response = session.get(url, params=params, timeout=120)
     response.raise_for_status()
     return response.json()
 
 
-def discover_layers():
-    metadata = get_json(
-        BASE_URL,
-        params={"f": "json"}
-    )
+def discover_resources():
+    """
+    Discover both layers and tables.
+    """
+    metadata = get_json(BASE_URL, {"f": "json"})
 
-    layers = metadata.get("layers", [])
-    if not layers:
-        raise RuntimeError("No layers found")
+    resources = []
 
-    return layers
+    for layer in metadata.get("layers", []):
+        resources.append({
+            "id": layer["id"],
+            "name": layer["name"],
+            "type": "layer"
+        })
+
+    for table in metadata.get("tables", []):
+        resources.append({
+            "id": table["id"],
+            "name": table["name"],
+            "type": "table"
+        })
+
+    return resources
 
 
-def fetch_all_features(layer_id):
-    layer_url = f"{BASE_URL}/{layer_id}"
+def fetch_all_records(resource_id, include_geometry=False):
+    """
+    Download all rows using pagination.
+    Works for both layers and tables.
 
-    meta = get_json(layer_url, {"f": "json"})
+    If include_geometry=True, x/y geometry is included.
+    """
+    resource_url = f"{BASE_URL}/{resource_id}"
+
+    meta = get_json(resource_url, {"f": "json"})
     max_record_count = meta.get("maxRecordCount", 2000)
 
     offset = 0
-    all_features = []
+    rows = []
 
     while True:
-        data = get_json(
-            f"{layer_url}/query",
+        result = get_json(
+            f"{resource_url}/query",
             {
                 "where": "1=1",
                 "outFields": "*",
-                "returnGeometry": "false",
+                "returnGeometry": str(include_geometry).lower(),
                 "f": "json",
                 "resultOffset": offset,
                 "resultRecordCount": max_record_count
             }
         )
 
-        features = data.get("features", [])
+        features = result.get("features", [])
+
         if not features:
             break
 
         for feature in features:
-            all_features.append(feature.get("attributes", {}))
+            row = feature.get("attributes", {}).copy()
 
-        print(f"Layer {layer_id}: downloaded {len(all_features)}")
+            # Add geometry for stops
+            if include_geometry:
+                geom = feature.get("geometry", {}) or {}
+
+                x = geom.get("x")
+                y = geom.get("y")
+
+                if x is not None:
+                    row["stop_lon"] = x
+
+                if y is not None:
+                    row["stop_lat"] = y
+
+            rows.append(row)
+
+        print(
+            f"Downloaded {len(rows)} rows "
+            f"(resource={resource_id})"
+        )
 
         if len(features) < max_record_count:
             break
 
         offset += max_record_count
 
-    return pd.DataFrame(all_features)
+    return pd.DataFrame(rows)
 
 
-def normalize_layer_name(name):
+def normalize_resource_name(name):
     """
-    Convert ArcGIS layer names to GTFS filenames.
-
-    Examples:
-    Stop Times -> stop_times
-    Agency -> agency
-    Calendar Dates -> calendar_dates
+    Convert ArcGIS names -> GTFS filenames.
     """
-    name = name.lower().strip()
-    name = name.replace(" ", "_")
+
+    cleaned = (
+        name.lower()
+        .replace(" ", "_")
+        .replace("-", "_")
+        .strip()
+    )
 
     aliases = {
+        "agency": "agency",
         "stops": "stops",
         "routes": "routes",
         "trips": "trips",
         "stop_times": "stop_times",
         "calendar": "calendar",
         "calendar_dates": "calendar_dates",
-        "agency": "agency",
         "shapes": "shapes",
         "feed_info": "feed_info",
         "transfers": "transfers",
         "fare_attributes": "fare_attributes",
         "fare_rules": "fare_rules",
+        "frequencies": "frequencies",
+        "pathways": "pathways",
+        "levels": "levels",
+        "translations": "translations",
+        "attributions": "attributions",
     }
 
     for key, value in aliases.items():
-        if key in name:
+        if key in cleaned:
             return value
 
-    return name
+    return cleaned
 
 
 def convert_dates(df):
     """
-    Convert ArcGIS timestamps to GTFS YYYYMMDD where possible.
+    Convert ArcGIS timestamps to GTFS YYYYMMDD.
     """
     for col in df.columns:
-        if "date" in col.lower():
-            try:
-                s = pd.to_datetime(df[col], errors="coerce")
-                if s.notna().any():
-                    df[col] = s.dt.strftime("%Y%m%d")
-            except Exception:
-                pass
+        lower = col.lower()
+
+        if "date" not in lower:
+            continue
+
+        try:
+            series = pd.to_datetime(
+                df[col],
+                errors="coerce"
+            )
+
+            if series.notna().any():
+                df[col] = (
+                    series.dt.strftime("%Y%m%d")
+                )
+        except Exception:
+            pass
 
     return df
 
 
-def save_gtfs(layers):
+def export_gtfs(resources):
     txt_files = []
 
-    for layer in layers:
-        layer_id = layer["id"]
-        layer_name = layer["name"]
+    for resource in resources:
+        name = resource["name"]
 
-        print(f"Processing {layer_name}")
+        if name.lower() in SKIP_LAYERS:
+            print(f"Skipping {name}")
+            continue
 
-        df = fetch_all_features(layer_id)
+        print(
+            f"Processing "
+            f"{resource['type']} "
+            f"{name}"
+        )
+
+        normalized_name = normalize_resource_name(name)
+
+        # Stops layer needs x/y geometry
+        include_geometry = normalized_name == "stops"
+        
+        df = fetch_all_records(
+            resource["id"],
+            include_geometry=include_geometry
+        )
 
         if df.empty:
-            print(f"Skipping empty layer {layer_name}")
+            print(f"Skipping empty {name}")
             continue
 
         df.columns = [c.lower() for c in df.columns]
+
         df = convert_dates(df)
 
-        gtfs_name = normalize_layer_name(layer_name)
-        path = OUTPUT_DIR / f"{gtfs_name}.txt"
+        filename = normalized_name + ".txt"
 
-        df.to_csv(path, index=False)
-        txt_files.append(path)
+        out_file = OUTPUT_DIR / filename
+
+        df.to_csv(out_file, index=False)
+
+        txt_files.append(out_file)
+
+        print(f"Saved {out_file}")
 
     zip_path = OUTPUT_DIR / "gtfs.zip"
 
-    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
-        for file in txt_files:
-            zf.write(file, arcname=file.name)
+    with zipfile.ZipFile(
+        zip_path,
+        "w",
+        zipfile.ZIP_DEFLATED
+    ) as zf:
+        for txt_file in txt_files:
+            zf.write(
+                txt_file,
+                arcname=txt_file.name
+            )
 
     print(f"Created {zip_path}")
 
 
 def main():
-    layers = discover_layers()
+    resources = discover_resources()
 
-    print("Layers found:")
-    for layer in layers:
-        print(f"- {layer['id']}: {layer['name']}")
+    print("Found resources:")
 
-    save_gtfs(layers)
+    for r in resources:
+        print(
+            f"- {r['type']}: "
+            f"{r['name']} "
+            f"(id={r['id']})"
+        )
+
+    export_gtfs(resources)
 
 
 if __name__ == "__main__":
