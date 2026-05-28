@@ -178,6 +178,26 @@ def convert_dates(df):
 
     return df
 
+def apply_gtfs_column_mapping(df, filename):
+    """
+    Rename ArcGIS columns to GTFS-compliant names.
+    """
+
+    mappings = {
+        "trips": {
+            "gtripid": "trip_id",
+            "calendarid": "service_id",
+            "gwheelchairaccessible": "wheelchair_accessible",
+            "gbikesallowed": "bikes_allowed",
+        }
+    }
+
+    rename_map = mappings.get(filename, {})
+
+    if rename_map:
+        df = df.rename(columns=rename_map)
+
+    return df
 
 def export_gtfs(resources):
     txt_files = []
@@ -212,6 +232,12 @@ def export_gtfs(resources):
         df.columns = [c.lower() for c in df.columns]
 
         df = convert_dates(df)
+
+        # Apply GTFS field mapping
+        df = apply_gtfs_column_mapping(
+            df,
+            normalized_name
+        )
 
         filename = normalized_name + ".txt"
 
