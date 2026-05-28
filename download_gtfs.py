@@ -1,5 +1,6 @@
 import zipfile
 from pathlib import Path
+from pyproj import Transformer
 
 import pandas as pd
 import requests
@@ -7,6 +8,14 @@ import requests
 BASE_URL = (
     "https://services9.arcgis.com/8rJ42n9yWry0I4K4/"
     "arcgis/rest/services/GTFS/FeatureServer"
+)
+
+# ArcGIS services commonly use Web Mercator
+# EPSG:3857 -> WGS84 (GTFS standard)
+transformer = Transformer.from_crs(
+    "EPSG:3857",
+    "EPSG:4326",
+    always_xy=True
 )
 
 OUTPUT_DIR = Path("output")
@@ -92,13 +101,13 @@ def fetch_all_records(resource_id, include_geometry=False):
 
                 x = geom.get("x")
                 y = geom.get("y")
-
-                if x is not None:
-                    row["stop_lon"] = x
-
-                if y is not None:
-                    row["stop_lat"] = y
-
+                
+                if x is not None and y is not None:
+                    lon, lat = transformer.transform(x, y)
+                
+                    row["stop_lon"] = lon
+                    row["stop_lat"] = lat
+                    
             rows.append(row)
 
         print(
