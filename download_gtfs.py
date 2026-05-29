@@ -1,9 +1,13 @@
 import zipfile
 from pathlib import Path
-
 import pandas as pd
 import requests
+import re
+from datetime import datetime
 
+# -----------------------------
+# SOURCES
+# -----------------------------
 BASE_URL = (
     "https://services9.arcgis.com/8rJ42n9yWry0I4K4/"
     "arcgis/rest/services/GTFS/FeatureServer"
@@ -15,263 +19,116 @@ STOPS_GEOJSON_URL = (
     "?outFields=*&where=1%3D1&f=geojson"
 )
 
+RUTAS_GEOJSON_URL = (
+    "https://services9.arcgis.com/8rJ42n9yWry0I4K4/"
+    "arcgis/rest/services/rutas/FeatureServer/0/query"
+    "?outFields=*&where=1%3D1&f=geojson"
+)
+
 OUTPUT_DIR = Path("output")
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-SKIP_LAYERS = {
-    "linevariantelements"
-}
+SKIP_LAYERS = {"linevariantelements"}
 
 session = requests.Session()
 
-
+# -----------------------------
+# GENERIC HELPERS
+# -----------------------------
 def get_json(url, params=None):
-    response = session.get(url, params=params, timeout=120)
-    response.raise_for_status()
-    return response.json()
+    r = session.get(url, params=params, timeout=120)
+    r.raise_for_status()
+    return r.json()
 
 
 def discover_resources():
-    """
-    Discover both layers and tables from the FeatureServer.
-    """
-    metadata = get_json(BASE_URL, {"f": "json"})
-
+    meta = get_json(BASE_URL, {"f": "json"})
     resources = []
 
-    for layer in metadata.get("layers", []):
-        resources.append({
-            "id": layer["id"],
-            "name": layer["name"],
-            "type": "layer"
-        })
+    for l in meta.get("layers", []):
+        resources.append({"id": l["id"], "name": l["name"], "type": "layer"})
 
-    for table in metadata.get("tables", []):
-        resources.append({
-            "id": table["id"],
-            "name": table["name"],
-            "type": "table"
-        })
+    for t in meta.get("tables", []):
+        resources.append({"id": t["id"], "name": t["name"], "type": "table"})
 
     return resources
 
 
 def fetch_all_records(resource_id):
-    """
-    Download all rows using pagination.
-    Works for both layers and tables.
-    """
-    resource_url = f"{BASE_URL}/{resource_id}"
-
-    meta = get_json(resource_url, {"f": "json"})
-    max_record_count = meta.get("maxRecordCount", 2000)
+    url = f"{BASE_URL}/{resource_id}"
+    meta = get_json(url, {"f": "json"})
+    max_rc = meta.get("maxRecordCount", 2000)
 
     offset = 0
     rows = []
 
     while True:
-        result = get_json(
-            f"{resource_url}/query",
+        res = get_json(
+            f"{url}/query",
             {
                 "where": "1=1",
                 "outFields": "*",
                 "returnGeometry": "false",
                 "f": "json",
                 "resultOffset": offset,
-                "resultRecordCount": max_record_count
-            }
+                "resultRecordCount": max_rc,
+            },
         )
 
-        features = result.get("features", [])
-
-        if not features:
+        feats = res.get("features", [])
+        if not feats:
             break
 
-        rows.extend(
-            feature.get("attributes", {})
-            for feature in features
-        )
+        for f in feats:
+            rows.append(f.get("attributes", {}))
 
-        print(
-            f"Downloaded {len(rows)} rows "
-            f"(resource={resource_id})"
-        )
-
-        if len(features) < max_record_count:
+        if len(feats) < max_rc:
             break
 
-        offset += max_record_count
+        offset += max_rc
 
     return pd.DataFrame(rows)
 
 
+# -----------------------------
+# STOPS (BASE + GEOJSON)
+# -----------------------------
 def fetch_stops_geojson():
-    """
-    Download stop enrichment data from GeoJSON.
-    """
-    response = session.get(
-        STOPS_GEOJSON_URL,
-        timeout=120
-    )
-    response.raise_for_status()
-
-    data = response.json()
+    data = get_json(STOPS_GEOJSON_URL)
 
     rows = []
-
-    for feature in data.get("features", []):
-        props = feature.get("properties", {}) or {}
-
-        stop_id = props.get("STOPID")
+    for f in data.get("features", []):
+        p = f.get("properties", {}) or {}
 
         rows.append({
-            "stop_id": str(stop_id).strip()
-            if stop_id is not None
-            else None,
-
-            "stop_lat": props.get("LATITUD"),
-            "stop_lon": props.get("LONGITUD"),
-            "stop_desc": props.get("DIRECCION"),
+            "stop_id": str(p.get("STOPID")).strip() if p.get("STOPID") else None,
+            "stop_lat": p.get("LATITUD"),
+            "stop_lon": p.get("LONGITUD"),
+            "stop_desc": p.get("DIRECCION"),
         })
 
     return pd.DataFrame(rows)
 
 
-def normalize_resource_name(name):
-    """
-    Convert ArcGIS names -> GTFS filenames.
-    """
-    cleaned = (
-        name.lower()
-        .replace(" ", "_")
-        .replace("-", "_")
-        .strip()
-    )
-
-    aliases = {
-        "agency": "agency",
-        "stops": "stops",
-        "routes": "routes",
-        "runs": "trips",
-        "trips": "trips",
-        "stop_times": "stop_times",
-        "calendar": "calendar",
-        "calendar_dates": "calendar_dates",
-        "shapes": "shapes",
-        "feed_info": "feed_info",
-        "transfers": "transfers",
-        "fare_attributes": "fare_attributes",
-        "fare_rules": "fare_rules",
-        "frequencies": "frequencies",
-        "pathways": "pathways",
-        "levels": "levels",
-        "translations": "translations",
-        "attributions": "attributions",
-    }
-
-    for key, value in aliases.items():
-        if key in cleaned:
-            return value
-
-    return cleaned
-
-
-def convert_dates(df):
-    """
-    Convert ArcGIS timestamps to GTFS YYYYMMDD.
-    """
-    for col in df.columns:
-        lower = col.lower()
-
-        if "date" not in lower:
-            continue
-
-        try:
-            series = pd.to_datetime(
-                df[col],
-                errors="coerce"
-            )
-
-            if series.notna().any():
-                df[col] = (
-                    series.dt.strftime("%Y%m%d")
-                )
-        except Exception:
-            pass
-
-    return df
-
-
-def apply_gtfs_column_mapping(df, filename):
-    """
-    Rename ArcGIS columns to GTFS-compliant names.
-    """
-    mappings = {
-        "trips": {
-            "gtripid": "trip_id",
-            "calendarid": "service_id",
-            "gwheelchairaccessible": "wheelchair_accessible",
-            "gbikesallowed": "bikes_allowed",
-        }
-    }
-
-    rename_map = mappings.get(filename, {})
-
-    if rename_map:
-        df = df.rename(columns=rename_map)
-
-    return df
-
-
-def build_stops_txt(base_df):
-    """
-    Build GTFS-compliant stops.txt
-
-    Base source:
-        FeatureServer stops layer
-
-    Enrichment:
-        GeoJSON stops feed
-    """
+def build_stops(base_df):
     df = base_df.copy()
-
     df.columns = [c.lower() for c in df.columns]
 
-    rename_map = {
+    df = df.rename(columns={
         "gstopid": "stop_id",
         "gstoptype": "location_type",
         "gstopparen": "parent_station",
         "gwheelchairboarding": "wheelchair_boarding",
-    }
+    })
 
-    df = df.rename(columns=rename_map)
+    df["stop_id"] = df["stop_id"].astype(str).str.strip()
+    df["stop_name"] = df["stop_id"]
 
-    # stop_name = GStopID
-    if "stop_id" in df.columns:
-        df["stop_name"] = (
-            df["stop_id"]
-            .astype(str)
-            .str.strip()
-        )
+    geo = fetch_stops_geojson()
 
-    # normalize join key
-    df["stop_id"] = (
-        df["stop_id"]
-        .astype(str)
-        .str.strip()
-    )
+    df = df.merge(geo, on="stop_id", how="left")
 
-    # enrich with GeoJSON
-    geo_df = fetch_stops_geojson()
-
-    df = df.merge(
-        geo_df,
-        on="stop_id",
-        how="left"
-    )
-
-    # GTFS stops.txt order
-    columns = [
+    return df[[
         "stop_id",
         "stop_name",
         "stop_lat",
@@ -280,156 +137,155 @@ def build_stops_txt(base_df):
         "location_type",
         "parent_station",
         "wheelchair_boarding",
-    ]
-
-    existing_cols = [
-        c for c in columns
-        if c in df.columns
-    ]
-
-    return df[existing_cols]
+    ]]
 
 
-def validate_gtfs_output(files_created):
-    """
-    Ensure required GTFS files exist.
-    """
-    required = [
-        "stops",
-        "routes",
-        "trips",
-    ]
+# -----------------------------
+# ROUTES + CALENDAR + SHAPES
+# -----------------------------
+def parse_operating(value):
+    if not value:
+        return False
 
-    created_names = [
-        p.stem for p in files_created
-    ]
+    text = str(value).strip().upper()
+    if "NO OPERA" in text:
+        return False
 
-    missing = [
-        f for f in required
-        if f not in created_names
-    ]
-
-    if missing:
-        raise RuntimeError(
-            "Missing required GTFS files: "
-            + ", ".join(missing)
-        )
+    return True
 
 
+def fetch_routes_geojson():
+    return get_json(RUTAS_GEOJSON_URL)
+
+
+def build_routes_calendar_shapes():
+    data = fetch_routes_geojson()
+
+    routes = []
+    calendar = []
+    shapes = []
+
+    start_date = datetime.utcnow().strftime("%Y0101")
+    end_date = datetime.utcnow().strftime("%Y1231")
+
+    for f in data.get("features", []):
+        p = f.get("properties", {}) or {}
+        geom = f.get("geometry", {}) or {}
+
+        ruta = str(p.get("RUTA")).strip()
+
+        # ---------------- ROUTES ----------------
+        routes.append({
+            "route_id": ruta,
+            "route_short_name": ruta,
+            "route_desc": p.get("NOMBRE"),
+            "route_type": p.get("ID_SERVICI"),
+        })
+
+        # ---------------- CALENDAR ----------------
+        calendar.append({
+            "service_id": ruta,
+            "monday": int(parse_operating(p.get("HABIL"))),
+            "tuesday": int(parse_operating(p.get("HABIL"))),
+            "wednesday": int(parse_operating(p.get("HABIL"))),
+            "thursday": int(parse_operating(p.get("HABIL"))),
+            "friday": int(parse_operating(p.get("HABIL"))),
+            "saturday": int(parse_operating(p.get("SABADO"))),
+            "sunday": int(parse_operating(p.get("DOM_FEST"))),
+            "start_date": start_date,
+            "end_date": end_date,
+        })
+
+        # ---------------- SHAPES ----------------
+        coords = geom.get("coordinates", [])
+
+        seq = 1
+        for c in coords:
+            lon = c[0]
+            lat = c[1]
+
+            shapes.append({
+                "shape_id": ruta,
+                "shape_pt_lat": lat,
+                "shape_pt_lon": lon,
+                "shape_pt_sequence": seq,
+            })
+
+            seq += 1
+
+    return (
+        pd.DataFrame(routes).drop_duplicates(),
+        pd.DataFrame(calendar).drop_duplicates(),
+        pd.DataFrame(shapes),
+    )
+
+
+# -----------------------------
+# GTFS EXPORT
+# -----------------------------
 def export_gtfs(resources):
-    txt_files = []
+    files = []
 
-    for resource in resources:
-        name = resource["name"]
+    for r in resources:
+        name = r["name"]
 
         if name.lower() in SKIP_LAYERS:
-            print(f"Skipping {name}")
             continue
 
-        print(
-            f"Processing "
-            f"{resource['type']} "
-            f"{name}"
-        )
+        print("Processing", name)
 
-        normalized_name = (
-            normalize_resource_name(name)
-        )
+        norm = name.lower().replace(" ", "_")
 
-        df = fetch_all_records(
-            resource["id"]
-        )
+        df = fetch_all_records(r["id"])
 
         if df.empty:
-            print(
-                f"Skipping empty {name}"
-            )
             continue
 
-        df.columns = [
-            c.lower()
-            for c in df.columns
-        ]
+        df.columns = [c.lower() for c in df.columns]
 
-        # Special handling for stops
-        if normalized_name == "stops":
-            print(
-                "Building stops.txt "
-                "from base layer + GeoJSON enrichment"
-            )
+        if norm == "stops":
+            df = build_stops(df)
 
-            df = build_stops_txt(df)
+        elif norm == "runs":
+            df = df.rename(columns={
+                "gtripid": "trip_id",
+                "calendarid": "service_id",
+                "gwheelchairaccessible": "wheelchair_accessible",
+                "gbikesallowed": "bikes_allowed",
+            })
 
-        else:
-            df = convert_dates(df)
+        out = OUTPUT_DIR / f"{norm}.txt"
+        df.to_csv(out, index=False)
+        files.append(out)
 
-            df = (
-                apply_gtfs_column_mapping(
-                    df,
-                    normalized_name
-                )
-            )
+    # routes/calendar/shapes
+    routes, calendar, shapes = build_routes_calendar_shapes()
 
-        filename = (
-            normalized_name
-            + ".txt"
-        )
+    routes_file = OUTPUT_DIR / "routes.txt"
+    calendar_file = OUTPUT_DIR / "calendar.txt"
+    shapes_file = OUTPUT_DIR / "shapes.txt"
 
-        out_file = (
-            OUTPUT_DIR / filename
-        )
+    routes.to_csv(routes_file, index=False)
+    calendar.to_csv(calendar_file, index=False)
+    shapes.to_csv(shapes_file, index=False)
 
-        df.to_csv(
-            out_file,
-            index=False
-        )
+    files += [routes_file, calendar_file, shapes_file]
 
-        txt_files.append(
-            out_file
-        )
+    # ZIP
+    zip_path = OUTPUT_DIR / "gtfs.zip"
 
-        print(
-            f"Saved {out_file}"
-        )
+    with zipfile.ZipFile(zip_path, "w") as z:
+        for f in files:
+            z.write(f, arcname=f.name)
 
-    validate_gtfs_output(
-        txt_files
-    )
-
-    zip_path = (
-        OUTPUT_DIR
-        / "gtfs.zip"
-    )
-
-    with zipfile.ZipFile(
-        zip_path,
-        "w",
-        zipfile.ZIP_DEFLATED
-    ) as zf:
-        for txt_file in txt_files:
-            zf.write(
-                txt_file,
-                arcname=txt_file.name
-            )
-
-    print(
-        f"Created {zip_path}"
-    )
+    print("GTFS created:", zip_path)
 
 
 def main():
     resources = discover_resources()
 
-    print(
-        "Found resources:"
-    )
-
     for r in resources:
-        print(
-            f"- {r['type']}: "
-            f"{r['name']} "
-            f"(id={r['id']})"
-        )
+        print(r)
 
     export_gtfs(resources)
 
