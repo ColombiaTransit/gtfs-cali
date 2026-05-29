@@ -33,7 +33,7 @@ SKIP_LAYERS = {"linevariantelements"}
 session = requests.Session()
 
 # -----------------------------
-# GENERIC HELPERS
+# GENERIC DOWNLOAD
 # -----------------------------
 def get_json(url, params=None):
     r = session.get(url, params=params, timeout=120)
@@ -46,10 +46,10 @@ def discover_resources():
     resources = []
 
     for l in meta.get("layers", []):
-        resources.append({"id": l["id"], "name": l["name"], "type": "layer"})
+        resources.append({"id": l["id"], "name": l["name"]})
 
     for t in meta.get("tables", []):
-        resources.append({"id": t["id"], "name": t["name"], "type": "table"})
+        resources.append({"id": t["id"], "name": t["name"]})
 
     return resources
 
@@ -89,7 +89,6 @@ def fetch_all_records(resource_id):
 
     return pd.DataFrame(rows)
 
-
 # -----------------------------
 # STOPS (BASE + GEOJSON)
 # -----------------------------
@@ -110,8 +109,8 @@ def fetch_stops_geojson():
     return pd.DataFrame(rows)
 
 
-def build_stops(base_df):
-    df = base_df.copy()
+def build_stops(df):
+    df = df.copy()
     df.columns = [c.lower() for c in df.columns]
 
     df = df.rename(columns={
@@ -126,9 +125,7 @@ def build_stops(base_df):
 
     geo = fetch_stops_geojson()
 
-    df = df.merge(geo, on="stop_id", how="left")
-
-    return df[[
+    return df.merge(geo, on="stop_id", how="left")[[
         "stop_id",
         "stop_name",
         "stop_lat",
@@ -139,23 +136,19 @@ def build_stops(base_df):
         "wheelchair_boarding",
     ]]
 
-
 # -----------------------------
 # ROUTES + CALENDAR + SHAPES
 # -----------------------------
-def parse_operating(value):
-    if not value:
-        return False
-
-    text = str(value).strip().upper()
-    if "NO OPERA" in text:
-        return False
-
-    return True
-
-
 def fetch_routes_geojson():
     return get_json(RUTAS_GEOJSON_URL)
+
+
+def parse_operating(v):
+    if not v:
+        return False
+    if "NO OPERA" in str(v).upper():
+        return False
+    return True
 
 
 def build_routes_calendar_shapes():
@@ -174,7 +167,7 @@ def build_routes_calendar_shapes():
 
         ruta = str(p.get("RUTA")).strip()
 
-        # ---------------- ROUTES ----------------
+        # ROUTES
         routes.append({
             "route_id": ruta,
             "route_short_name": ruta,
@@ -182,7 +175,7 @@ def build_routes_calendar_shapes():
             "route_type": p.get("ID_SERVICI"),
         })
 
-        # ---------------- CALENDAR ----------------
+        # CALENDAR (service_id = RUTA)
         calendar.append({
             "service_id": ruta,
             "monday": int(parse_operating(p.get("HABIL"))),
@@ -196,7 +189,7 @@ def build_routes_calendar_shapes():
             "end_date": end_date,
         })
 
-        # ---------------- SHAPES ----------------
+        # SHAPES (GeoJSON = [lon, lat])
         coords = geom.get("coordinates", [])
 
         seq = 1
@@ -219,9 +212,8 @@ def build_routes_calendar_shapes():
         pd.DataFrame(shapes),
     )
 
-
 # -----------------------------
-# GTFS EXPORT
+# EXPORT
 # -----------------------------
 def export_gtfs(resources):
     files = []
@@ -232,7 +224,7 @@ def export_gtfs(resources):
         if name.lower() in SKIP_LAYERS:
             continue
 
-        print("Processing", name)
+        print("Processing:", name)
 
         norm = name.lower().replace(" ", "_")
 
@@ -258,7 +250,7 @@ def export_gtfs(resources):
         df.to_csv(out, index=False)
         files.append(out)
 
-    # routes/calendar/shapes
+    # routes / calendar / shapes
     routes, calendar, shapes = build_routes_calendar_shapes()
 
     routes_file = OUTPUT_DIR / "routes.txt"
@@ -274,19 +266,15 @@ def export_gtfs(resources):
     # ZIP
     zip_path = OUTPUT_DIR / "gtfs.zip"
 
-    with zipfile.ZipFile(zip_path, "w") as z:
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
         for f in files:
             z.write(f, arcname=f.name)
 
-    print("GTFS created:", zip_path)
+    print("Created:", zip_path)
 
 
 def main():
     resources = discover_resources()
-
-    for r in resources:
-        print(r)
-
     export_gtfs(resources)
 
 
