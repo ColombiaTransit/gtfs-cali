@@ -1,6 +1,5 @@
 import zipfile
 from pathlib import Path
-from pyproj import Transformer
 
 import pandas as pd
 import requests
@@ -14,14 +13,6 @@ STOPS_GEOJSON_URL = (
     "https://services9.arcgis.com/8rJ42n9yWry0I4K4/"
     "arcgis/rest/services/ptosparadas/FeatureServer/0/query"
     "?outFields=*&where=1%3D1&f=geojson"
-)
-
-# ArcGIS services commonly use Web Mercator
-# EPSG:3857 -> WGS84 (GTFS standard)
-transformer = Transformer.from_crs(
-    "EPSG:3857",
-    "EPSG:4326",
-    always_xy=True
 )
 
 OUTPUT_DIR = Path("output")
@@ -42,7 +33,7 @@ def get_json(url, params=None):
 
 def discover_resources():
     """
-    Discover both layers and tables.
+    Discover both layers and tables from the FeatureServer.
     """
     metadata = get_json(BASE_URL, {"f": "json"})
 
@@ -64,37 +55,11 @@ def discover_resources():
 
     return resources
 
-def fetch_stops_geojson():
-    """
-    Download stops from dedicated GeoJSON endpoint.
-    """
 
-    r = requests.get(STOPS_GEOJSON_URL, timeout=120)
-    r.raise_for_status()
-
-    data = r.json()
-
-    rows = []
-
-    for f in data.get("features", []):
-        props = f.get("properties", {}) or {}
-        geom = f.get("geometry", {}) or {}
-
-        rows.append({
-            "stop_id": props.get("STOPID"),
-            "stop_lat": props.get("LATITUD"),
-            "stop_lon": props.get("LONGITUD"),
-            "stop_desc": props.get("DIRECCION"),
-        })
-
-    return pd.DataFrame(rows)
-
-def fetch_all_records(resource_id, include_geometry=False):
+def fetch_all_records(resource_id):
     """
     Download all rows using pagination.
     Works for both layers and tables.
-
-    If include_geometry=True, x/y geometry is included.
     """
     resource_url = f"{BASE_URL}/{resource_id}"
 
@@ -110,7 +75,7 @@ def fetch_all_records(resource_id, include_geometry=False):
             {
                 "where": "1=1",
                 "outFields": "*",
-                "returnGeometry": str(include_geometry).lower(),
+                "returnGeometry": "false",
                 "f": "json",
                 "resultOffset": offset,
                 "resultRecordCount": max_record_count
@@ -122,23 +87,10 @@ def fetch_all_records(resource_id, include_geometry=False):
         if not features:
             break
 
-        for feature in features:
-            row = feature.get("attributes", {}).copy()
-
-            # Add geometry for stops
-            if include_geometry:
-                geom = feature.get("geometry", {}) or {}
-
-                x = geom.get("x")
-                y = geom.get("y")
-                
-                if x is not None and y is not None:
-                    lon, lat = transformer.transform(x, y)
-                
-                    row["stop_lon"] = lon
-                    row["stop_lat"] = lat
-                    
-            rows.append(row)
+        rows.extend(
+            feature.get("attributes", {})
+            for feature in features
+        )
 
         print(
             f"Downloaded {len(rows)} rows "
@@ -153,11 +105,42 @@ def fetch_all_records(resource_id, include_geometry=False):
     return pd.DataFrame(rows)
 
 
+def fetch_stops_geojson():
+    """
+    Download stop enrichment data from GeoJSON.
+    """
+    response = session.get(
+        STOPS_GEOJSON_URL,
+        timeout=120
+    )
+    response.raise_for_status()
+
+    data = response.json()
+
+    rows = []
+
+    for feature in data.get("features", []):
+        props = feature.get("properties", {}) or {}
+
+        stop_id = props.get("STOPID")
+
+        rows.append({
+            "stop_id": str(stop_id).strip()
+            if stop_id is not None
+            else None,
+
+            "stop_lat": props.get("LATITUD"),
+            "stop_lon": props.get("LONGITUD"),
+            "stop_desc": props.get("DIRECCION"),
+        })
+
+    return pd.DataFrame(rows)
+
+
 def normalize_resource_name(name):
     """
     Convert ArcGIS names -> GTFS filenames.
     """
-
     cleaned = (
         name.lower()
         .replace(" ", "_")
@@ -169,6 +152,7 @@ def normalize_resource_name(name):
         "agency": "agency",
         "stops": "stops",
         "routes": "routes",
+        "runs": "trips",
         "trips": "trips",
         "stop_times": "stop_times",
         "calendar": "calendar",
@@ -217,11 +201,11 @@ def convert_dates(df):
 
     return df
 
+
 def apply_gtfs_column_mapping(df, filename):
     """
     Rename ArcGIS columns to GTFS-compliant names.
     """
-
     mappings = {
         "trips": {
             "gtripid": "trip_id",
@@ -238,30 +222,99 @@ def apply_gtfs_column_mapping(df, filename):
 
     return df
 
-def finalize_stops(df):
-    """
-    Ensure GTFS stops.txt compliance.
-    """
 
-    df = df.copy()
+def build_stops_txt(base_df):
+    """
+    Build GTFS-compliant stops.txt
 
-    # enforce correct naming
+    Base source:
+        FeatureServer stops layer
+
+    Enrichment:
+        GeoJSON stops feed
+    """
+    df = base_df.copy()
+
     df.columns = [c.lower() for c in df.columns]
 
-    # required GTFS columns only
-    keep = [
+    rename_map = {
+        "gstopid": "stop_id",
+        "gstoptype": "location_type",
+        "gstopparen": "parent_station",
+        "gwheelchairboarding": "wheelchair_boarding",
+    }
+
+    df = df.rename(columns=rename_map)
+
+    # stop_name = GStopID
+    if "stop_id" in df.columns:
+        df["stop_name"] = (
+            df["stop_id"]
+            .astype(str)
+            .str.strip()
+        )
+
+    # normalize join key
+    df["stop_id"] = (
+        df["stop_id"]
+        .astype(str)
+        .str.strip()
+    )
+
+    # enrich with GeoJSON
+    geo_df = fetch_stops_geojson()
+
+    df = df.merge(
+        geo_df,
+        on="stop_id",
+        how="left"
+    )
+
+    # GTFS stops.txt order
+    columns = [
         "stop_id",
         "stop_name",
         "stop_lat",
         "stop_lon",
-        "stop_desc"
+        "stop_desc",
+        "location_type",
+        "parent_station",
+        "wheelchair_boarding",
     ]
 
-    # stop_name might not exist → fallback
-    if "stop_name" not in df.columns:
-        df["stop_name"] = df.get("stop_desc")
+    existing_cols = [
+        c for c in columns
+        if c in df.columns
+    ]
 
-    return df[[c for c in keep if c in df.columns]]
+    return df[existing_cols]
+
+
+def validate_gtfs_output(files_created):
+    """
+    Ensure required GTFS files exist.
+    """
+    required = [
+        "stops",
+        "routes",
+        "trips",
+    ]
+
+    created_names = [
+        p.stem for p in files_created
+    ]
+
+    missing = [
+        f for f in required
+        if f not in created_names
+    ]
+
+    if missing:
+        raise RuntimeError(
+            "Missing required GTFS files: "
+            + ", ".join(missing)
+        )
+
 
 def export_gtfs(resources):
     txt_files = []
@@ -279,42 +332,74 @@ def export_gtfs(resources):
             f"{name}"
         )
 
-        normalized_name = normalize_resource_name(name)
-
-        # Stops layer needs x/y geometry
-        include_geometry = normalized_name == "stops"
-        
-        if normalize_resource_name(name) == "stops":
-            print("Using GeoJSON stops feed (authoritative source)")
-            df = fetch_stops_geojson()
-        else:
-            df = fetch_all_records(resource["id"])
-
-        if df.empty:
-            print(f"Skipping empty {name}")
-            continue
-
-        df.columns = [c.lower() for c in df.columns]
-
-        df = convert_dates(df)
-
-        # Apply GTFS field mapping
-        df = apply_gtfs_column_mapping(
-            df,
-            normalized_name
+        normalized_name = (
+            normalize_resource_name(name)
         )
 
-        filename = normalized_name + ".txt"
+        df = fetch_all_records(
+            resource["id"]
+        )
 
-        out_file = OUTPUT_DIR / filename
+        if df.empty:
+            print(
+                f"Skipping empty {name}"
+            )
+            continue
 
-        df.to_csv(out_file, index=False)
+        df.columns = [
+            c.lower()
+            for c in df.columns
+        ]
 
-        txt_files.append(out_file)
+        # Special handling for stops
+        if normalized_name == "stops":
+            print(
+                "Building stops.txt "
+                "from base layer + GeoJSON enrichment"
+            )
 
-        print(f"Saved {out_file}")
+            df = build_stops_txt(df)
 
-    zip_path = OUTPUT_DIR / "gtfs.zip"
+        else:
+            df = convert_dates(df)
+
+            df = (
+                apply_gtfs_column_mapping(
+                    df,
+                    normalized_name
+                )
+            )
+
+        filename = (
+            normalized_name
+            + ".txt"
+        )
+
+        out_file = (
+            OUTPUT_DIR / filename
+        )
+
+        df.to_csv(
+            out_file,
+            index=False
+        )
+
+        txt_files.append(
+            out_file
+        )
+
+        print(
+            f"Saved {out_file}"
+        )
+
+    validate_gtfs_output(
+        txt_files
+    )
+
+    zip_path = (
+        OUTPUT_DIR
+        / "gtfs.zip"
+    )
 
     with zipfile.ZipFile(
         zip_path,
@@ -327,13 +412,17 @@ def export_gtfs(resources):
                 arcname=txt_file.name
             )
 
-    print(f"Created {zip_path}")
+    print(
+        f"Created {zip_path}"
+    )
 
 
 def main():
     resources = discover_resources()
 
-    print("Found resources:")
+    print(
+        "Found resources:"
+    )
 
     for r in resources:
         print(
