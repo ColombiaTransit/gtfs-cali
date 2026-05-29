@@ -10,6 +10,12 @@ BASE_URL = (
     "arcgis/rest/services/GTFS/FeatureServer"
 )
 
+STOPS_GEOJSON_URL = (
+    "https://services9.arcgis.com/8rJ42n9yWry0I4K4/"
+    "arcgis/rest/services/ptosparadas/FeatureServer/0/query"
+    "?outFields=*&where=1%3D1&f=geojson"
+)
+
 # ArcGIS services commonly use Web Mercator
 # EPSG:3857 -> WGS84 (GTFS standard)
 transformer = Transformer.from_crs(
@@ -58,6 +64,30 @@ def discover_resources():
 
     return resources
 
+def fetch_stops_geojson():
+    """
+    Download stops from dedicated GeoJSON endpoint.
+    """
+
+    r = requests.get(STOPS_GEOJSON_URL, timeout=120)
+    r.raise_for_status()
+
+    data = r.json()
+
+    rows = []
+
+    for f in data.get("features", []):
+        props = f.get("properties", {}) or {}
+        geom = f.get("geometry", {}) or {}
+
+        rows.append({
+            "stop_id": props.get("STOPID"),
+            "stop_lat": props.get("LATITUD"),
+            "stop_lon": props.get("LONGITUD"),
+            "stop_desc": props.get("DIRECCION"),
+        })
+
+    return pd.DataFrame(rows)
 
 def fetch_all_records(resource_id, include_geometry=False):
     """
@@ -208,6 +238,31 @@ def apply_gtfs_column_mapping(df, filename):
 
     return df
 
+def finalize_stops(df):
+    """
+    Ensure GTFS stops.txt compliance.
+    """
+
+    df = df.copy()
+
+    # enforce correct naming
+    df.columns = [c.lower() for c in df.columns]
+
+    # required GTFS columns only
+    keep = [
+        "stop_id",
+        "stop_name",
+        "stop_lat",
+        "stop_lon",
+        "stop_desc"
+    ]
+
+    # stop_name might not exist → fallback
+    if "stop_name" not in df.columns:
+        df["stop_name"] = df.get("stop_desc")
+
+    return df[[c for c in keep if c in df.columns]]
+
 def export_gtfs(resources):
     txt_files = []
 
@@ -229,10 +284,11 @@ def export_gtfs(resources):
         # Stops layer needs x/y geometry
         include_geometry = normalized_name == "stops"
         
-        df = fetch_all_records(
-            resource["id"],
-            include_geometry=include_geometry
-        )
+        if normalize_resource_name(name) == "stops":
+            print("Using GeoJSON stops feed (authoritative source)")
+            df = fetch_stops_geojson()
+        else:
+            df = fetch_all_records(resource["id"])
 
         if df.empty:
             print(f"Skipping empty {name}")
