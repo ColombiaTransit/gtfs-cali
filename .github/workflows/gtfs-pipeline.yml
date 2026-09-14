@@ -1,0 +1,116 @@
+name: Metro Cali GTFS pipeline
+
+on:
+  schedule:
+    # Daily at 04:00 UTC (23:00 America/Bogota the previous day). Adjust as needed.
+    - cron: "0 4 * * *"
+  workflow_dispatch: {}
+
+# Avoid overlapping runs stepping on each other / the repo commit.
+concurrency:
+  group: gtfs-pipeline
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  PIPELINE_DIR: gtfs_pipeline          # folder containing download.py / fix.py / etc.
+  OUTPUT_ZIP_PATH: data/gtfs.zip       # where the final feed is committed in the repo
+  OUTPUT_REPORT_DIR: data/validation   # where the canonical validator report is committed
+  GTFS_VALIDATOR_VERSION: latest       # or pin e.g. "v5.0.1"
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: pip install -r requirements.txt
+
+      - name: Unit-test the join/reconstruction logic
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: python test_reconstruct.py
+
+      - name: Download GTFS source layers from ArcGIS
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: python download.py
+
+      - name: Fix / normalize the feed
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: python fix.py
+
+      - name: Set up Java (for the canonical validator)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Resolve gtfs-validator-cli download URL
+        id: resolve_validator
+        run: |
+          if [ "${GTFS_VALIDATOR_VERSION}" = "latest" ]; then
+            URL=$(curl -sSL https://api.github.com/repos/MobilityData/gtfs-validator/releases/latest \
+              | python3 -c "import sys,json; d=json.load(sys.stdin); print(next(a['browser_download_url'] for a in d['assets'] if a['name'].endswith('cli.jar')))")
+          else
+            URL="https://github.com/MobilityData/gtfs-validator/releases/download/${GTFS_VALIDATOR_VERSION}/gtfs-validator-cli.jar"
+          fi
+          echo "url=${URL}" >> "$GITHUB_OUTPUT"
+
+      - name: Download gtfs-validator-cli.jar
+        run: curl -L -o gtfs-validator-cli.jar "${{ steps.resolve_validator.outputs.url }}"
+
+      - name: Run MobilityData gtfs-validator (canonical)
+        run: |
+          java -jar gtfs-validator-cli.jar \
+            --input "${PIPELINE_DIR}/build/gtfs.zip" \
+            --output_base "${PIPELINE_DIR}/build/report/canonical"
+
+      - name: Check validator report for errors
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: python check_validator_report.py build/report/canonical/report.json
+
+      - name: Upload validator report as workflow artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gtfs-validation-report
+          path: ${{ env.PIPELINE_DIR }}/build/report/canonical
+          retention-days: 30
+
+      - name: Stage feed + report for commit
+        if: success()
+        run: |
+          mkdir -p "$(dirname "${OUTPUT_ZIP_PATH}")" "${OUTPUT_REPORT_DIR}"
+          cp "${PIPELINE_DIR}/build/gtfs.zip" "${OUTPUT_ZIP_PATH}"
+          cp "${PIPELINE_DIR}/build/report/canonical/report.json" "${OUTPUT_REPORT_DIR}/report.json"
+          cp "${PIPELINE_DIR}/build/report/fix_report.txt" "${OUTPUT_REPORT_DIR}/fix_report.txt"
+
+      - name: Commit updated feed to the repo
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${OUTPUT_ZIP_PATH}" "${OUTPUT_REPORT_DIR}"
+          if git diff --cached --quiet; then
+            echo "No changes to commit (feed is identical to last run)."
+          else
+            git commit -m "chore: update GTFS feed [automated, $(date -u +'%Y-%m-%d')]"
+            git push
+          fi
+
+      # --- Future step, once you're ready to also publish releases: ---
+      # - name: Create GitHub Release with gtfs.zip
+      #   if: success()
+      #   uses: softprops/action-gh-release@v2
+      #   with:
+      #     tag_name: gtfs-${{ github.run_number }}
+      #     files: ${{ env.OUTPUT_ZIP_PATH }}
