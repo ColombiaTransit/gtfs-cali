@@ -171,9 +171,61 @@ def test_time_unit_detection_minutes_and_seconds():
     print("test_time_unit_detection_minutes_and_seconds: PASS")
 
 
+def test_empty_calendars_falls_back_to_exceptions():
+    """Reproduces the real failure seen in CI: Calendars returns 0 rows.
+    build_calendar must not crash, and calendar_id_lookup_with_fallback must
+    still resolve service_id from CalendarExceptions (CalendarID + GServiceID)."""
+    empty_calendars = pd.DataFrame()  # exactly what query_all_records returns for 0 features
+
+    calendar_exceptions = pd.DataFrame([
+        {"CalendarID": 3001, "GServiceID": "WK", "ExceptionDate": "20260101", "GExceptionType": 2},
+        {"CalendarID": 3002, "GServiceID": "SAT", "ExceptionDate": "20260102", "GExceptionType": 1},
+    ])
+
+    calendar_df = R.build_calendar(empty_calendars)
+    assert calendar_df.empty
+    assert list(calendar_df.columns) == [
+        "service_id", "monday", "tuesday", "wednesday", "thursday", "friday",
+        "saturday", "sunday", "start_date", "end_date", "_internal_id",
+    ]  # doesn't crash, and still has the right shape for downstream .drop(columns=[...])
+
+    runs = pd.DataFrame([
+        {"ID": 1, "ScheduleID": 5001, "StartRun": 6.0, "GTripID": "T1", "CalendarID": 3001,
+         "GWheelchairAccessible": 1, "GBikesAllowed": 0},
+        {"ID": 2, "ScheduleID": 5001, "StartRun": 7.0, "GTripID": "T2", "CalendarID": 3002,
+         "GWheelchairAccessible": 1, "GBikesAllowed": 0},
+    ])
+
+    lookup = R.calendar_id_lookup_with_fallback(calendar_df, calendar_exceptions, runs)
+    assert lookup == {3001: "WK", 3002: "SAT"}, lookup
+    print("test_empty_calendars_falls_back_to_exceptions: PASS")
+
+
+def test_calendars_present_takes_priority_over_exceptions():
+    """When Calendars DOES have data, it should win over CalendarExceptions
+    on any overlapping CalendarID (Calendars is the authoritative source)."""
+    calendars_raw_local = pd.DataFrame([
+        {"ID": 3001, "GServiceID": "WEEKDAY", "Monday": 1, "Tuesday": 1, "Wednesday": 1,
+         "Thursday": 1, "Friday": 1, "Saturday": 0, "Sunday": 0,
+         "StartDate": "20260101", "EndDate": "20260201"},
+    ])
+    calendar_exceptions = pd.DataFrame([
+        {"CalendarID": 3001, "GServiceID": "STALE_NAME", "ExceptionDate": "20260101", "GExceptionType": 2},
+    ])
+    runs = pd.DataFrame([{"ID": 1, "ScheduleID": 5001, "StartRun": 6.0, "GTripID": "T1",
+                           "CalendarID": 3001, "GWheelchairAccessible": 1, "GBikesAllowed": 0}])
+
+    calendar_df = R.build_calendar(calendars_raw_local)
+    lookup = R.calendar_id_lookup_with_fallback(calendar_df, calendar_exceptions, runs)
+    assert lookup[3001] == "WEEKDAY", lookup  # Calendars wins, not the exceptions fallback
+    print("test_calendars_present_takes_priority_over_exceptions: PASS")
+
+
 if __name__ == "__main__":
     test_per_stop_alignment()
     test_per_segment_alignment()
     test_shapes_built_with_cumulative_distance()
     test_time_unit_detection_minutes_and_seconds()
+    test_empty_calendars_falls_back_to_exceptions()
+    test_calendars_present_takes_priority_over_exceptions()
     print("\nAll reconstruct.py tests passed.")

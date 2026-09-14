@@ -131,6 +131,14 @@ def build_routes(lines_df):
 # --------------------------------------------------------------------------
 
 def build_calendar(calendars_df):
+    if calendars_df is None or calendars_df.empty:
+        diag("Calendars table returned 0 rows - calendar.txt will be empty. "
+             "Falling back to CalendarExceptions for service_id resolution "
+             "(see calendar_id_lookup_with_fallback).")
+        return pd.DataFrame(columns=[
+            "service_id", "monday", "tuesday", "wednesday", "thursday",
+            "friday", "saturday", "sunday", "start_date", "end_date", "_internal_id",
+        ])
     df = pd.DataFrame()
     df["service_id"] = calendars_df["GServiceID"].astype(str)
     for gtfs_col, src_col in [
@@ -158,6 +166,43 @@ def build_calendar_dates(exceptions_df):
 def calendar_id_lookup(calendar_internal_df):
     """{Calendars.ID -> GServiceID}"""
     return dict(zip(calendar_internal_df["_internal_id"], calendar_internal_df["service_id"]))
+
+
+def calendar_id_lookup_with_fallback(calendar_internal_df, calendar_exceptions_df, runs_df):
+    """Primary source: Calendars.ID -> GServiceID. If Calendars is empty (or
+    doesn't cover every CalendarID that Runs actually reference), fall back
+    to CalendarExceptions, which carries both CalendarID and GServiceID
+    directly and doesn't require the Calendars table at all. Logs how much
+    of Runs' CalendarID space each source actually covers, since a partial
+    fallback can still leave trips without a resolvable service_id."""
+    primary = calendar_id_lookup(calendar_internal_df)
+
+    fallback = {}
+    if calendar_exceptions_df is not None and not calendar_exceptions_df.empty \
+            and "CalendarID" in calendar_exceptions_df.columns:
+        fallback = dict(zip(
+            calendar_exceptions_df["CalendarID"].dropna(),
+            calendar_exceptions_df["GServiceID"].astype(str),
+        ))
+
+    merged = {**fallback, **primary}  # primary wins on overlap (it's the authoritative source)
+
+    if runs_df is not None and "CalendarID" in runs_df.columns:
+        needed = set(runs_df["CalendarID"].dropna())
+        covered = needed & set(merged.keys())
+        diag(f"service_id coverage: {len(covered)}/{len(needed)} distinct "
+             f"CalendarID value(s) referenced by Runs are resolvable "
+             f"(Calendars covers {len(needed & set(primary.keys()))}, "
+             f"CalendarExceptions fallback adds {len(needed & set(fallback.keys()) - set(primary.keys()))})")
+        if len(covered) < 0.9 * len(needed) and len(needed) > 0:
+            diag(f"WARNING: {len(needed) - len(covered)} CalendarID value(s) "
+                 f"used by Runs have NO service_id anywhere (not in Calendars, "
+                 f"not in CalendarExceptions). Trips using them will be "
+                 f"dropped. This likely means the live 'Calendars' table "
+                 f"query needs manual investigation - see the [diagnostic] "
+                 f"lines above about server record counts.")
+
+    return merged
 
 
 # --------------------------------------------------------------------------

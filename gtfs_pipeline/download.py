@@ -85,6 +85,21 @@ def query_all_records(service_url, layer_id, label):
     geometries add stop_lat/stop_lon; polyline geometries add _geom_path
     (list of (lat, lon) tuples in the order ArcGIS returns them)."""
     query_url = f"{service_url}/{layer_id}/query"
+
+    # Cross-check against the server's own count first. This catches cases
+    # where the paginated query silently comes back empty even though the
+    # table has data (seen in practice for at least one table on this
+    # service) - if the count says non-zero but we fetch zero rows, that's
+    # a bug/quirk worth failing loudly on rather than silently proceeding
+    # with missing data.
+    try:
+        count_data = get_json(query_url, where="1=1", returnCountOnly="true")
+        server_count = count_data.get("count")
+        print(f"    [{label}] server reports {server_count} record(s)")
+    except Exception as e:
+        server_count = None
+        print(f"    [{label}] could not get server count ({e}), proceeding anyway")
+
     offset = 0
     rows = []
     while True:
@@ -114,7 +129,57 @@ def query_all_records(service_url, layer_id, label):
         print(f"    [{label}] fetched {offset} records so far...")
         if not data.get("exceededTransferLimit") and got < PAGE_SIZE:
             break
+
+    if server_count is not None and len(rows) != server_count:
+        print(f"    [{label}] WARNING: server count ({server_count}) != rows fetched "
+              f"({len(rows)}). Retrying once with an explicit orderByFields...")
+        rows = _retry_with_order_by(query_url, label)
+        if server_count is not None and len(rows) != server_count:
+            print(f"    [{label}] STILL mismatched after retry: server says "
+                  f"{server_count}, fetched {len(rows)}. Proceeding with what "
+                  f"we have, but treat this table's data as suspect - "
+                  f"investigate manually (try the query URL directly: "
+                  f"{query_url}?where=1=1&outFields=*&f=json).")
+
     return pd.DataFrame(rows)
+
+
+def _retry_with_order_by(query_url, label):
+    """Some ArcGIS services paginate unreliably without an explicit sort
+    order. Retry once with orderByFields=OBJECTID before giving up."""
+    offset = 0
+    rows = []
+    while True:
+        params = {
+            "where": "1=1", "outFields": "*", "f": "json",
+            "resultOffset": offset, "resultRecordCount": PAGE_SIZE,
+            "outSR": 4326, "returnGeometry": "true", "orderByFields": "OBJECTID",
+        }
+        try:
+            data = get_json(query_url, **params)
+        except Exception as e:
+            print(f"    [{label}] retry failed ({e}), giving up on this approach")
+            return rows
+        feats = data.get("features", [])
+        if not feats:
+            break
+        for feat in feats:
+            attrs = dict(feat.get("attributes", {}))
+            geom = feat.get("geometry")
+            if geom:
+                if "x" in geom and "y" in geom:
+                    attrs["stop_lat"] = geom["y"]
+                    attrs["stop_lon"] = geom["x"]
+                elif "paths" in geom and geom["paths"]:
+                    path = [pt for part in geom["paths"] for pt in part]
+                    attrs["_geom_path"] = [(lat, lon) for lon, lat in path]
+            rows.append(attrs)
+        got = len(feats)
+        offset += got
+        print(f"    [{label}] (retry) fetched {offset} records so far...")
+        if not data.get("exceededTransferLimit") and got < PAGE_SIZE:
+            break
+    return rows
 
 
 def fetch_all_layers(service_url):
@@ -123,6 +188,23 @@ def fetch_all_layers(service_url):
         print(f"Fetching layer {layer_id}: {name}")
         layers[name] = query_all_records(service_url, layer_id, name)
         print(f"  -> {len(layers[name])} rows")
+
+    # Calendars is allowed to be empty (reconstruct.py falls back to
+    # CalendarExceptions). Everything else is load-bearing for the join
+    # chain - fail clearly now rather than deep inside a join with a
+    # confusing KeyError.
+    required_nonempty = [n for n in LAYER_IDS if n != "Calendars"]
+    empty = [n for n in required_nonempty if layers[n].empty]
+    if empty:
+        raise RuntimeError(
+            f"The following required table(s)/layer(s) returned 0 rows: "
+            f"{empty}. Check the '[layer] server reports N record(s)' lines "
+            f"above - if the server itself reports 0, the live data is "
+            f"genuinely empty (contact sistemas@metrocali.gov.co); if it "
+            f"reports >0 but we fetched 0, it's a query/pagination bug - "
+            f"try the query URL directly: {service_url}/{LAYER_IDS[empty[0]]}"
+            f"/query?where=1=1&outFields=*&f=json"
+        )
     return layers
 
 
@@ -147,8 +229,10 @@ def main():
     routes_df = routes_internal.drop(columns=["_internal_id"])
 
     calendar_internal = R.build_calendar(layers["Calendars"])
-    calendar_id_to_service_id = R.calendar_id_lookup(calendar_internal)
-    calendar_df = calendar_internal.drop(columns=["_internal_id"])
+    calendar_id_to_service_id = R.calendar_id_lookup_with_fallback(
+        calendar_internal, layers["CalendarExceptions"], layers["Runs"]
+    )
+    calendar_df = calendar_internal.drop(columns=["_internal_id"]) if not calendar_internal.empty else calendar_internal
     calendar_dates_df = R.build_calendar_dates(layers["CalendarExceptions"])
 
     print("Building stop sequences per pattern (LineVariants x LineVariantElements)...")
