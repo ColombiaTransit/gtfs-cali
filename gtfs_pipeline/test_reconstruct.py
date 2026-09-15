@@ -8,6 +8,9 @@ Run: python test_reconstruct.py
 import pandas as pd
 
 import reconstruct as R
+from datetime import date
+
+from colombia_holidays import colombian_holidays
 
 # ---- fabricate one route, one pattern, 3 stops, 2 segments, 2 runs ----
 
@@ -220,6 +223,242 @@ def test_calendars_present_takes_priority_over_exceptions():
     assert lookup[3001] == "WEEKDAY", lookup  # Calendars wins, not the exceptions fallback
     print("test_calendars_present_takes_priority_over_exceptions: PASS")
 
+def test_colombian_holidays_2026():
+    holidays = colombian_holidays(2026)
+
+    expected_dates = {
+        "20260101",
+        "20260112",
+        "20260323",
+        "20260402",
+        "20260403",
+        "20260501",
+        "20260518",
+        "20260608",
+        "20260615",
+        "20260629",
+        "20260713",
+        "20260720",
+        "20260807",
+        "20260817",
+        "20261012",
+        "20261102",
+        "20261116",
+        "20261208",
+        "20261225",
+    }
+
+    actual_dates = {
+        holiday_date.strftime("%Y%m%d")
+        for holiday_date in holidays
+    }
+
+    assert actual_dates == expected_dates
+
+    print("test_colombian_holidays_2026: PASS")
+
+
+def test_colombian_holiday_emiliani_rule():
+    holidays = colombian_holidays(2026)
+
+    # January 6, 2026 is a Tuesday.
+    # The observed public holiday is Monday January 12.
+    assert date(2026, 1, 6) not in holidays
+    assert date(2026, 1, 12) in holidays
+
+    # March 19, 2026 is a Thursday.
+    # The observed public holiday is Monday March 23.
+    assert date(2026, 3, 19) not in holidays
+    assert date(2026, 3, 23) in holidays
+
+    print("test_colombian_holiday_emiliani_rule: PASS")
+
+
+def test_colombian_chiquinquira_holiday():
+    # The new national holiday applies from 2026.
+    holidays_2025 = colombian_holidays(2025)
+    holidays_2026 = colombian_holidays(2026)
+
+    assert date(2025, 7, 14) not in holidays_2025
+    assert date(2026, 7, 13) in holidays_2026
+
+    print("test_colombian_chiquinquira_holiday: PASS")
+
+
+def test_build_calendar_dates_adds_colombian_holiday_service():
+    calendars = pd.DataFrame([
+        {
+            "service_id": "WK",
+            "monday": 1,
+            "tuesday": 1,
+            "wednesday": 1,
+            "thursday": 1,
+            "friday": 1,
+            "saturday": 0,
+            "sunday": 0,
+            "start_date": "20260101",
+            "end_date": "20261231",
+        },
+        {
+            "service_id": "DOM_FEST",
+            "monday": 0,
+            "tuesday": 0,
+            "wednesday": 0,
+            "thursday": 0,
+            "friday": 0,
+            "saturday": 0,
+            "sunday": 1,
+            "start_date": "20260101",
+            "end_date": "20261231",
+        },
+    ])
+
+    existing_exceptions = pd.DataFrame(
+        columns=[
+            "GServiceID",
+            "ExceptionDate",
+            "GExceptionType",
+        ]
+    )
+
+    result = R.build_calendar_dates(
+        existing_exceptions,
+        calendars,
+    )
+
+    jan_12 = result[result["date"] == "20260112"]
+
+    assert len(jan_12) == 2
+
+    assert set(
+        zip(
+            jan_12["service_id"],
+            jan_12["exception_type"],
+        )
+    ) == {
+        ("WK", 2),
+        ("DOM_FEST", 1),
+    }
+
+    print("test_build_calendar_dates_adds_colombian_holiday_service: PASS")
+
+
+def test_build_calendar_dates_does_not_add_exception_on_sunday():
+    calendars = pd.DataFrame([
+        {
+            "service_id": "WK",
+            "monday": 1,
+            "tuesday": 1,
+            "wednesday": 1,
+            "thursday": 1,
+            "friday": 1,
+            "saturday": 0,
+            "sunday": 0,
+            "start_date": "20260101",
+            "end_date": "20261231",
+        },
+        {
+            "service_id": "DOM_FEST",
+            "monday": 0,
+            "tuesday": 0,
+            "wednesday": 0,
+            "thursday": 0,
+            "friday": 0,
+            "saturday": 0,
+            "sunday": 1,
+            "start_date": "20260101",
+            "end_date": "20261231",
+        },
+    ])
+
+    existing_exceptions = pd.DataFrame(
+        columns=[
+            "GServiceID",
+            "ExceptionDate",
+            "GExceptionType",
+        ]
+    )
+
+    result = R.build_calendar_dates(
+        existing_exceptions,
+        calendars,
+    )
+
+    # Christmas 2026 is Friday, so it should generate an exception.
+    christmas = result[result["date"] == "20261225"]
+
+    assert set(
+        zip(
+            christmas["service_id"],
+            christmas["exception_type"],
+        )
+    ) == {
+        ("WK", 2),
+        ("DOM_FEST", 1),
+    }
+
+    print("test_build_calendar_dates_does_not_add_exception_on_sunday: PASS")
+
+
+def test_build_calendar_dates_preserves_existing_metro_cali_exception():
+    calendars = pd.DataFrame([
+        {
+            "service_id": "WK",
+            "monday": 1,
+            "tuesday": 1,
+            "wednesday": 1,
+            "thursday": 1,
+            "friday": 1,
+            "saturday": 0,
+            "sunday": 0,
+            "start_date": "20260101",
+            "end_date": "20261231",
+        },
+        {
+            "service_id": "DOM_FEST",
+            "monday": 0,
+            "tuesday": 0,
+            "wednesday": 0,
+            "thursday": 0,
+            "friday": 0,
+            "saturday": 0,
+            "sunday": 1,
+            "start_date": "20260101",
+            "end_date": "20261231",
+        },
+    ])
+
+    # Metro Cali explicitly says WK does not operate on this holiday.
+    existing_exceptions = pd.DataFrame([
+        {
+            "GServiceID": "WK",
+            "ExceptionDate": "20260713",
+            "GExceptionType": 2,
+        }
+    ])
+
+    result = R.build_calendar_dates(
+        existing_exceptions,
+        calendars,
+    )
+
+    july_13 = result[result["date"] == "20260713"]
+
+    assert len(july_13) == 2
+
+    assert set(
+        zip(
+            july_13["service_id"],
+            july_13["exception_type"],
+        )
+    ) == {
+        ("WK", 2),
+        ("DOM_FEST", 1),
+    }
+
+    print(
+        "test_build_calendar_dates_preserves_existing_metro_cali_exception: PASS"
+    )
 
 if __name__ == "__main__":
     test_per_stop_alignment()
@@ -228,4 +467,12 @@ if __name__ == "__main__":
     test_time_unit_detection_minutes_and_seconds()
     test_empty_calendars_falls_back_to_exceptions()
     test_calendars_present_takes_priority_over_exceptions()
+    
+    test_colombian_holidays_2026()
+    test_colombian_holiday_emiliani_rule()
+    test_colombian_chiquinquira_holiday()
+    test_build_calendar_dates_adds_colombian_holiday_service()
+    test_build_calendar_dates_does_not_add_exception_on_sunday()
+    test_build_calendar_dates_preserves_existing_metro_cali_exception()
+
     print("\nAll reconstruct.py tests passed.")
