@@ -1,0 +1,46 @@
+name: Temporary - Fetch Metro Cali Stop Information
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fetch-stop-info:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify GTFS ZIP
+        run: |
+          set -euo pipefail
+
+          if [ ! -f data/gtfs.zip ]; then
+            echo "ERROR: data/gtfs.zip was not found."
+            exit 1
+          fi
+
+          echo "GTFS file:"
+          ls -lh data/gtfs.zip
+
+          echo
+          echo "ZIP contents:"
+          unzip -l data/gtfs.zip | head -50
+
+      - name: Fetch Metro Cali stop information
+        run: |
+          python scripts/fetch_metro_cali_stop_info.py data/gtfs.zip
+
+      - name: Show fetch summary
+        run: |
+          cat tmp/metro_cali_stop_info/summary.json
+
+      - name: Upload stop information
+        uses: actions/upload-artifact@v4
+        with:
+          name: metro-cali-stop-information
+          path: tmp/metro_cali_stop_info/
+          retention-days: 1
