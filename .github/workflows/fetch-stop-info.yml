@@ -23,24 +23,30 @@ jobs:
             exit 1
           fi
 
-          echo "GTFS file:"
+          echo "GTFS ZIP:"
           ls -lh data/gtfs.zip
 
           echo
-          echo "ZIP contents:"
-          unzip -l data/gtfs.zip | head -50
+          echo "Checking ZIP contents..."
+
+          unzip -l data/gtfs.zip | grep -i 'stops.txt'
 
       - name: Fetch Metro Cali stop information
         run: |
           python scripts/fetch_metro_cali_stop_info.py data/gtfs.zip
 
-      - name: Show fetch summary
+      - name: Show summary
+        if: always()
         run: |
-          cat tmp/metro_cali_stop_info/summary.json
+          if [ -f tmp/metro_cali_stop_info/summary.json ]; then
+            cat tmp/metro_cali_stop_info/summary.json
+          fi
 
-      - name: Upload stop information
+      - name: Upload Metro Cali stop information
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: metro-cali-stop-information
           path: tmp/metro_cali_stop_info/
-          retention-days: 1
+          retention-days: 7
+          if-no-files-found: warn
