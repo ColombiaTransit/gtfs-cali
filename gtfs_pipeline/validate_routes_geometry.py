@@ -94,6 +94,11 @@ def main():
     if ext_df.empty or "_geom_path" not in ext_df.columns:
         print("rutas returned no usable geometry. Skipping geometry validation.")
         return
+    # Exclude special-occasion variants (CICLOVIA Sunday detours, DESVIO
+    # hourly detours) before any matching - they can share a RUTA code
+    # with the everyday route while describing a different path, and would
+    # otherwise corrupt both route identification and this shape QA check.
+    ext_df = routes_enrich.filter_to_normal_variant(ext_df)
 
     # IMPORTANT: our route_id is often NOT the same ID space as rutas' RUTA
     # (confirmed on a live run - our route_id is a plain internal integer,

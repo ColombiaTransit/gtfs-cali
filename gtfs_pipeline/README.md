@@ -205,6 +205,41 @@ ID matching is kept as the first attempt (not removed) in case a future
 data release restores a shared ID scheme — geometry matching only runs
 when ID coverage doesn't clear 50%.
 
+### Special-occasion route variants (CICLOVIA / DESVIO)
+
+`rutas` also carries a `VARIANTE` column beyond `RUTA`/`NOMBRE`. Confirmed
+values so far: `NORMAL` (the everyday route) and two special-occasion
+types that can share the **exact same `RUTA` code** as the `NORMAL` row
+while describing a different path:
+
+- `CICLOVIA` — a detour that only operates on Sundays when Cali closes
+  streets for ciclovía.
+- `DESVIO` — an hour-of-day detour (the route takes a different path at
+  certain hours).
+
+(Related columns worth knowing about for future calendar work: `DIA_TIPO`
+— `HABIL` = weekday Mon–Fri, `SABADO` = Saturday, `DOM_FEST` = Sunday/
+public holiday, `SABADO_DOMINGO` = a combined Sat+Sun pattern — and
+`HABIL`/`SABADO`/`DOM_FEST` columns giving the operating-hour window per
+day type. Not currently used by the pipeline, since our `calendar.txt` is
+built from the separate `Calendars`/`CalendarExceptions` tables on the
+main GTFS FeatureServer — but a genuine opportunity for a future
+cross-check between reconstructed `stop_times` and these published
+operating windows.)
+
+Because a `CICLOVIA`/`DESVIO` row can share a `RUTA` with the standing
+route, **every matching function filters to `VARIANTE == NORMAL` first**
+(`routes_enrich.filter_to_normal_variant`, applied inside both
+`enrich_routes()` and `validate_routes_geometry.py`) — otherwise a
+Sunday-only detour could get picked as "the route" for GTFS purposes, or
+corrupt the shape QA check. Rows with no `VARIANTE` value at all are kept
+(defensive: don't drop everything if the schema changes).
+
+`test_routes_enrich.py`'s adversarial test (`test_ciclovia_variant_never
+_wins_over_normal_route`) deliberately gives the `CICLOVIA` row a
+*perfect* geometry match (0m, vs. ~22m for the real `NORMAL` row) to prove
+the filter — not just distance ranking — is what keeps it from winning.
+
 Run it alongside the stop enrichment, between `download.py` and `fix.py`
 (it needs `shapes.txt`/`trips.txt` from `download.py` for the geometry
 fallback):

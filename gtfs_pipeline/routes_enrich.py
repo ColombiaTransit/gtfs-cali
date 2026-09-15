@@ -70,6 +70,43 @@ def base_route_code(ruta):
     return m.group(1) if m else s
 
 
+# VARIANTE values seen in the live data beyond "NORMAL": "CICLOVIA" (a
+# detour that ONLY operates on Sundays when Cali closes streets for
+# ciclovía) and "DESVIO" (an hour-of-day detour, e.g. during specific
+# service windows). Both can share the exact same RUTA code as the
+# standing "NORMAL" route, differing only in geometry/DIA_TIPO - so they
+# must be filtered out before any ID or geometry matching, or a special-
+# occasion detour can get picked as if it were the everyday route. GTFS
+# has no clean way to represent "this route takes a different path during
+# ciclovía" without calendar-based trip splitting, which is out of scope
+# here; we always want the NORMAL variant for routes.txt/shapes.txt
+# identity matching.
+NORMAL_VARIANT_VALUE = "NORMAL"
+
+
+def filter_to_normal_variant(ext_df, variante_col="VARIANTE"):
+    """Returns ext_df restricted to VARIANTE == 'NORMAL' (case-insensitive).
+    Rows with no VARIANTE column, or a blank/missing value, are kept as-is
+    (defensive: don't silently drop everything if the schema changes) -
+    only rows that EXPLICITLY name a non-NORMAL variant (CICLOVIA, DESVIO,
+    etc.) are excluded."""
+    if variante_col not in ext_df.columns:
+        diag(f"no '{variante_col}' column found - cannot filter special-occasion "
+             f"route variants (CICLOVIA/DESVIO), using all rows as-is")
+        return ext_df
+
+    col = ext_df[variante_col]
+    is_missing = col.isna()
+    norm = col.astype(str).str.strip().str.upper()
+    is_normal_or_blank = is_missing | norm.isin(["", "NAN", "NONE", NORMAL_VARIANT_VALUE])
+    excluded = ext_df[~is_normal_or_blank]
+    if len(excluded):
+        counts = excluded[variante_col].value_counts().to_dict()
+        diag(f"excluded {len(excluded)} special-occasion route variant row(s) "
+             f"before matching (not the standing/everyday route): {counts}")
+    return ext_df[is_normal_or_blank]
+
+
 def build_route_variant_map(ext_df):
     """Group ext_df rows by base route code. Returns
     {base_code: [(RUTA, row_index), ...]}, and logs how many distinct base
@@ -218,7 +255,14 @@ def enrich_routes(our_routes_df, ext_df, name_col="NOMBRE", shapes_df=None, trip
     Tries ID-based matching first (best_id_match); if that doesn't clear
     the coverage bar AND shapes_df/trips_df were provided, falls back to
     geometry-based matching (match_routes_by_geometry) - see that
-    function's docstring for why this feed specifically needs it."""
+    function's docstring for why this feed specifically needs it.
+
+    Special-occasion route variants (VARIANTE == CICLOVIA/DESVIO/etc, see
+    filter_to_normal_variant) are excluded before any matching, since they
+    can share a RUTA code with the everyday route but describe a
+    different, occasional path."""
+    ext_df = filter_to_normal_variant(ext_df)
+
     if name_col not in ext_df.columns:
         diag(f"WARNING: expected name column '{name_col}' not found in "
              f"rutas data (columns: {list(ext_df.columns)}). Cannot enrich "

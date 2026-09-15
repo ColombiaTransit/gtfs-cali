@@ -155,6 +155,52 @@ def test_geometry_fallback_skips_untrustworthy_matches():
     print("test_geometry_fallback_skips_untrustworthy_matches: PASS")
 
 
+def test_filter_to_normal_variant_excludes_special_occasion_rows():
+    ext_df = pd.DataFrame([
+        {"RUTA": "A01A", "VARIANTE": "NORMAL", "NOMBRE": "Everyday route"},
+        {"RUTA": "A01A", "VARIANTE": "CICLOVIA", "NOMBRE": "Sunday ciclovia detour"},
+        {"RUTA": "A01A", "VARIANTE": "DESVIO", "NOMBRE": "Hourly detour"},
+        {"RUTA": "A02", "VARIANTE": "normal", "NOMBRE": "Lowercase should still count"},
+        {"RUTA": "A03", "NOMBRE": "No VARIANTE value at all - kept defensively"},
+    ])
+    filtered = RE.filter_to_normal_variant(ext_df)
+    assert set(filtered["NOMBRE"]) == {
+        "Everyday route", "Lowercase should still count",
+        "No VARIANTE value at all - kept defensively",
+    }, set(filtered["NOMBRE"])
+    print("test_filter_to_normal_variant_excludes_special_occasion_rows: PASS")
+
+
+def test_ciclovia_variant_never_wins_over_normal_route():
+    """A CICLOVIA row sharing the exact same RUTA and (deliberately, to
+    stress-test) an even closer geometry than the NORMAL row must still
+    lose - it should never be picked as the route's identity."""
+    our_routes = pd.DataFrame([
+        {"route_id": "112", "agency_id": "MIO", "route_short_name": "112",
+         "route_long_name": "", "route_type": "3"},
+    ])
+    our_path = _straight_line(3.40, -76.53, 3.45, -76.50)
+    shapes_df = pd.DataFrame([
+        {"shape_id": "SHP-112", "shape_pt_lat": lat, "shape_pt_lon": lon, "shape_pt_sequence": i}
+        for i, (lat, lon) in enumerate(our_path, start=1)
+    ])
+    trips_df = pd.DataFrame([{"route_id": "112", "shape_id": "SHP-112"}])
+
+    ext_df = pd.DataFrame([
+        {"FID": 1, "RUTA": "A01A", "VARIANTE": "NORMAL",
+         "NOMBRE": "ESTACIÓN SAN BOSCO - CAM - CENTRO",
+         "_geom_path": [(lat + 0.0002, lon) for lat, lon in our_path]},  # ~22m off
+        {"FID": 2, "RUTA": "A01A", "VARIANTE": "CICLOVIA",
+         "NOMBRE": "SUNDAY CICLOVIA DETOUR - WRONG FOR EVERYDAY GTFS",
+         "_geom_path": our_path},  # 0m off - deliberately the "closer" geometry
+    ])
+
+    enriched, stats = RE.enrich_routes(our_routes, ext_df, shapes_df=shapes_df, trips_df=trips_df)
+    row = enriched[enriched["route_id"] == "112"].iloc[0]
+    assert row["route_long_name"] == "ESTACIÓN SAN BOSCO - CAM - CENTRO", row.to_dict()
+    print("test_ciclovia_variant_never_wins_over_normal_route: PASS")
+
+
 if __name__ == "__main__":
     test_base_route_code_strips_variant_letter()
     test_enrich_routes_matches_and_picks_primary_variant()
@@ -163,4 +209,6 @@ if __name__ == "__main__":
     test_missing_name_column_returns_unchanged()
     test_geometry_fallback_when_id_schemes_dont_match()
     test_geometry_fallback_skips_untrustworthy_matches()
+    test_filter_to_normal_variant_excludes_special_occasion_rows()
+    test_ciclovia_variant_never_wins_over_normal_route()
     print("\nAll routes_enrich.py tests passed.")
