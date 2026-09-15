@@ -42,6 +42,7 @@ jobs:
           python test_reconstruct.py
           python test_stops_enrich.py
           python test_routes_enrich.py
+          python test_shape_geometry_validate.py
 
       - name: Download GTFS source layers from ArcGIS
         working-directory: ${{ env.PIPELINE_DIR }}
@@ -89,6 +90,10 @@ jobs:
         working-directory: ${{ env.PIPELINE_DIR }}
         run: python check_validator_report.py build/report/canonical/report.json
 
+      - name: Cross-validate shape geometry against rutas (informational)
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: python validate_routes_geometry.py || echo "Geometry cross-check failed or found nothing - non-blocking."
+
       - name: Upload validator report as workflow artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -109,6 +114,9 @@ jobs:
           fi
           if [ -f "${PIPELINE_DIR}/build/report/route_enrichment.csv" ]; then
             cp "${PIPELINE_DIR}/build/report/route_enrichment.csv" "${OUTPUT_REPORT_DIR}/route_enrichment.csv"
+          fi
+          if [ -f "${PIPELINE_DIR}/build/report/shape_geometry_validation.csv" ]; then
+            cp "${PIPELINE_DIR}/build/report/shape_geometry_validation.csv" "${OUTPUT_REPORT_DIR}/shape_geometry_validation.csv"
           fi
 
       - name: Commit updated feed to the repo
