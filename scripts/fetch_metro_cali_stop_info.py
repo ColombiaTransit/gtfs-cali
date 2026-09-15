@@ -6,11 +6,17 @@ import json
 import sys
 import time
 import zipfile
+
 from datetime import datetime, timezone
+from http.cookiejar import CookieJar
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.request import Request, build_opener, HTTPCookieProcessor
-from http.cookiejar import CookieJar
+from urllib.parse import urlencode
+from urllib.request import (
+    HTTPCookieProcessor,
+    Request,
+    build_opener,
+)
 
 
 BASE_URL = (
@@ -25,25 +31,30 @@ REFERER = (
 
 OUTPUT_DIR = Path("tmp/metro_cali_stop_info")
 
+# Small delay between requests.
+# This is intentionally conservative.
 REQUEST_DELAY_SECONDS = 0.25
+
+REQUEST_TIMEOUT_SECONDS = 30
 
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
     "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0"
+    "Chrome/152.0.0.0 Safari/537.36"
 )
 
 
-def read_stop_ids_from_zip(zip_path: Path) -> list[str]:
-    """Read unique stop_id values from stops.txt inside gtfs.zip."""
+def read_stop_ids_from_zip(zip_path):
+    """
+    Read all unique stop_id values from stops.txt inside data/gtfs.zip.
+    """
 
-    with zipfile.ZipFile(zip_path, "r") as z:
-        names = z.namelist()
+    with zipfile.ZipFile(zip_path, "r") as archive:
 
         stops_name = next(
             (
                 name
-                for name in names
+                for name in archive.namelist()
                 if Path(name).name.lower() == "stops.txt"
             ),
             None,
@@ -51,20 +62,20 @@ def read_stop_ids_from_zip(zip_path: Path) -> list[str]:
 
         if stops_name is None:
             raise RuntimeError(
-                "stops.txt was not found inside "
-                f"{zip_path}"
+                f"stops.txt was not found inside {zip_path}"
             )
 
-        print(f"Reading: {stops_name}")
+        print(f"Reading stops from: {stops_name}")
 
-        with z.open(stops_name) as raw:
-            data = io.TextIOWrapper(
+        with archive.open(stops_name) as raw:
+
+            text = io.TextIOWrapper(
                 raw,
                 encoding="utf-8-sig",
                 newline="",
             )
 
-            reader = csv.DictReader(data)
+            reader = csv.DictReader(text)
 
             if not reader.fieldnames:
                 raise RuntimeError(
@@ -73,13 +84,14 @@ def read_stop_ids_from_zip(zip_path: Path) -> list[str]:
 
             if "stop_id" not in reader.fieldnames:
                 raise RuntimeError(
-                    "stops.txt does not contain stop_id. "
-                    f"Columns: {reader.fieldnames}"
+                    "stops.txt does not contain a stop_id column. "
+                    f"Found: {reader.fieldnames}"
                 )
 
             stop_ids = []
 
             for row in reader:
+
                 stop_id = str(
                     row.get("stop_id", "")
                 ).strip()
@@ -87,16 +99,16 @@ def read_stop_ids_from_zip(zip_path: Path) -> list[str]:
                 if stop_id:
                     stop_ids.append(stop_id)
 
-    # Remove duplicate stop IDs while preserving order.
+    # Remove duplicates while preserving original order.
     return list(dict.fromkeys(stop_ids))
 
 
 def create_session():
     """
-    Establish a fresh PHP session with Metro Cali.
+    Create an HTTP opener with cookie support.
 
-    We deliberately do not use the PHPSESSID from the user's curl
-    example because that is a browser/session-specific cookie.
+    First visit the Metro Cali route page so a fresh PHP session can
+    be established if required.
     """
 
     cookie_jar = CookieJar()
@@ -105,19 +117,13 @@ def create_session():
         HTTPCookieProcessor(cookie_jar)
     )
 
-    headers = {
-        "Accept": "*/*",
-        "Accept-Language": (
-            "nl,en;q=0.9,en-GB;q=0.8,"
-            "en-US;q=0.7,es;q=0.6,nl-NL;q=0.5"
-        ),
-        "Referer": REFERER,
-        "User-Agent": USER_AGENT,
-    }
-
     request = Request(
         REFERER,
-        headers=headers,
+        headers={
+            "Accept": "*/*",
+            "Accept-Language": "es-CO,es;q=0.9,en;q=0.8",
+            "User-Agent": USER_AGENT,
+        },
         method="GET",
     )
 
@@ -125,89 +131,72 @@ def create_session():
 
     with opener.open(
         request,
-        timeout=30,
+        timeout=REQUEST_TIMEOUT_SECONDS,
     ) as response:
         response.read()
 
-    cookies = list(cookie_jar)
-
     print(
-        f"Session established "
-        f"({len(cookies)} cookie(s))."
+        f"Session established. "
+        f"Cookies received: {len(list(cookie_jar))}"
     )
 
     return opener
 
 
-def fetch_stop(opener, stop_id: str) -> dict:
-    """Fetch one stop using numeroParada=stop_id."""
+def fetch_stop(opener, stop_id):
+    """
+    Fetch the live information for one Metro Cali stop.
+    """
 
-    url = (
-        f"{BASE_URL}"
-        f"?numeroParada={stop_id}"
+    query = urlencode(
+        {
+            "numeroParada": stop_id,
+        }
     )
 
-    headers = {
-        "Accept": "*/*",
-        "Accept-Language": (
-            "nl,en;q=0.9,en-GB;q=0.8,"
-            "en-US;q=0.7,es;q=0.6,nl-NL;q=0.5"
-        ),
-        "Priority": "u=1, i",
-        "Referer": REFERER,
-        "Sec-CH-UA": (
-            '"Chromium";v="152", '
-            '"Not?A_Brand";v="24", '
-            '"Microsoft Edge";v="152"'
-        ),
-        "Sec-CH-UA-Mobile": "?0",
-        "Sec-CH-UA-Platform": '"Windows"',
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-origin",
-        "User-Agent": USER_AGENT,
-    }
+    url = f"{BASE_URL}?{query}"
 
     request = Request(
         url,
-        headers=headers,
+        headers={
+            "Accept": "*/*",
+            "Accept-Language": "es-CO,es;q=0.9,en;q=0.8",
+            "Referer": REFERER,
+            "User-Agent": USER_AGENT,
+        },
         method="GET",
     )
 
     try:
+
         with opener.open(
             request,
-            timeout=30,
+            timeout=REQUEST_TIMEOUT_SECONDS,
         ) as response:
 
-            body = response.read()
+            body = response.read().decode(
+                "utf-8",
+                errors="replace",
+            )
 
             return {
-                "stop_id": stop_id,
-                "numeroParada": stop_id,
-                "url": url,
                 "http_status": response.status,
                 "content_type": response.headers.get(
                     "Content-Type",
                     "",
                 ),
-                "body": body.decode(
-                    "utf-8",
-                    errors="replace",
-                ),
+                "body": body,
                 "error": None,
             }
 
     except HTTPError as exc:
+
         body = exc.read().decode(
             "utf-8",
             errors="replace",
         )
 
         return {
-            "stop_id": stop_id,
-            "numeroParada": stop_id,
-            "url": url,
             "http_status": exc.code,
             "content_type": exc.headers.get(
                 "Content-Type",
@@ -218,10 +207,8 @@ def fetch_stop(opener, stop_id: str) -> dict:
         }
 
     except URLError as exc:
+
         return {
-            "stop_id": stop_id,
-            "numeroParada": stop_id,
-            "url": url,
             "http_status": None,
             "content_type": None,
             "body": "",
@@ -229,10 +216,8 @@ def fetch_stop(opener, stop_id: str) -> dict:
         }
 
     except Exception as exc:
+
         return {
-            "stop_id": stop_id,
-            "numeroParada": stop_id,
-            "url": url,
             "http_status": None,
             "content_type": None,
             "body": "",
@@ -240,21 +225,43 @@ def fetch_stop(opener, stop_id: str) -> dict:
         }
 
 
+def try_parse_json(body):
+    """
+    Parse the response as JSON when possible.
+
+    Keep the original response if it is not valid JSON.
+    """
+
+    if not body:
+        return None
+
+    try:
+        return json.loads(body)
+
+    except json.JSONDecodeError:
+        return None
+
+
 def main():
+
     if len(sys.argv) != 2:
+
         print(
             f"Usage: {sys.argv[0]} data/gtfs.zip",
             file=sys.stderr,
         )
+
         return 2
 
     zip_path = Path(sys.argv[1])
 
     if not zip_path.exists():
+
         print(
-            f"ERROR: file does not exist: {zip_path}",
+            f"ERROR: GTFS ZIP does not exist: {zip_path}",
             file=sys.stderr,
         )
+
         return 1
 
     OUTPUT_DIR.mkdir(
@@ -262,32 +269,27 @@ def main():
         exist_ok=True,
     )
 
-    raw_dir = OUTPUT_DIR / "raw"
-    raw_dir.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
     stop_ids = read_stop_ids_from_zip(zip_path)
 
+    total = len(stop_ids)
+
     print()
-    print(f"GTFS ZIP: {zip_path}")
-    print(f"Unique stops: {len(stop_ids)}")
+    print(f"GTFS ZIP:     {zip_path}")
+    print(f"Unique stops: {total}")
     print()
 
     opener = create_session()
 
-    results_file = (
-        OUTPUT_DIR / "stop_info.jsonl"
+    started_at = datetime.now(timezone.utc)
+
+    observations_file = (
+        OUTPUT_DIR / "observations.jsonl"
     )
 
-    total = len(stop_ids)
     successful = 0
     failed = 0
 
-    started = datetime.now(timezone.utc)
-
-    with results_file.open(
+    with observations_file.open(
         "w",
         encoding="utf-8",
     ) as output:
@@ -296,9 +298,14 @@ def main():
             stop_ids,
             start=1,
         ):
+
+            observed_at = datetime.now(
+                timezone.utc
+            ).isoformat()
+
             print(
                 f"[{index}/{total}] "
-                f"numeroParada={stop_id}",
+                f"Fetching numeroParada={stop_id}",
                 flush=True,
             )
 
@@ -307,43 +314,25 @@ def main():
                 stop_id,
             )
 
-            # Keep the complete raw response.
-            #
-            # Stop IDs in the MIO feed are normally numeric, but use
-            # an index as the filename as well so a strange stop_id
-            # can never create a path outside raw/.
-            raw_file = (
-                raw_dir
-                / f"{index:06d}_{stop_id}.txt"
+            parsed_data = try_parse_json(
+                result["body"]
             )
-
-            raw_file.write_text(
-                result["body"],
-                encoding="utf-8",
-            )
-
-            # Try to decode the response as JSON.
-            parsed = None
-
-            if result["body"]:
-                try:
-                    parsed = json.loads(
-                        result["body"]
-                    )
-                except json.JSONDecodeError:
-                    pass
 
             record = {
+                "observed_at": observed_at,
                 "stop_id": stop_id,
                 "numeroParada": stop_id,
-                "url": result["url"],
+                "url": (
+                    f"{BASE_URL}"
+                    f"?numeroParada={stop_id}"
+                ),
                 "http_status": result["http_status"],
                 "content_type": result["content_type"],
                 "error": result["error"],
-                "data": parsed,
+                "data": parsed_data,
                 "raw_response": (
                     None
-                    if parsed is not None
+                    if parsed_data is not None
                     else result["body"]
                 ),
             }
@@ -367,7 +356,7 @@ def main():
                 failed += 1
 
                 print(
-                    "  ERROR: "
+                    f"  ERROR: "
                     f"{result['error'] or result['http_status']}",
                     flush=True,
                 )
@@ -376,45 +365,47 @@ def main():
                 REQUEST_DELAY_SECONDS
             )
 
-    finished = datetime.now(timezone.utc)
+    finished_at = datetime.now(timezone.utc)
 
     summary = {
         "gtfs_zip": str(zip_path),
         "total_stops": total,
         "successful": successful,
         "failed": failed,
-        "started_utc": started.isoformat(),
-        "finished_utc": finished.isoformat(),
+        "started_at": started_at.isoformat(),
+        "finished_at": finished_at.isoformat(),
         "request_delay_seconds": REQUEST_DELAY_SECONDS,
-        "output": str(results_file),
+        "output_file": str(observations_file),
     }
 
-    with (
+    summary_file = (
         OUTPUT_DIR / "summary.json"
-    ).open(
+    )
+
+    with summary_file.open(
         "w",
         encoding="utf-8",
-    ) as f:
+    ) as output:
+
         json.dump(
             summary,
-            f,
+            output,
             indent=2,
             ensure_ascii=False,
         )
 
     print()
-    print("========================================")
-    print("Metro Cali stop information fetch")
-    print("========================================")
-    print(f"Total:      {total}")
-    print(f"Successful: {successful}")
-    print(f"Failed:     {failed}")
-    print(f"Output:     {results_file}")
-    print("========================================")
+    print("=" * 50)
+    print("Metro Cali stop information fetch complete")
+    print("=" * 50)
+    print(f"Total stops: {total}")
+    print(f"Successful:  {successful}")
+    print(f"Failed:      {failed}")
+    print(f"Output:      {observations_file}")
+    print("=" * 50)
 
-    # Don't fail the entire GitHub Action because one or more
-    # individual stops returned an error. The artifact is still
-    # useful for investigating those responses.
+    # Do not fail the complete workflow merely because individual
+    # stops failed. We want to inspect all collected responses.
     return 0
 
 
