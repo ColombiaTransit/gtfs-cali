@@ -153,32 +153,61 @@ pure-logic/CLI-wrapper split as the stops enrichment:
 **Confirmed live fields**: `FID, RUTA, NOMBRE, DIA_TIPO, VARIANTE,
 DIA_VARI, ID_SERVICI, SERVICIO, TIPOLOGIA, FECHA_IMPL, PSO, OBSERVACIO,
 HABIL, SABADO, DOM_FEST, FRANJA, LONGITUD, FINALIZA, PSO_IMPL,
-Shape__Length`, plus real `LineString`/`MultiLineString` route geometry
-(not currently used for matching — a possible future check would be
-cross-validating it against our reconstructed `shapes.txt`).
+Shape__Length`, plus real `LineString`/`MultiLineString` route geometry.
 
 - **`RUTA`** (e.g. `"A01A"`, `"A11B"`, `"A02"`) is a base route code plus
   an *optional* trailing letter for direction/variant — `A01A`/`A01B` are
   the two directions of route `A01`; `A02` has only one variant so carries
-  no suffix. Matching strips a trailing letter only when what's left still
-  ends in a digit, so `"A02"` is correctly left alone.
+  no suffix. This matches Metro Cali's real, publicly-used route numbering
+  (confirmed against `metrocali.gov.co/newmioapp` and public Metro Cali
+  communications: routes are always `T##`/`P##`/`A##`-style codes).
 - **`NOMBRE`** (e.g. `"ESTACIÓN SAN BOSCO - CAM - CENTRO"`) is populated
   on every row and becomes `route_long_name`.
-- Multiple `RUTA` rows can share a base code (one per direction). The row
-  whose `RUTA` equals the base code exactly (no suffix) is preferred as
-  the "primary" variant; otherwise the first one found is used, and a
-  diagnostic is logged whenever variants disagree on the name text so you
-  can sanity-check which one got picked.
-- Only trusted if base-code coverage against our `route_id` values clears
-  50% — otherwise it bails out with zero changes rather than guessing.
 
-Once a route gets a real `route_long_name`, `fix.py` also backfills
-`route_short_name = route_id` for it (previously that placeholder only
-fired when *both* names were missing) — GTFS only strictly requires one
-of the two, but a short code is recommended, and `route_id` here already
-doubles as a legitimate one (e.g. `"A01"`).
+### The ID scheme mismatch (confirmed on a live run) and the geometry fallback
 
-Run it alongside the stop enrichment, between `download.py` and `fix.py`:
+A live run showed **0% ID-match coverage** — not a bug, a genuine finding:
+our reconstructed `route_id` comes from the GTFS FeatureServer's
+`Lines.GRouteID` field, which turned out to be a **plain internal
+scheduling-system integer** (e.g. `"112"`), completely unrelated to the
+real letter-coded route numbers `rutas` uses. There's no shared key
+between the two ID spaces at all.
+
+Since ID matching can't work here, `enrich_routes.py` automatically falls
+back to **matching by real route geometry** — the same nearest-vertex
+distance metric from `shape_geometry_validate.py`, just used here to
+establish identity rather than to audit it:
+
+1. For each `route_id`, pick a representative shape (the most-detailed
+   shape used by any trip on that route) from our reconstructed
+   `shapes.txt`.
+2. Cheaply pre-filter `rutas` candidates by centroid distance (only
+   compare geometries whose rough location is within 5km — skips the
+   expensive full comparison for obviously-unrelated routes).
+3. Among survivors, run the full nearest-vertex-distance comparison and
+   keep the closest match — but only if it's within
+   `ROUTE_MATCH_TRUST_THRESHOLD_M` (150m; more lenient than the 30m "OK"
+   threshold in `shape_geometry_validate.py`, since this is now an
+   identification mechanism rather than a "did we reproduce this exactly"
+   QA check).
+4. On a trusted geometry match, `route_long_name` gets the matched
+   `NOMBRE`, **and `route_short_name` gets corrected from the meaningless
+   internal integer to the real letter code** (`base_route_code()` of the
+   matched `RUTA`) — so `route_id=112` ends up correctly labeled `A01`.
+
+`test_routes_enrich.py` reproduces this exact scenario (integer `route_id`
+vs. letter-coded `RUTA`, a real matching candidate plus a decoy far-away
+route) and confirms both the correct match and that an untrustworthy match
+(real candidate nearby, but too far off the actual path) is correctly
+refused rather than guessed.
+
+ID matching is kept as the first attempt (not removed) in case a future
+data release restores a shared ID scheme — geometry matching only runs
+when ID coverage doesn't clear 50%.
+
+Run it alongside the stop enrichment, between `download.py` and `fix.py`
+(it needs `shapes.txt`/`trips.txt` from `download.py` for the geometry
+fallback):
 
 ```bash
 python download.py
@@ -189,8 +218,8 @@ python validate.py
 ```
 
 `run_all.py` and the GitHub Action run both enrichment steps in order and
-treat both as non-fatal. A full per-route audit trail is written to
-`build/report/route_enrichment.csv`.
+treat both as non-fatal. A full per-route audit trail (including which
+match method was used) is written to `build/report/route_enrichment.csv`.
 
 ## Step 4 — `validate_routes_geometry.py`: does our reconstruction match reality?
 

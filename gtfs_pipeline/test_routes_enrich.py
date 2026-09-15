@@ -86,10 +86,81 @@ def test_missing_name_column_returns_unchanged():
     print("test_missing_name_column_returns_unchanged: PASS")
 
 
+def _straight_line(lat0, lon0, lat1, lon1, n=15):
+    return [(lat0 + (lat1 - lat0) * i / (n - 1), lon0 + (lon1 - lon0) * i / (n - 1)) for i in range(n)]
+
+
+def test_geometry_fallback_when_id_schemes_dont_match():
+    """Reproduces the real discovery: our route_id is a plain internal
+    integer (e.g. '112') from the GTFS FeatureServer, completely unrelated
+    to rutas' letter-coded RUTA ('A01A'). ID matching must score ~0% and
+    correctly trigger the geometry fallback, which should still find the
+    right route by path shape and also fix route_short_name to the real
+    letter code."""
+    our_routes = pd.DataFrame([
+        {"route_id": "112", "agency_id": "MIO", "route_short_name": "112",
+         "route_long_name": "", "route_type": "3"},
+        {"route_id": "998", "agency_id": "MIO", "route_short_name": "998",
+         "route_long_name": "", "route_type": "3"},  # no nearby rutas geometry at all
+    ])
+
+    route_112_path = _straight_line(3.40, -76.53, 3.45, -76.50)
+    shapes_rows = []
+    for seq, (lat, lon) in enumerate(route_112_path, start=1):
+        shapes_rows.append({"shape_id": "SHP-112", "shape_pt_lat": lat, "shape_pt_lon": lon, "shape_pt_sequence": seq})
+    shapes_df = pd.DataFrame(shapes_rows)
+    trips_df = pd.DataFrame([{"route_id": "112", "shape_id": "SHP-112"}])
+
+    ext_df = pd.DataFrame([
+        {"FID": 1, "RUTA": "A01A", "NOMBRE": "ESTACIÓN SAN BOSCO - CAM - CENTRO",
+         "_geom_path": [(lat + 0.00005, lon) for lat, lon in route_112_path]},  # ~5.5m off - the real match
+        {"FID": 2, "RUTA": "T14", "NOMBRE": "UNIVERSIDADES - 7 DE AGOSTO",
+         "_geom_path": _straight_line(3.10, -76.90, 3.12, -76.88)},  # far away, wrong route
+    ])
+
+    enriched, stats = RE.enrich_routes(our_routes, ext_df, shapes_df=shapes_df, trips_df=trips_df)
+    assert stats["method"] == "geometry", stats
+    row_112 = enriched[enriched["route_id"] == "112"].iloc[0]
+    assert row_112["route_long_name"] == "ESTACIÓN SAN BOSCO - CAM - CENTRO", row_112.to_dict()
+    assert row_112["route_short_name"] == "A01", row_112.to_dict()  # real letter code, not "112"
+
+    row_998 = enriched[enriched["route_id"] == "998"].iloc[0]
+    assert pd.isna(row_998["route_long_name"]) or row_998["route_long_name"] == "", row_998.to_dict()
+    assert row_998["route_short_name"] == "998"  # untouched - no shape data for this route at all
+    print("test_geometry_fallback_when_id_schemes_dont_match: PASS")
+
+
+def test_geometry_fallback_skips_untrustworthy_matches():
+    """A route whose only nearby candidate is still far beyond the trust
+    threshold should be left alone, not assigned a wrong name."""
+    our_routes = pd.DataFrame([
+        {"route_id": "500", "agency_id": "MIO", "route_short_name": "500",
+         "route_long_name": "", "route_type": "3"},
+    ])
+    our_path = _straight_line(3.40, -76.53, 3.45, -76.50)
+    shapes_df = pd.DataFrame([
+        {"shape_id": "SHP-500", "shape_pt_lat": lat, "shape_pt_lon": lon, "shape_pt_sequence": i}
+        for i, (lat, lon) in enumerate(our_path, start=1)
+    ])
+    trips_df = pd.DataFrame([{"route_id": "500", "shape_id": "SHP-500"}])
+    # candidate is within the 5km centroid prefilter but 500m+ off the actual path
+    offset_path = [(lat + 0.005, lon) for lat, lon in our_path]
+    ext_df = pd.DataFrame([
+        {"FID": 1, "RUTA": "A99", "NOMBRE": "SHOULD NOT BE USED", "_geom_path": offset_path},
+    ])
+    enriched, stats = RE.enrich_routes(our_routes, ext_df, shapes_df=shapes_df, trips_df=trips_df)
+    row = enriched[enriched["route_id"] == "500"].iloc[0]
+    assert pd.isna(row["route_long_name"]) or row["route_long_name"] == "", row.to_dict()
+    assert row["route_short_name"] == "500"
+    print("test_geometry_fallback_skips_untrustworthy_matches: PASS")
+
+
 if __name__ == "__main__":
     test_base_route_code_strips_variant_letter()
     test_enrich_routes_matches_and_picks_primary_variant()
     test_enrich_routes_prefers_exact_base_code_row()
     test_low_coverage_bails_out_safely()
     test_missing_name_column_returns_unchanged()
+    test_geometry_fallback_when_id_schemes_dont_match()
+    test_geometry_fallback_skips_untrustworthy_matches()
     print("\nAll routes_enrich.py tests passed.")
