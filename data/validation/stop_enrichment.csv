@@ -1,0 +1,2108 @@
+stop_id,stop_name,matched
+519075,Kr 1 entre Kr 2A y 2B (Zoológico de Cali),True
+519076,Kr 2 entre Cl 13 Oe y 12 Oe (Parada ubicada sobre carrera 2  entre calle 13 y 12 Oeste. En sentido  Occidente - Oriente.),True
+519077,Kr 2 entre Cl 11 Oe y 10 Oe (Liceo Benalcazar),True
+519078,Kr 2 entre Cl 9 Oe y 7 Oe (Edificion Alianza),True
+519079,Kr 1 con Cl 2A (Hotel Intercontinental Cali),True
+519080,Kr 10 entre Cl 7 y 8,True
+519081,Cl 5 con Kr 16 (Parque Artesanal Loma de la Cruz),True
+519082,Cl 5 entre Kr 19 y 22 (Conexión con la estación Santa Librada),True
+519083,Kr 23 entre Cl 5 y 3A,True
+519084,Kr 23 entre Cl 2 y 1A,True
+519086,Kr 24C con Cl 6 Oe,True
+519087,Kr 24C entre Cl 6 Oe y 10 Oe (Unidad residencial Andalucia),True
+519088,Kr 14 entre Cl 9 Oe y 8 Oe (Unidad Recreativa Los Cristales),True
+519089,Kr 14 entre Cl 6 Oe y 5 Oe (Teatro al aire libre Los Cristales),True
+519090,Kr 14 entre Cl 3 Oe y 2 Oe,True
+519092,Kr 14 entre Cl 3 y 4,True
+519093,Cl 4B entre Kr 27 y 34 (Conexión con la estación Manzana del Saber),True
+519094,Kr 34 entre Cl 4 y 3,True
+519095,Cl 3 Oe entre Kr 34 y 27 (Parque del Perro),True
+519096,Kr 27 entre Cl 5 Oe y Kr 25 (Olimpica),True
+519097,Cl 10 Oe entre Kr 24C y Cl 9 Oe (Puente Peatonal Mortiñal),True
+519098,Kr 5 con Cl 10 Oe (Los Cristales),True
+519099,Kr 4 con 7 Oe,True
+519100,Kr 4 con Cl 8 Oe (Panadería),True
+519101,Kr 4B entre Kr 4 y Cl 12 Oe (Antiguo ISS sede Bellavista),True
+519103,Kr 4B entre Cl 12 Oe y 11 Oe (Antiguo ISS sede Bellavista),True
+519104,Kr 4 entre Cl 11 Oe y 8 Oe,True
+519105,Kr 4 entre Cl 8 Oe y 7 Oe,True
+519106,Kr 5 con Cl 10 Oe Retorno (Los Cristales),True
+519107,Cl 10 Oe con Cl 9 Oe (El Mortinal),True
+519108,Kr 27 Oe entre Cl 10 Oe y 5 Oe (Tejares de San Fernando),True
+519109,Kr 27 entre Cl 3 Oe y 2 Oe,True
+519110,Kr 27 entre Cl 3 y 4,True
+519111,Cl 1 entre Kr 13A y 13 (San Cayetano),True
+519112,Kr 1 entre Kr 2 y Cl 2 Oe (El Peñon del Rio Cali),True
+519113,Kr 24C entre Kr 22A y Cl 6 Oe,True
+519115,Cl 11 Oe con Kr 24D,True
+519117,Cl 5 entre Kr 22 y 23 (Conexión con la estación Santa Librada),True
+519121,Cl 21 entre Kr 9 y 10,True
+519122,Kr 1 con Kr 4_1 (Parada ubicada sobre carrera 1  Oeste con carrera 3 Oeste. En sentido  Oriente - Occidente.),True
+519123,Kr 1 Zoo Entrada 2_1 (Parada ubicada sobre carrera 1 entre calle 20. entrada 2 al Zoologico de Cali. En sentido Oriente - Occidente.),True
+50005,,False
+519124,Kr 1 Sector Atenas (Sector Atenas),True
+519125,Kr 1 Zoo Entrada 2_2 (Parada ubicada sobre carrera 1 entre calle 20. entrada 2 al Zoologico de Cali. En sentido Occidente - Oriente.),True
+519126,Kr 1 con Kr 4_2 (A Bellavista),True
+519127,Kr 1 entre Kr 2B y 2A (Zoológico de Cali),True
+519128,Kr 4B entre Cl 12 Oe y 13 Oe,True
+519129,Cl 14 Oe con Cl 13 Oe_1 (Conjunto residencial Mont Bre),True
+500051,CAÑAVERALEJO A2,True
+519130,Cl 14 Oe entre Cl 13 Oe y Kr 24G (Unidad Montelugano),True
+500052,CAÑAVERALEJO A3,True
+519131,Cl 14 Oe con Cl 13 Bis Oe_2 (Unidad residencial),True
+500053,CAÑAVERALEJO A4,True
+500054,CAÑAVERALEJO A4,True
+519132,Cl 14 Oe con Cl 13 Oe_2 (Conjunto residencial Mont Bre),True
+519133,Kr 4B entre Cl 13 Oe y 12 Oe,True
+500055,CAÑAVERALEJO A7,True
+500056,CAÑAVERALEJO A6,True
+519135,Cl 5 entre Kr 6 y 9 (Comfenalco Valle),True
+519136,Cl 5 entre Kr 13 y 14 (Barrio San Cayetano),True
+500058,CAÑAVERALEJO A8,True
+50010,MENGA C2,True
+519138,Cl 5 entre Kr 14 y 13 (Barrio San Juan Bosco),True
+513237,Cl 73A entre Kr 1A y 1A1,True
+519139,Kr 10 entre Cl 15 y 16,True
+500100,MENGA C1,True
+513238,Cl 76 entre Kr 1A4A y 1A4ABIS,True
+500101,MENGA C2,True
+519140,Kr 10 entre Cl 19 y 20,True
+513239,Cl 76 entre Kr 1A5ABIS y 1A5B,True
+500102,MENGA C3,True
+519141,Kr 10 entre Cl 22A y 23 (Parque Barrio Obrero),True
+513240,,False
+500103,MENGA C4,True
+519142,Cl 13 entre Kr 23 y 23A,True
+513241,Kr 1A12 entre Cl 76 y 73A,True
+500104,MENGA B1,True
+519144,Cl 14 Oe con Cl 13 Bis Oe_1 (Unidad residencial),True
+513242,Cl 73A entre Kr 1A8 y 1A7BIS,True
+500105,MENGA B2,True
+519160,Kr 14 entre Cl 2 y 2A,True
+513243,Cl 73A entre Kr 1A5D y 1A5CBIS,True
+500106,MENGA B3,True
+519161,Av 4N entre Cl 3 Oe y 4 Oe (El Gato de Tejada),True
+513244,Cl 73A entre Kr 1A4B1 y 1A4B,True
+500107,MENGA B4,True
+519162,Kr 1 entre Cl 7 Oe y Kr 1A (Super A),True
+513245,Cl 73A entre Kr 1A1 y 1A,True
+500110,MENGA A3,True
+519163,Cl 8 entre Av 3 y 4 (Centro Comercial Centenario),True
+513246,Cl 56 entre Kr 1D y 1C,True
+500111,MENGA A4,True
+519164,,False
+513247,Cl 52 entre Kr 9N y 8N (Nuestra Señora de las Lajas),True
+50015,ANDRÉS SANÍN C3,True
+519165,Av 4N entre Cl 21 y 22 (Clinica Santiago de Cali),True
+513248,Cl 52 entre Kr 5N y 4N,True
+500150,ANDRÉS SANÍN B1,True
+519166,Av 4N entre Cl 23 y 24 (Parque Versalles),True
+513250,Cl 56 entre Kr 1C y 1B,True
+500151,ANDRÉS SANÍN B2,True
+519167,Av 4 entre Cl 17N y 18N,True
+519173,Cl 5 con Kr 23,True
+519174,Cl 21 entre Kr 7 y 7A (Comfandi San Nicolas),True
+519175,Cl 21 entre Kr 4 y 5,True
+519176,Cl 8 entre Kr 6 y 8 (Centro Cultural Comfandi),True
+519181,Av 15 Oe con Cl 5D Oe,True
+519182,Av 15 Oe entre Cl 7 Oe y 8 Oe (Bajo Aguacatal),True
+519183,Av 15 Oe con Cl 9 Oe_1,True
+519184,Av 15 Oe entre Cl 9 Oe y 10 Oe,True
+519185,Av 15 Oe entre Cl 10 Oe y 11 Oe (Urbanización Senderos Aguacatal),True
+519186,Cl 11 Oe con Av 15 Oe_1 (Colegio la Presentacion del Aguacatal),True
+519187,Av 15 Oe con Cl 11A Oe_1 (Unidad residencial Claro de Luna),True
+519188,Cl 15 Oe_M1 (Conjunto residencial Murano),True
+519189,Cl 15 Oe_SM1 (Urbanización Santa Marta de los Caballeros),True
+519190,Av 9 Oe entre Cl 22A Oe y 23 Oe,True
+519191,Av 9 Oe entre Cl 23 Oe y 23C Oe (Cantera),True
+519192,Av 9 Oe entre Cl 23C Oe y 23 Oe (Inicio de ruta),True
+519193,Av 9 Oe entre Cl 23 Oe y 22A Oe,True
+519194,Cl 15 Oe_SM2 (Urbanización Santa Marta de los Caballeros),True
+519195,Cl 15 Oe_M2 (Conjunto residencial Murano),True
+519196,Av 15 Oe con Cl 11A Oe_2 (Unidad residencial Claro de Luna),True
+519197,Cl 11 Oe con Av 15 Oe_2 (Colegio la Presentacion del Aguacatal),True
+519198,Av 15 Oe entre Cl 12 Oe y 10 Oe (Puente Río Aguacatal),True
+519199,Av 15 Oe entre Cl 10 Oe y 9 Oe,True
+519200,Av 15 Oe con Cl 9 Oe_2,True
+519201,Av 15 Oe entre Cl 8 Oe y 7 Oe (Bajo Aguacatal),True
+519202,Av 15 con Av 4 Oe,True
+519204,Cl 11 Oe entre Av 15 Oe y Cl 11A Oe,True
+519207,Cl 11 Oe entre Cl 11A Oe y Av 15 Oe,True
+519263,Kr 27 entre Cl 4 Oe y 5 Oe,True
+519264,Kr 27 entre Cl 5 Oe y 4 Oe,True
+519266,Cl 5 entre Kr 9 y 6 (Comfenalco Valle),True
+519270,Cl 5 entre Kr 15 y Cl 6 (Colegio Santa Librada),True
+519280,Kr 10 entre Cl 7 y 8,True
+519284,Cl 21 entre Kr 11B y 11D,True
+519288,Kr 15 entre Cl 7 y 5 (Colegio Santa Librada),True
+519289,Kr 1 entre Kr 1C y Cl 5 Oe (Edificio Alcazar del Rio),True
+519290,Cl 13 entre Kr 23A y 23,True
+519292,Kr 23 entre Cl 11A y 12,True
+519293,Cl 14 Oe entre Kr 24G y Cl 13 Oe (Retorno),True
+519294,Cl 9 Oe entre Kr 22A y 18,True
+513252,Cl 70 entre Kr 6N y 5N (Calima),True
+500152,ANDRÉS SANÍN B3,True
+513257,Cl 70 entre Av 3N y 3BN,True
+500153,ANDRÉS SANÍN C1,True
+513258,Cl 70 entre Av 3C y 3 P2,True
+500154,ANDRÉS SANÍN C3,True
+513259,Cl 70 entre Av 3CN y 4N,True
+500155,ANDRÉS SANÍN C4,True
+513260,Cl 70 entre Av 4 y 3C P1,True
+500156,ANDRÉS SANÍN D3,True
+513261,Cl 70 entre Av 4N y 6N (Super Inter),True
+500157,ANDRÉS SANÍN D2,True
+513262,Cl 70 entre Av 6N y 4N,True
+500158,ANDRÉS SANÍN E3,True
+513264,Av 6 entre Cl 52N y 67N P1 (Centro Empresa),True
+500159,ANDRÉS SANÍN E2,True
+513265,Av 6N entre Cl 49 y 48 (Las Vallas),True
+500160,ANDRÉS SANÍN C2,True
+513267,Av 6N entre Cl 47 y 44B (Panadería Kuty),True
+500161,ANDRÉS SANÍN C5,True
+513268,Av 6 entre Cl 45N y 47N P1 (Frente a Panadería Kuty),True
+500162,ANDRÉS SANÍN D1,True
+513269,Av 6 entre Cl 41N y 40N P1,True
+500163,ANDRÉS SANÍN E1,True
+513270,Av 6 entre Cl 40N y 42N P1,True
+500164,ANDRÉS SANÍN D4,True
+513271,Av 6A entre Cl 35N y 29N P1 (Homecenter),True
+500165,ANDRÉS SANÍN D5,True
+513273,Av 6AN entre Cl 22A y 22 (ITAU),True
+50020,CHIMINANGOS B1,True
+513275,,False
+500200,CHIMINANGOS A2,True
+513276,Cl 84 entre Kr 3N y 3AN,True
+500201,CHIMINANGOS B1,True
+513277,Kr 1FN entre Cl 81 y 80,True
+500203,CHIMINANGOS B2,True
+513279,Av 6 entre Cl 23N y 24N P1,True
+500250,FLORA INDUSTRIAL A1,True
+513280,Av 6 entre Cl 25N y 26N,True
+500251,FLORA INDUSTRIAL B1,True
+513282,Kr 1FN entre Cl 77 y 73,True
+500300,SALOMIA A1,True
+513284,Cl 76 con Kr 1A5F Bis,True
+500301,SALOMIA B1,True
+513286,,False
+500350,POPULAR A1,True
+513287,,False
+500353,POPULAR B2,True
+513289,Cl 52 entre Kr 4N y 5N,True
+500400,MANZANARES A1,True
+513291,Kr 5 entre Cl 44 y 44B,True
+500401,MANZANARES B1,True
+513292,Kr 5 entre Cl 45C y 45,True
+500450,FÁTIMA A1,True
+513293,Kr 2AN entre Cl 73 y 81,True
+500451,FÁTIMA B1,True
+513294,Cl 84 entre Kr 2Bis y 2AN,True
+513301,Cl 62 entre Kr 1A9 y 1A10,True
+513302,Kr 5N entre Cl 46A y 46B,True
+513303,Kr 5 entre Cl 36 y 35,True
+513304,Kr 5N entre Cl 52 y 55,True
+513308,Cl 66 entre Kr 1A6 y 1A10,True
+513309,Cl 70 con Kr 1G,True
+513310,Cl 62 entre Kr 1HBis y 1H,True
+513311,Cl 66 entre Kr 1A10 y 1A6,True
+513312,Kr 1A6 entre Cl 62A y 62,True
+513325,Kr 5N entre Cl 67 y 65 (Tiendas ARA),True
+513326,Cl 62 entre Kr 5N y 4N (Institución educativa INEM - Jorge Isaacs),True
+513327,Cl 70 entre Kr 1GBis y 1F,True
+513328,Cl 44 entre Kr 4N y 3AN (Conexión con la estación Popular),True
+513329,Cl 44 entre Kr 3 y 4,True
+513330,Cl 44 entre Kr 3 y 2C,True
+514001,Cl 16 entre Kr 100 y 98 (Centro Comercial Jardín Plaza),True
+514017,Kr 15 entre Cl 73 y 74,True
+514019,Cl 44 entre Kr 12 y 11D,True
+514020,Kr 25 entre Cl 73A y 74 (Frente al Centro Comercial Rio Cauca),True
+514021,Kr 25 entre Cl 77 y 78,True
+514023,Cl 80 entre Kr 25 y 23,True
+514024,Kr 23 entre Cl 81B y 82,True
+514025,Kr 23 entre Cl 83B y 84,True
+514026,Kr 23 entre Cl 85A y 85,True
+514027,Kr 23 con Cl 96,True
+514028,Kr 23 entre Cl 102 y 102C (Sede Social),True
+514029,Kr 23 entre Cl 118 y 119 (CALI 21),True
+514030,Cl 123 entre Kr 23 y 23A,True
+514031,Cl 123 entre Kr 26ABis y 26CBis (Centro de Salud Desepaz),True
+514032,Cl 123 entre Kr 26I y 26I2,True
+514033,Cl 123 entre Kr 26J1 y 26J2,True
+514035,Cl 123 entre Kr 27C y 27D,True
+514036,Cl 123 entre Kr 28B y 28B1 (Frente a Rapitienda Familiar),True
+514037,Cl 123 entre Kr 26P y 26Q,True
+514038,Cl 121 entre Kr 28D y 28,True
+514039,Cl 121 entre Kr 27F y 27D1 (Restaurante Comunitario),True
+514040,Cl 123A4 entre Kr 28D10 y 28D11,True
+514041,Cl 123 entre Kr 26M3 y 26M1,True
+514042,Cl 123 entre Kr 26J2 y 26J,True
+514044,Cl 123 entre Kr 26B y 26ABis,True
+514045,Kr 23 entre Cl 120Q y 120R,True
+514046,Kr 23 entre Cl 120C y 120B,True
+514047,Kr 23 entre Cl 114 y 112,True
+514048,Kr 23 entre Cl 102B y 102,True
+514049,Kr 23 entre Cl 98A y 98,True
+514050,Kr 23 entre Cl 87 y 86,True
+514051,Kr 23 entre Cl 84 y 83B,True
+514052,Kr 23 entre Cl 83 y 81B,True
+514053,Cl 80 entre Kr 23 y 25,True
+514054,Kr 25 entre Cl 80 y 79,True
+514055,Kr 25 entre Cl 77 y 78,True
+514056,Kr 25 entre Cl 74 y 75 (Centro Comercial Rio Cauca),True
+514058,Kr 15 entre Cl 74A y 74,True
+514067,Tv 103 entre Cl 74 y Kr 26B2,True
+514068,Tv 103 entre Cl 76 y 77,True
+514069,Tv 103 entre Cl 79 y 79A,True
+514070,Tv 103 entre Cl 84 y 85,True
+514071,Tv 103 entre Dg 26P3 y 26P4,True
+514072,Tv 103 entre Dg 26P8 y 26P9,True
+514073,Tv 103 entre Dg 26P14 y 26P15,True
+514074,Tv 103 entre Kr 27C y 27D,True
+514076,Cl 73 entre Kr 27B y 27D,True
+514077,Tv 103 entre Kr 28 y 28-3 (CAI Alfonso Bonilla Aragón),True
+514080,Cl 73 con Kr 8 (Debajo del puente de la Kr 8),True
+514081,Kr 27 entre Cl 77 y 78,True
+514082,Cl 73 entre Kr 7RBis y 7S,True
+514083,Kr 27 entre Cl 85 y 86,True
+514084,Kr 27 entre Cl 91 y 96,True
+514085,Tv 103 entre Dg 26P17 y 26P16,True
+514086,Tv 103 entre Dg 26P9 y 26P8,True
+514087,Tv 103 entre Cl 95 y 92 (Clinica Versalles),True
+514088,Tv 103 entre Cl 84 y 80F,True
+514090,Tv 103 entre Cl 79 y 78,True
+514091,Tv 103 entre Cl 77 y 76 (Colegio Francisco Eladio Ramirez),True
+514092,Tv 103 entre Cl 75 y 74,True
+514095,Cl 73 entre Kr 7M y 7LBis (CALI 7),True
+514096,Cl 73 entre Kr 7JBis y 7J,True
+514097,Cl 73 entre Kr 7B y 7BBis,True
+514098,Cl 73 entre Kr 7G y 7FBis,True
+514099,Cl 73 entre Kr 7D y 7C,True
+514111,Cl 112 entre Kr 23 y 24,True
+514113,Cl 73 entre Kr 7C y 7ABis (Estación de servicio),True
+514114,Cl 34 entre Kr 7 y 8,True
+514115,Kr 8 entre Cl 34 y 26 (Antigua Bavaria),True
+514116,Kr 8 entre Cl 27 y 26,True
+514119,Kr 8 entre Cl 44 y 36 (Acuaparque de la Caña),True
+514120,Kr 8 entre Cl 39 y 41 (Frente al Acuaparque de la Cana),True
+514121,Kr 8 con Cl 47 (Base Aérea Marco Fidel Suárez),True
+514122,Cl 112 entre Kr 25 y 26 (Estación eléctrica),True
+514123,Cl 112 entre Kr 26A y 26A1,True
+514124,Cl 112 entre Kr 26B3 y 26C,True
+514125,Kr 8 con Cl 51 (Base Aérea Marco Fidel Suárez),True
+514126,Kr 8 entre Cl 49 y 50 (Nueva EPS),True
+514128,Kr 8 entre Cl 52 y 54,True
+514129,Kr 8 entre Cl 56 y 54 (Base Aérea Marco Fidel Suárez),True
+514130,Kr 8 entre Cl 54 y 56,True
+514131,Kr 8 entre Cl 59 y 58,True
+514132,Kr 8 entre Cl 58 y 59,True
+514133,Kr 8 entre Cl 62 y 61,True
+514134,Kr 8 entre Cl 59 y 70,True
+514147,Kr 25 entre Cl 114 y 113,True
+514152,Cl 73 entre Kr 7F y 7G,True
+514153,Cl 73 con Kr 7LBis,True
+514154,Cl 73 entre Kr 7R Bis y 7S Bis (Detrás de la institución educativa Alfonso López Pumarejo),True
+514155,Cl 73 con Kr 8 (Bajo el puente de la Kr 8),True
+514156,Cl 73 entre Kr 11 y Dg 14,True
+514157,Cl 73 entre Kr 11 y 10,True
+514161,Cl 95 entre Kr 26I7 y 26I6 (Clinica Versalles),True
+514162,Cl 95 entre Kr 26H y 26G4 (Polideportivo Villa San Marcos),True
+514170,,False
+514171,,False
+514172,,False
+514173,Cl 112 entre Kr 27 y 26Q,True
+514174,Cl 112 entre Kr 26J5 y 26J,True
+514175,Cl 112 entre Kr 26J y 26J5,True
+514176,Cl 112 entre Kr 26F y 26E,True
+514177,Kr 26C entre Cl 100 y 99,True
+514178,Kr 26G entre Cl 97 y 94,True
+514179,Cl 94 entre Kr 26H y 26I,True
+514180,Kr 26C entre Cl 97 y 108,True
+514181,Cl 112 entre Kr 26D y 26E,True
+514182,Cl 112 entre Kr 26H2 y 26H3,True
+514183,Cl 112 entre Kr 26Q y 27,True
+514184,Kr 26C entre Cl 111 y 112,True
+514185,Kr 26C entre Cl 112 y 110,True
+514186,Kr 27 entre Tv 103 y Cl 104 (Galería CASONA),True
+514189,,False
+514190,Kr 27 entre Cl 106 y Tv 103 (Comfandi CASONA),True
+514192,Kr 27 entre Cl 91 y 88,True
+514193,Kr 27 entre Cl 81 y 80,True
+514194,Kr 25 entre Cl 80B y 80C,True
+514195,Kr 25 con Cl 85,True
+514196,Kr 25 entre Cl 89 y 94 (Colegio Compartir),True
+514197,Kr 25 entre Cl 94D y 112 (Subestacion Eléctrica),True
+514198,Kr 25 entre Cl 112 y 113,True
+514199,Cl 121 con Kr 25 (CAI),True
+514200,Cl 121 entre Kr 26G y 26G1 (Sendero Peatonal),True
+514201,Cl 121 entre Kr 26K y 26K1,True
+514202,Cl 121 entre Kr 26R y 26R1,True
+514206,Cl 121 entre Cl 122A3 y 122A2,True
+514207,Cl 121 entre Cl 121D y Kr 28D,True
+514208,Cl 121 con Kr 26P,True
+514209,Cl 121 entre Kr 26J2 y 26J3,True
+514210,Cl 121 entre Kr 26E y 26F,True
+514211,Cl 121 entre Kr 25B y 25 (Comfandi Ciudadela del Rio),True
+514212,Kr 25 entre Cl 104 y 105,True
+514213,Kr 25 entre Cl 89 y 94 (Frente al Colegio Compartir),True
+514214,Kr 25 entre Cl 86 y 85,True
+514215,Kr 25 entre Cl 80A y 80B,True
+514218,Cl 73 entre Kr 7C Bis y 7D,True
+514219,Tv 103 entre Kr 26A2 y 26A3,True
+514220,Tv 103 con Cl 73C,True
+514232,Cl 121 entre Kr 27I y 27J,True
+514233,Cl 121 con Kr 28D (Frente a caseta de basura),True
+514235,Cl 123 entre Kr 28B y 28A,True
+514236,Cl 123 entre Kr 26T y 26S,True
+514246,Cl 123 entre Kr 28D y 28D1 (CAI),True
+514257,Kr 12 entre Cl 59 y 58A (Base Aérea Marco Fidel Suárez),True
+514262,Cl 44 entre Kr 8A y 9,True
+514269,Cl 123 entre Kr 28D5 y 28D7,True
+514270,,False
+514271,Cl 123 entre Kr 27B y 27,True
+514273,,False
+514274,,False
+514275,Cl 112 entre Kr 26L y 26M (Supermercado el Canario),True
+514276,Cl 112 entre Kr 26L y 26K1,True
+514277,Cl 112 entre Kr 26H3 y 26H2,True
+514278,Cl 79 entre Kr 28C y 28D (Ciudadela Educativa Nuevo Latir),True
+514279,,False
+514285,Cl 44 entre Kr 12B y 12C,True
+514286,Cl 120 entre Kr 28 y 28D (Patio Taller Aguablanca),True
+514287,Cl 72H1 entre Kr 22 y 22B (Centro de Salud - Misión medica),True
+514288,Kr 28D entre Cl 113 y 114 (Patio Taller Aguablanca),True
+514289,Cl 120 entre Kr 28D y 28 (Frente al Patio Taller Aguablanca),True
+514291,Cl 72D entre Kr 26 y 26A,True
+514301,Cl 72U entre Kr 27G y 27F,True
+514302,Cl 72U entre Kr 27 y 26R,True
+514303,Cl 72U entre Kr 26J y 26I3,True
+514304,Cl 72U entre Kr 26H3 y 26H2,True
+514305,Cl 72U entre Kr 26G8 y 26G7,True
+514306,Cl 72U entre Kr 26G7 y 26G8,True
+514307,Cl 72U entre Kr 26G11 y 26H3,True
+514308,Cl 72U entre Kr 26I2 y 26J,True
+514309,Cl 72U entre Kr 26S y 27,True
+514312,Cl 44 entre Kr 7 y 8 (Acuaparque de la Caña),True
+514313,Cl 44 entre Kr 8 y 7 (Base Aérea Marco Fidel Suárez),True
+514314,Kr 8 entre Cl 44B y 47,True
+514326,Cl 123 entre Kr 28D5 y 28D7,True
+514333,Cl 123A4 entre Kr 28E3 y 28E5,True
+514337,Kr 28 entre Cl 116A y 112,True
+514338,Kr 28 entre Cl 112 y 116,True
+514339,Kr 28 entre Cl 108 y 112,True
+514340,Cl 112 entre Kr 27G y 27F,True
+514341,Cl 112 entre Kr 27D y 27,True
+514342,Cl 59 entre Kr 10 y 10A (Base Aérea Marco Fidel Suárez),True
+514343,Kr 8 entre Cl 35 y 34A,True
+514345,Cl 73 entre Kr 8C y 8D,True
+514346,Kr 8 con Cl 70,True
+514347,Kr 8 con Cl 70,True
+514348,Cl 44 entre Kr 15 y 14 (Conexión con la estación Chapinero),True
+514349,Cl 44 entre Kr 12C y 12,True
+514350,Cl 44 entre Kr 15A y 16 (Conexión con la estación Chapinero),True
+514354,Cl 26 entre Kr 10 y 9 (Zona Industrial),True
+514355,Kr 8 entre Cl 26 y 28 (Zona Industrial),True
+514356,Kr 8 entre Cl 32 y 33 (Zona Industrial),True
+514357,Kr 8 entre Cl 34 y 35 (Zona Industrial),True
+514358,Kr 26C entre Cl 94 y 91,True
+514359,Kr 26C entre Cl 91 y 89 (Puertas del Sol),True
+514365,Cl 73 entre Dg 15 y 16,True
+514367,Cl 73 entre Kr 25S y 25T,True
+514368,Cl 73 entre Kr 26B2 y 26B1 (Frente a la laguna del Pondaje),True
+514369,Cl 73 entre Kr 25U y 25T (Subestación Eléctrica),True
+514370,Cl 73 entre Kr 26G6 y 26G7 (Marroqui III),True
+514371,Cl 73 entre Kr 26G4 y 26G3,True
+514372,Cl 73 entre Kr 26H3 y 26I,True
+514373,Cl 73 entre Kr 26H3 y 26H2,True
+514374,Cl 73 entre Kr 26M y 26N (Frente a la estación de Policía Los Mangos),True
+514376,Cl 72Y entre Kr 27A y 27B,True
+514377,Cl 73 entre Kr 27 y 26U,True
+514378,Cl 73 con Kr 28D,True
+514379,Cl 73 entre Kr 28D y 28C (Frente a la Ciudadela Educativa Nuevo Latir),True
+514381,Cl 73 entre Kr 26F1 y 26F,True
+514382,Cl 73 entre Kr 19 y 22,True
+514384,Cl 73 entre Dg 26I3 y 26I2,True
+514386,Cl 44 entre Kr 9 y 8A (Servientrega),True
+514387,Cl 44 entre Kr 11D y 11F,True
+514388,Kr 12 entre Cl 48 y 47,True
+514390,Kr 12 entre Cl 52 y 51,True
+514392,Kr 12 entre Cl 56 y 54,True
+514396,Cl 59 entre Kr 8A y 8B,True
+514398,Kr 26C entre Cl 89 y 90,True
+514400,Cl 73 entre Kr 26 y 26G3 (Laguna del Pondaje),True
+514401,Cl 73 entre Dg 18 y 17,True
+514403,Tv 103 entre Kr 28-4 y 28-3 (Despues de la Glorieta),True
+514404,Tv 103 entre Kr 27B y 27A,True
+514408,Kr 23 entre Cl 70 y 63 (Parque la Base),True
+514411,Kr 8 entre Cl 72 y 72B,True
+514415,Cl 73 entre Kr 28A y 28,True
+514416,Cl 72U entre Kr 28A y 28A1 (Parque),True
+514417,Cl 73 entre Dg 26G11 y Kr 26H,True
+514421,Kr 27 entre Cl 96 y 95,True
+514424,Kr 26C entre Cl 94 y 97,True
+514427,Tv 103 con Dg 26O (Clinica Versalles),True
+514428,Cl 121 entre Kr 26I2 y 26I3,True
+514429,Cl 121 entre Kr 26I3 y 26I2,True
+514431,Cl 73 entre Kr 26G9 y 26G8,True
+514441,Kr 28D entre Cl 83 y 85,True
+514442,Cl 16 entre Kr 98 y 100 (Universidad del Valle),True
+514443,"Cl 73 entre Kr 26M y Dg 26M (Estación de Bomberos, junto a la estación de Policía Los Mangos)",True
+514445,Kr 28D entre Cl 91 y 92,True
+514446,Cl 96 con Kr 28D4,True
+514449,Kr 25U entre Kr 22 y Cl 72U (Cancha multiple frente al CAI de Charco Azul),True
+514466,Cl 123 entre Kr 26H1 y 26HBis (Parque Infantil),True
+514467,Kr 25 entre Cl 79 y 80,True
+514468,Kr 27 entre Cl 108 y 109,True
+514469,Kr 27 entre Cl 109 y 108,True
+514470,,False
+514473,,False
+514474,Kr 28D9 entre Cl 122J y 122K,True
+514477,Cl 72H1 con Kr 25C (Unidad Recreativa Villa del Lago),True
+514478,Cl 72H1 con Kr 24C,True
+514481,Kr 28D entre Cl 121 y 122 (Potrero Grande),True
+514482,Kr 28D entre Cl 122 y 123,True
+514483,Kr 28F entre Cl 122E y 122D1,True
+514484,Tv 103 con Kr 28F,True
+514485,Cl 112 entre Kr 26B1 y 26,True
+514487,Cl 112 entre Kr 26 y 25,True
+514489,Kr 28D entre Cl 107 y 112,True
+514490,Kr 28D entre Cl 113 y 120A,True
+514491,Kr 28D entre Cl 120B y 120C (Junto a la caseta de basuras),True
+514494,Kr 28 entre Cl 108 y 107B,True
+514495,Tv 103 entre Kr 28 y Cl 97,True
+514496,Kr 28D entre Cl 121 y 120 (Polideportivo Pizamos III),True
+514497,Tv 103 entre Kr 28D y Dg 119,True
+514498,Kr 28D entre Cl 112 y 107,True
+514507,Kr 26 entre Cl 72I1 y 72I Bis,True
+514508,Cl 72H1 entre Kr 26 y 25G (Cancha de futbol - Villa del Lago),True
+514529,Cl 72J entre Kr 26H y 26,True
+514530,Cl 72K entre Kr 26H4 y 26I,True
+514531,,False
+514532,Cl 72K entre Kr 26K1 y 26J (SENA El Pondaje),True
+514534,Cl 121 entre Kr 26M y 26M1,True
+514535,Cl 121 con Kr 26M,True
+514537,Cl 123 entre Kr 26H2 y 26H3,True
+514538,Kr 23 entre Cl 101A y 100,True
+514539,,False
+514541,Cl 73 entre Kr 26J y 26K,True
+514545,Cl 126 entre Kr 28F y 28G,True
+514546,Cl 125A con Kr 28F,True
+514547,Cl 123A4 entre Kr 28E1y 28E3,True
+514548,Cl 123 entre Kr 122D y 122B,True
+514549,Kr 28D entre Cl 122 y 123 (Arquidiocesis de Cali),True
+514550,Kr 28D entre Cl 122 y 123,True
+514551,Cl 72K entre Kr 26J y 26K1 (SENA El Pondaje),True
+514552,Cl 94 entre Kr 101B y 101A,True
+514553,Cl 94 entre Kr 100 y 99,True
+514554,Kr 23 entre Cl 101A y 101B,True
+514555,Kr 26C entre Cl 85 y 84 (Puertas del Sol - CAI),True
+514556,Kr 26G entre Cl 84 y 89,True
+514557,Kr 26G con Cl 91 (Parque Lineal UNIMETRO),True
+514559,Tv 103 entre Dg 26P4 y Kr 26J,True
+514560,Kr 27 entre Cl 72J y 72K (Frente al Parque - Villablanca),True
+514561,Kr 26H entre Cl 72D y 72H,True
+514562,Kr 26H entre Cl 72H5 y 72I,True
+514563,Kr 27 entre Cl 72J2 y 72J1 (Parque Villablanca),True
+514564,Kr 26G entre Cl 94 y 91,True
+514565,Kr 26G entre Cl 91 y 84,True
+514566,Cl 84 entre Kr 26E y 26C,True
+514567,Cl 94 entre Cl 86 y 87,True
+514568,Cl 94 entre Cl 88 y 89,True
+514569,,False
+514570,Kr 28D con Cl 123,True
+514571,Kr 28D entre Cl 124C y 125,True
+514572,Cl 126 con Kr28D-3,True
+514573,Cl 126 entre Kr 28E1 y 28E2,True
+514580,Cl 126 con Kr 28E1,True
+514581,Cl 126 con Kr 28D4,True
+514582,Kr 28D con Cl 125,True
+514583,Kr 28D entre Cl 124A y 123,True
+515001,Cl 8 entre Kr 3 y 4 (Cámara de Comercio de Cali),True
+515002,Kr 39 entre Cl 40 y 39,True
+515003,Cl 46 entre Kr 43B y 43A,True
+515006,Kr 39 entre Cl 51 y 50,True
+515007,Kr 39 entre Cl 48 y 49,True
+515008,Kr 39 entre Cl 54 y 53,True
+515009,Cl 54 entre Kr 38B y 38A,True
+515010,Cl 55 entre Kr 32A y 33,True
+515011,Cl 55 entre Kr 33 y 32A,True
+515012,Cl 83 entre Kr 28D4 y 28E,True
+515013,Cl 83 entre Kr 28E3 y 28E (Institución Educativa Carlos Holguín Mallarino),True
+515014,Cl 55 entre Kr 29A y 30A,True
+515015,Cl 55 entre Kr 30 y 29,True
+515016,Kr 39 entre Cl 46 y 45A,True
+515017,Kr 39 entre Cl 45A y 46,True
+515018,Cl 55 entre Kr 33 y 34,True
+515019,Cl 55 entre Kr 34 y 33,True
+515020,Cl 83 entre Kr 28G y 28E6,True
+515021,Cl 83 entre Kr 28D2 y 28D1,True
+515022,Cl 54 entre Kr 39 y 39A,True
+515023,Cl 54 entre Kr 39H y 40 (Frente a Centro Recreativo El Vallado),True
+515025,Kr 46 entre Cl 50 y 51,True
+515026,Cl 54 entre Kr 49B y 49C,True
+515027,,False
+515028,Cl 48 entre Kr 46D y 46C,True
+515034,Kr 29 entre Cl 48 y 46 (Conexión con la estación Conquistadores),True
+515036,Cl 48 entre Kr 37 y 36,True
+515037,Cl 48 entre Kr 32A y 30D,True
+515040,Kr 29 entre Cl 83 y 79 (Sobre la calzada central),True
+515041,Cl 54 entre Kr 45 y 43C,True
+515042,Cl 54 entre Kr 42C1 y 42C (Supermercado y droguería Comfandi),True
+515043,Cl 54 entre Kr 41G y 41E3,True
+515044,Cl 54 entre Kr 41D y 41B,True
+515045,Cl 54 entre Kr 41B y 39E (Unidad Recreativa El Vallado),True
+515046,Kr 29 entre Cl 72Y y 48,True
+515048,Cl 48 entre Kr 34 y 35,True
+515049,Cl 48 entre Kr 39E y 39G,True
+515050,Cl 48 entre Kr 39G y 41,True
+515051,Cl 48 entre Kr 41B y 41D (Frente a la fundación Carvajal - El Vallado),True
+515052,Cl 48 entre Kr 41H y 42A,True
+515054,Cl 54 entre Kr 43B y 44,True
+515057,Cl 48 entre Kr 40B y 40A,True
+515058,Kr 29 entre Cl 48 y 72U,True
+515059,Cl 72U entre Kr 28E6 y 28E5 (Hospital Carlos Holmes Trujillo),True
+515060,Cl 72U entre Kr 28D5 y 28D4,True
+515061,Cl 83 entre Kr 28D y Cl 82,True
+515062,Kr 29 con Cl 76 (Sobre la calzada central),True
+515064,Kr 46 entre Cl 44 y 43,True
+515069,Kr 39 entre Cl 42 y 43 (Supermercado),True
+515070,Kr 42B entre Cl 54 y 54C,True
+515071,Kr 42B entre Cl 55C y 56,True
+515077,,False
+515078,,False
+515079,,False
+515080,,False
+515081,,False
+515086,,False
+515087,,False
+515088,,False
+515090,Cl 72U entre Kr 28D4 y 28D5,True
+515091,Cl 72U entre Kr 28E3 y 28E4,True
+515092,Kr 28F entre Cl 72U y 72S,True
+515093,Kr 28F entre Cl 72P y 72L,True
+515094,Kr 28F entre Cl 72L y 72O,True
+515095,Kr 28F entre Cl 72T y 72U,True
+515096,Cl 72U entre Kr 28D y 28D1 (Conexión con la estación Estación Amanecer),True
+515100,Kr 50 entre Cl 44 y 43,True
+515101,Kr 50 con Cl 44,True
+515102,Cl 36 entre Kr 30A y 30,True
+515103,Kr 46 entre Cl 56D y 56G,True
+515111,,False
+515113,Kr 29 entre Cl 72U y 72T,True
+515114,Kr 29 entre Cl 72Q y 72O,True
+515115,Kr 29 entre Cl 72J y 72I,True
+515116,Kr 29 entre Cl 41 y 40 (Antes de la estación de servicio),True
+515122,Cl 48 entre Kr 30B y 30,True
+515125,,False
+515126,Cl 72U entre Kr 28A y 28A4,True
+515132,Cl 48 entre Kr 39E y 39D,True
+515138,Cl 54 entre Kr 46D y 47,True
+515139,Cl 48 entre Kr 49G y 49F,True
+515140,Cl 48 entre Kr 49A y 49,True
+515141,Kr 46 entre Cl 46 y 47,True
+515146,Kr 46 entre Cl 44 y 45,True
+515150,Kr 39 entre Cl 42B y 42,True
+515151,Kr 39 entre Cl 40 y 41,True
+515152,Kr 39 entre Cl 38 y 37,True
+515153,Kr 46 entre Cl 42 y 41A,True
+515156,Kr 28E3 con Cl 96 (Hospital Isaias Duarte Cancino),True
+515157,Cl 96 entre Kr 28E y 28D4,True
+515158,Kr 28D entre Cl 91 y 90,True
+515160,,False
+515161,Kr 46 entre Cl 40 y 41,True
+515166,Cl 96 con Kr 28E3,True
+515167,Cl 56C con Kr 43A,True
+515168,Cl 56C entre Kr 45A y 46,True
+515169,Kr 46 entre Cl 56G y 57,True
+515171,Cl 46 entre Kr 45 y 44A,True
+515178,Kr 28D con Cl 72F,True
+515180,Cl 72I entre Kr 28E y 28E1,True
+515181,Cl 72I entre Kr 28F1 y 28G,True
+515185,Cl 57 entre Kr 47 y 47A (Entrada Institución Educativa Llano Verde - Sede Principal),True
+515186,Cl 57 entre Kr 48B y 48C,True
+515187,Cl 48 entre Kr 43B y 43ABis,True
+515188,Cl 48 entre Kr 42A1 y 42ABis,True
+515189,Cl 48 entre Kr 41E3 y 41E2,True
+515194,Cl 72U entre Kr 28C y 28B (Conexión con la estación Estación Amanecer),True
+515196,Cl 54 entre Kr 41B y 41D,True
+515197,Kr 49D con Cl 56D,True
+515198,Kr 49D con Cl 55A,True
+515199,Kr 48B entre Cl 55A y 55,True
+515201,Cl 57 entre Kr 49A y 49D,True
+515202,Kr 29 con Cl 38,True
+515205,Kr 50 con Cl 45,True
+515206,Kr 50 entre Cl 43 y 42,True
+515207,Kr 50 entre Cl 41 y 40,True
+515208,Kr 50 entre Cl 41 y 42,True
+515209,Kr 50 entre Cl 42 y 43,True
+515210,Kr 50 con Cl 46,True
+515212,Cl 54 entre Kr 49D y 49C,True
+515213,Cl 54 entre Kr 48B y 48A,True
+515214,Cl 54 entre Kr 47D y 47,True
+515237,Cl 83 entre Kr 28E3 y 28E6,True
+515238,Cl 83 entre Kr 28F y 28J,True
+515239,Cl 48 entre Kr 46 y 46B,True
+515240,Cl 48 entre Kr 48 y 48B,True
+515241,Cl 48 entre Kr 49G y 50,True
+515245,Cl 48 entre Kr 42B y 42C,True
+515246,Cl 48 entre Kr 42D y 43B,True
+515250,Kr 28D entre Cl 72G y 72I,True
+515260,Cl 48 entre Kr 29 y 31,True
+515280,,False
+516004,Kr 44 entre Cl 13 y 13A,True
+516005,Kr 44 entre Cl 14 y 14B,True
+516006,Kr 44 entre Cl 15 y 15Bis,True
+516007,Kr 44 entre Cl 18 y 23,True
+516008,Cl 25 entre Kr 42C y 42B,True
+516009,Cl 25 entre Kr 41A y 41 (Colegio San Pedro Claver),True
+516010,Kr 39 entre Cl 33 y 34 (Iglesia Mormona),True
+516011,Kr 39 entre Cl 17 y 16,True
+516014,Cl 25 entre Kr 39 y 37,True
+516015,Cl 25 entre Kr 41E y 41D,True
+516016,Cl 25 entre Kr 33B y 33A (Institución Educativa Boyacá),True
+516017,Dg 23 entre Cl 18 y 17,True
+516018,Dg 23 entre Cl 18E y 19 (Estación de servicio),True
+516019,Cl 5 entre Kr 77 y 76,True
+516020,Cl 10 entre Kr 73 y 72 (Bajo el puente de la 14 Limonar),True
+516021,,False
+516022,Cl 10 entre Kr 70 y 68 (Seguro Social),True
+516023,Kr 50 entre Cl 8A y 8,True
+516025,Cl 10 entre Kr 63 y 63A,True
+516026,Cl 10 entre Kr 64A y 61,True
+516027,Cl 10 entre Kr 61 y 61A,True
+516028,Cl 10 entre Kr 57 y 56 (Comfandi Guadalupe),True
+516029,Kr 50 entre Cl 9B y 9 (Centro Comercial Palmetto Plaza),True
+516030,Cl 10 entre Kr 53 y 50,True
+516031,Cl 10 entre Kr 49 y 50,True
+516032,Cl 10 entre Kr 48B y 48A,True
+516033,Cl 10 entre Kr 44A y 46 (Clinica Santillana),True
+516034,Cl 10 con Kr 44 (Bajo el puente de la 44),True
+516035,Cl 10 entre Kr 42 y 44,True
+516036,Cl 10 entre Kr 43 y 41A (EMCALI),True
+516037,Cl 10 entre Kr 39 y 41 (Hipercentro Corona),True
+516038,Cl 10 entre Kr 38A y 38,True
+516039,,False
+516040,Cl 10 entre Kr 35 y 34,True
+516041,Dg 23 entre Cl 13 y 12A (La Luna),True
+516042,Dg 23 entre Cl 12B y 12C,True
+516043,Dg 23 entre Cl 13B y 13 (La Luna),True
+516044,Dg 23 entre Cl 13 y 17A,True
+516047,Kr 23 entre Cl 19B y 19A,True
+516048,Kr 23 entre Cl 19A y 19B (Olimpica),True
+516050,"Cl 13 con Kr 80 (Parada ubicada sobre calle 13 con carrera 80, bajo el puente vehicular del cruce con carrera 80. En sentido Sur -  Norte.)",True
+516051,Cl 13 entre Kr 75 y 76 (Frente a Corona),True
+516052,Cl 13 entre Kr 80 y 75,True
+516053,Cl 13 entre Kr 70 y 72 (Automarcali),True
+516054,Cl 13 entre Kr 75 y 72 (Simón Parrilla),True
+516055,Cl 13 entre Kr 65B y 65C,True
+516056,Cl 13 entre Kr 68 y 66 (Antes de cruzar la 66),True
+516057,Cl 13 entre Kr 59 y 64 (Comfenalco Valle),True
+516058,Cl 13 entre Kr 65 y 64A (Comfenalco Valle),True
+516059,Cl 13 con Kr 56,True
+516060,Cl 13 entre Kr 57 y 56,True
+516061,Cl 13 entre Kr 50 y 53 (Estación de servicio),True
+516062,Cl 13 entre Kr 56 y 53,True
+516063,Cl 13 entre Kr 49A y 49B (Cruz Blanca),True
+516064,Cl 13 entre Kr 50 y 49A,True
+516065,Cl 13 entre Kr 47A y 47,True
+516066,Cl 13 entre Kr 47 y 47A,True
+516067,Cl 13 entre Kr 45 y 44A,True
+516068,Cl 13 entre Kr 44 y 44A,True
+516069,Cl 13 entre Kr 41A y 42,True
+516070,Cl 13 entre Kr 41A y 41,True
+516071,Cl 13 entre Kr 37 y 38,True
+516072,Cl 13 entre Kr 39 y 38,True
+516073,Cl 13 entre Kr 34 y 35,True
+516074,Cl 13 entre Kr 34 y 33A (ISS),True
+516076,Cl 13 entre Kr 32 y Cl 14 (Almacenes Exito),True
+516077,Cl 13 entre Kr 31 y 32,True
+516078,Cl 13 entre Cl 12C y Kr 29B (Entrada al Parque),True
+516079,Cl 13 entre Cl 14 y 16 (COTRAEMCALI),True
+516080,Kr 46 entre Cl 52 y 51A (Iglesia Santa Cecilia),True
+516081,Kr 46 entre Cl 48 y 47,True
+516082,Kr 46 entre Cl 46 y 45,True
+516083,,False
+516084,Kr 46 entre Cl 45 y 44,True
+516085,Kr 46 entre Cl 42 y 43,True
+516086,,False
+516087,,False
+516088,Kr 46 entre Cl 40 y 39,True
+516089,Kr 46 entre Cl 37 y 38A (Conexión con la estación Villa del Sur),True
+516090,Kr 46 entre Cl 37 y 36,True
+516092,Cl 27 entre Kr 36 y 44A (Conexión con la estación Villa del Sur),True
+516093,Cl 27 entre Kr 42B y 43,True
+516094,Cl 27 entre Kr 42B y 42A (Hogar Infantil Villa del Sur),True
+516096,Cl 27 entre Kr 42 y 41D,True
+516097,,False
+516101,Kr 50 entre Cl 14C y 16,True
+516102,Kr 50 entre Cl 18 y 18A,True
+516106,Kr 41B entre Cl 46 y 47,True
+516107,Cl 54 entre Kr 41D y 41E,True
+516108,Cl 54 entre Kr 42B y 42C,True
+516110,Cl 13 entre Kr 67 y 68 (Frente al Centro Comercial La Fontana),True
+516114,,False
+516115,,False
+516116,Kr 50 entre Cl 44 y 45,True
+516117,Kr 50 entre Cl 47 y 47A,True
+516118,Kr 66 entre Kr 60 y 54,True
+516119,Kr 56 entre Cl 18 y 18A,True
+516121,Kr 50 entre Cl 42A y 43,True
+516122,Cl 10 entre Kr 50 y 53 (Estación de servicio),True
+516123,Kr 69 con Cl 34,True
+516124,Kr 66 entre Cl 17 y 18 (Parada ubicada sobre carrera 66 entre calle 16 y 18. En sentido Occidente - Oriente.),True
+516125,Kr 69 entre Cl 33A y 33,True
+516126,Kr 69 entre Cl 29 y 26,True
+516127,Kr 56 entre Cl 18 y 18A,True
+516128,Kr 56 entre Cl 16 y 15,True
+516129,Cl 14 entre Kr 58 y 65 (Unidad residencial),True
+516130,Cl 14 entre Kr 65 y 65C,True
+516131,Kr 50 entre Cl 9 y 9B (Centro Comercial Palmetto Plaza),True
+516132,Kr 50 entre Cl 12A y 13 (Unidad residencial),True
+516133,Kr 50 entre Cl 13E y 13G,True
+516137,Kr 44 entre Cl 12 y 12B,True
+516138,Cl 25 entre Kr 70 y 69 (Frente Clinica Comfandi AMIGA),True
+516139,Cl 25 entre Kr 69A y 70 (Clinica Comfandi AMIGA),True
+516142,Cl 42 entre Kr 69 y 68,True
+516143,Cl 42 entre Kr 63 y 55 (Frente al parque),True
+516145,Cl 33 entre Kr 65 y 66,True
+516146,Cl 16 entre Kr 66 y 62 (Conjunto Residencial Torremolinos),True
+516147,Cl 16 entre Kr 56 y 53,True
+516148,Cl 16 entre Kr 49A y 49,True
+516149,Cl 16 entre Kr 46A y 45Bis,True
+516166,Cl 16 entre Kr 53 y 56 (Unidad residencial),True
+516167,Cl 16 entre Kr 56 y 65_2 (Bloques del Limonar),True
+516172,Cl 16 entre Kr 60 y 56 (Canaverales - Los Samanes),True
+516173,Cl 16 entre Kr 56 y 65_1,True
+516175,Kr 50 entre Cl 34 y 38,True
+516176,Kr 50 entre Cl 41 y 42,True
+516177,Cl 13 entre Kr 69 y 68,True
+516178,Cl 42 entre Kr 59 y 67,True
+516179,Cl 42 entre Kr 68A y 68B,True
+516182,Kr 69 entre Cl 47 y 48,True
+516183,Kr 69 entre Cl 44 y 43,True
+516184,Cl 16 con Kr 69,True
+516185,Kr 66 entre Cl 13E y 13D (Parada ubicada sobre carrera 66 entre calle 13E y 13C. En sentido Oriente - Occidente.),True
+516186,Kr 66 entre Cl 13B y 13 (Parada ubicada sobre carrera 66 entre calle 13B y 13. parqueadero Transito de la 66. En sentido Oriente - Occidente.),True
+516187,Kr 66 entre Cl 13 y 12 (Parada ubicada sobre carrera 66 entre calle 13 y 12. costado izquierdo de Soporte Técnico Apple. En sentido Oriente - Occidente.),True
+516192,Cl 25 entre Kr 73 y 70,True
+516193,Cl 25 entre Kr 70 y 73,True
+516194,Cl 25 entre Kr 68A y 68,True
+516196,Cl 25 entre Kr 66 y 65 (Tiendas Metro - Ciudad 2000),True
+516197,Kr 66 entre Cl 25 y 18 (Cancha de Futbol 7),True
+516198,Kr 66 entre Cl 16 y 14C (Parada ubicada sobre carrera 66 entre calle 14C y 14. Parque la Guadua. En sentido Oriente - Occidente.),True
+516200,Kr 66 entre Cl 14C y 14 (Parada ubicada sobre carrera 66 entre calle 14C y 14. En sentido Oriente - Occidente.),True
+516202,Cl 14 entre Kr 66 y 65 (Antes de la Cra 65),True
+516203,Cl 14 entre Kr 64B y 64A (Unidad residencial),True
+516204,Cl 14 entre Kr 56 y 54,True
+516205,Cl 14 entre Kr 54 y 56,True
+516206,Cl 14 entre Kr 53 y 50,True
+516207,Cl 14 entre Kr 50 y 53,True
+516209,Cl 14 entre Kr 47 y 50,True
+516211,Cl 14 entre Kr 44 y 45,True
+516212,Cl 14 entre Kr 43 y 42,True
+516213,Cl 14 entre Kr 42 y 42A,True
+516214,Cl 14 entre Kr 40B y 40A,True
+516215,Cl 14 entre Kr 40 y 40A,True
+516216,Cl 14 entre Kr 38A y 37A,True
+516217,Cl 14 entre Kr 37 y 39,True
+516218,Cl 14 entre Kr 34 y 33A,True
+516219,Cl 14 entre Kr 33A y 34 (EMCALI Telefonia),True
+516220,Cl 14 entre Kr 32 y 31,True
+516221,Cl 14 entre Kr 31 y 32 (Almacenes Prica),True
+516224,Cl 14 entre Kr 72 y 75 (Quintas de Don Simon),True
+516225,Cl 14 entre Kr 76 y 73 (Prados del Limonar),True
+516226,Cl 14 entre Kr 69A y 70,True
+516227,Cl 14 entre Kr 70 y 69A,True
+516228,Cl 14 entre Kr 66 y 66A (La Hacienda),True
+516231,Kr 56 entre Cl 14 y 14C,True
+516232,Kr 56 entre Cl 15 y 16,True
+516233,Kr 56 entre Cl 7A y 6A,True
+516234,Cl 25 entre Kr 58 y 57A (Puente peatonal),True
+516235,Cl 13 entre Kr 29B y 31 (Unidad residencial),True
+516236,Cl 14 entre Kr 68 y 67 (La Hacienda),True
+516237,Cl 14 entre Kr 49 y 48,True
+516238,Cl 14 entre Kr 46 y 45,True
+516239,Kr 39 entre Cl 15 y 14C,True
+516240,Kr 39 entre Cl 26C y 26E,True
+516241,Kr 39 entre Cl 13B y 13A,True
+516242,Kr 39 entre Cl 11B y 10A,True
+516244,Cl 27 entre Kr 41 y 41A,True
+516245,Cl 27 entre Kr 41C y 41D,True
+516246,Kr 66 entre Cl 13A y 13B (La Hacienda),True
+516247,Kr 66 entre Cl 14A y 15 (Parada ubicada sobre carrera 66 entre calle 14A y 15. En sentido Occidente - Oriente.),True
+516248,Kr 66 entre Cl 15A y 16 (Unidad residencial),True
+516250,Cl 16 entre Kr 68 y 66,True
+516251,Cl 16 con Kr 68,True
+516252,Cl 16 entre Kr 69 y 70,True
+516254,Kr 80 entre Cl 13B y 13A (Centro Comercial Aquarela),True
+516255,Cl 16 entre Kr 44 y 43 (Barrio San Judas),True
+516256,Cl 16 entre Kr 41C y 41B,True
+516257,Cl 16 entre Kr 40A y 40,True
+516262,Cl 16 entre Kr 46A y 46B,True
+516263,Cl 16 entre Kr 48 y 49 (Antes del Olimpica),True
+516264,Cl 27 entre Kr 40A y 40,True
+516265,,False
+516266,Cl 27 entre Kr 36 y 37 (Escuela Jose Maria Vivas),True
+516267,Cl 27 entre Kr 39 y 40 (Drogas La Rebaja),True
+516268,Cl 27 con Kr 44,True
+516270,Dg 23 entre Cl 15 y Kr 23D,True
+516276,Kr 80 entre Cl 10A y 9 (Ciudadela Capri),True
+516277,Kr 80 entre Cl 13 y 10A (Parada ubicada sobre carrera 80 entre calle 13 y 10A. Centro Comercial San Andresito del Sur. En sentido Oriente - Occidente.),True
+516279,Cl 10 entre Kr 67 y 66A,True
+516283,Kr 83C con Cl 50,True
+516285,Kr 83C entre Cl 53 y 53A,True
+516286,Cl 54 entre Kr 83E y 83C,True
+516287,Cl 54 entre Kr 83E y 84,True
+516288,Cl 48 entre Kr 63 y 67,True
+516289,Cl 48 con Kr 69 (Ciudad 2000),True
+516290,Kr 70 entre Cl 10A y 11A,True
+516291,Kr 70 entre Cl 11A y 13,True
+516292,Kr 70 entre Cl 13 y 13A,True
+516293,Kr 70 entre Cl 13A1 y 13B,True
+516294,Kr 70 entre Cl 13C y 14,True
+516295,Kr 80 entre Cl 14 y 13C,True
+517002,Cl 8 entre Kr 10 y 12 (Punto GANE),True
+517006,Kr 56 entre Cl 8 y 9,True
+517007,Cl 9 entre Kr 53 y 52A,True
+517008,Cl 9 entre Kr 50 y 48 P2 (Centro Comercial Palmetto Plaza),True
+517009,Cl 9 entre Kr 46 y 44 (Clinica Santillana),True
+517010,Cl 9 entre Kr 50 y 48 P1 (Centro Comercial Palmetto Plaza),True
+517011,Kr 39 entre Cl 9A y 9,True
+517012,Kr 39 entre Cl 6 y 5F (Clinica Viva),True
+517013,Kr 39 entre Cl 5B y 5A (Telepacífico),True
+517014,Kr 52 entre Cl 3 y 2 (Colegio Eustaquio Palacios),True
+517015,Kr 52 entre Cl 2 y 3 (Unidad Deportiva),True
+517016,Cl 1 entre Kr 52 y 53 (Frente a Unidad residencial el Coliseo),True
+517017,Cl 1 entre Kr 53 y 52 (Unidad residencial del Coliseo),True
+517018,Cl 1 entre Kr 55B y 56 (Colegio El Amparo),True
+517020,Cl 1 entre Kr 59 y 60,True
+517021,Cl 1 entre Kr 60 y 59,True
+517023,Cl 1 entre Kr 62 y 60,True
+517025,Cl 1 entre Kr 64 y 64A,True
+517026,Cl 1 entre Kr 65A y 64A (Unidad residencial),True
+517027,Cl 1 entre Kr 66B y 67,True
+517028,Cl 1 entre Kr 69 y 67 (Unidad residencial),True
+517029,Kr 70 entre Cl 1Oe y 1A Oe,True
+517030,Cl 2 Oe entre Kr 72 y 73B,True
+517031,Cl 2A Oe entre Kr 74C y 74D,True
+517032,Cl 2A Oe entre Kr 75 y 75A (Hospital Mario Correa Rengifo),True
+517033,Cl 1A Oe entre Kr 75 y 74B,True
+517034,Cl 3 Oe entre Dg 51 y 50,True
+517035,Dg 50 entre Cl 6 y 7,True
+517037,Kr 52 entre Dg 50 y 51,True
+517038,Dg 51 entre Cl 8 y 7 (Cementerio de Siloe),True
+517039,Dg 51 entre Cl 5 y 4,True
+517041,Cl 2A con Kr 62B (Institución Educativa Politécnico Municipal),True
+517042,Cl 2A entre Kr 64 y 64A,True
+517043,Cl 2A entre Kr 65A y 66 (Unidad residencial Puente del Palmar),True
+517045,Cl 3 entre Kr 65A y 65,True
+517046,Cl 3 entre Kr 64 y 63A,True
+517050,Cl 3 entre Kr 60 y 58,True
+517052,Cl 2 entre Kr 54 y 53,True
+517058,Cl 1 entre Kr 52 y 50 (Centro de Salud Siloe),True
+517059,Cl 1 entre Kr 50 y Dg 51 (Frente al Centro de Salud),True
+517060,Cl 1 entre Kr 46 y 45,True
+517061,Cl 1 entre Kr 44 y 45,True
+517062,Cl 1 entre Kr 44 y 42 (Puente peatonal),True
+517063,Cl 1 entre Kr 39 y 40,True
+517064,Cl 1 entre Kr 42 y 40,True
+517076,Cl 5 entre Kr 70 y 73 P2 (Conexión con la estación Caldas),True
+517077,,False
+517078,,False
+517083,Cl 1AOe entre Kr 73B y 73A (Institución educativa Juan Pablo II),True
+517084,Cl 1A Oe entre Kr 72 y 70 (Antes de la 70),True
+517090,Cl 2 entre Kr 79 y 78B (Unidad residencial),True
+517091,Cl 1C entre Kr 77A y 78 (5 Esquinas),True
+517093,Cl 1C entre Kr 74 y 74A,True
+517096,Kr 73 entre Cl 2A y 2C (Universidad Cooperativa de Colombia),True
+517097,Kr 73 entre Cl 2C y 3,True
+517102,Cl 9 entre Kr 65A y 65 (Hamburguesas El Corral),True
+517103,Cl 9 entre Kr 63 y 62C,True
+517104,Cl 9 entre Kr 61A y 61,True
+517105,Cl 9 entre Kr 56 y 55,True
+517106,Cl 9 entre Kr 43 y 42,True
+517107,Cl 9 entre Kr 39 y 38 (Villa Olimpica),True
+517108,Cl 9 entre Kr 37 y 36 (Canchas Panamericanas),True
+517109,Cl 6 entre Kr 24A y 25 (Museo Biblioteca Departamental),True
+517110,Cl 6 entre Kr 26 y 27,True
+517111,Cl 6 entre Kr 29 y 30 (Iglesia La Milagrosa),True
+517113,Cl 6 entre Kr 34 y 36 (Coliseo Evangelista Mora),True
+517115,Cl 6 entre Kr 42 y 43,True
+517117,Cl 6 entre Kr 50 y Cl 5 (Cosmocentro),True
+517119,Kr 39 entre Cl 7A y 7,True
+517121,Kr 66 entre Cl 9 y 10 (Parada ubicada sobre carrera 66 entre calle 9 y 10. a 70m del cruce con carrera 66. KIA Motors. En sentido   Occidente - Oriente.),True
+517122,Kr 66 entre Cl 11 y 12 (Parada ubicada sobre carrera 66 entre calle11 y 13. costado derecho de Route 66 Bar. En sentido Occidente - Oriente.),True
+517123,Kr 66 entre Cl 13B y 13E (Unidad residencial Cananbu),True
+517125,Cl 10 entre Kr 33 y 39 (Canchas Panamericanas),True
+517126,Kr 67 entre Cl 2 y 1C,True
+517129,Cl 2A entre Kr 76A y 76,True
+517131,Cl 5 entre Kr 70 y 68 (Centro Comercial Limonar Premier),True
+517132,Cl 1 entre Kr 37A y 37 (Puente peatonal),True
+517133,Cl 9 Oe entre Kr 38B y 37,True
+517134,Cl 11 Oe entre Kr 36A y 36 (Los Cristales),True
+517143,Kr 56 entre Cl 1A Oe y 2 Oe,True
+517144,Kr 56 entre Cl 7 Oe y 8 Oe (Ciudadela Guadalupe),True
+517147,Cl 13 Oe entre Kr 56 y 54 (Hogar Geriatrico La Esperanza),True
+517150,Dg 51 con Cl 10 Oe (Colegio Juan Pablo II),True
+517151,Cl 1 entre Kr 52 y 54,True
+517152,Cl 1 entre Kr 38D y 38C,True
+517154,Kr 57 entre Cl 3 y 2A (Unidad residencial),True
+517155,Cl 2A entre Kr 58 y 60,True
+517156,Cl 2 entre Kr 66A y 66B,True
+517159,Cl 1C entre Kr 71 y 72,True
+517162,Cl 3 entre Kr 67 y 66B (Colegio Parroquial Divino Nino),True
+517163,Kr 68 entre Cl 3B y 3C,True
+517164,Cl 5 entre Kr 68 y 69,True
+517165,Cl 3 entre Kr 69 y 68,True
+517166,Kr 55B entre Cl 3 y 1A (Unidad Deportiva),True
+517167,Cl 3 entre Kr 62 y 61A,True
+517168,Kr 56 entre Cl 3 y 1B P1 (Colegio British),True
+517169,Kr 56 entre Cl 3 y 1B P2,True
+517173,Kr 56 entre Cl 7 Oe y 8 Oe (Colegio Tecnico Multiproposito),True
+517174,Cl 13 Oe entre Kr 55 y 56 (Unidad residencial Gualanday),True
+517175,Kr 56 entre Cl 5 y 7 (Camino Real),True
+517176,Kr 56 entre Cl 2 Oe y 1A Oe,True
+517177,Cl 1 entre Kr 56 y 55B (Colegio El Amparo),True
+517178,Kr 56 entre Cl 6A y 5 (Conexión con la estación Guadalupe),True
+517179,Kr 56 entre Cl 7 Oe y 8 Oe,True
+517180,Kr 56 entre Cl 17B Oe y 17C Oe,True
+517182,Cl 3 entre Kr 56 y 55,True
+517183,Vía La Sirena - Colegio Ideas_2,True
+517184,Kr 56 - Jardines del recuerdo_2 (Cementerio Jardines del Recuerdo),True
+517185,Kr 56 con Cl 17C Oe,True
+517186,Kr 56 con Cl 17B Oe,True
+517187,Kr 56 entre Cl 8 Oe y 7 Oe,True
+517188,Kr 56 entre Cl 8 Oe y 7 Oe,True
+517189,Kr 56 entre Cl 5 Oe y 3 Oe (Unidad residencial),True
+517190,Cl 6 entre Cl 5E y Kr 36B,True
+517200,Kr 66 entre Cl 10 y 9A (Parada ubicada sobre carrera 66 entre calle 10 y 9. costado derecho de Fundación Universitaria María Cano. En sentido Oriente - Occidente.),True
+517203,Dg 51 entre Cl 13A Oe y 14 Oe,True
+517204,Dg 51 entre Cl 14 Oe y 13A Oe,True
+517205,Dg 51 entre Cl 11 Oe y 10 Oe (Colegio Juan Pablo II),True
+517207,Kr 50 entre Cl 6 y 5,True
+517208,Cl 6 entre Kr 37A y 38 (FISCALÍA),True
+517209,Kr 50 con Cl 6 (Centro Comercial Cosmocentro),True
+517210,Kr 50 entre Kr 53 y 53A,True
+517211,Cl 6 entre Kr 39 y 39A,True
+517212,Kr 56 entre Cl 9C y 9B (Unidad residencial),True
+517213,Kr 56 entre Cl 9 y 10 (Unidad residencial),True
+517214,Kr 56 entre Cl 5 y 3,True
+517215,Cl 6 entre Kr 44 y 45A,True
+517216,Kr 56 - Jardines del recuerdo_1 (Cementerio Jardines del Recuerdo),True
+517217,Vía La Sirena - Colegio Ideas_1,True
+517218,Vía La Sirena_1 (Quebrada las Pilas),True
+517219,La Sirena Fin de ruta,True
+517220,La Sirena Inicio de ruta,True
+517221,Vía La Sirena_2 (Quebrada las Pilas),True
+517222,Cl 7 Oe entre Kr 52 y 51A,True
+517223,Cl 7 Oe entre Kr 51A y 52,True
+517224,Dg 51 con Cl 17 Oe (Cementerio Jardines de la Aurora),True
+517225,Dg 51 con Cl 17 Oe Inicio (Escuela de Carabineros),True
+517226,Kr 70 entre Cl 1C y 2B,True
+517227,Kr 70 entre Cl 2C y 3,True
+517228,Cl 1 entre Kr 55 y 54 (Riveras del Río),True
+517229,Vía a La Sirena - Los Monos_1 (Puente Rojo),True
+517230,Vía a La Sirena - Los Monos_2 (Puente Rojo),True
+517231,Cl 1 entre Kr 56 y 59,True
+517232,Cl 1 entre Kr 59 y 56,True
+517244,Cl 2A entre Kr 73B y 73C (Universidad Cooperativa de Colombia),True
+517247,Cl 3 entre Kr 73 y 70,True
+517248,Kr 52 con Cl 1,True
+517249,Kr 73 entre Cl 4 y 3B (Parqueadero),True
+517250,Kr 73 entre Cl 3 y 2C,True
+517251,Cl 2A entre Kr 73C y 73B (Universidad Cooperativa de Colombia),True
+517253,Cl 1C entre Kr 73 y 72,True
+517254,Kr 70 entre Cl 1A y 1Bis,True
+517255,Kr 70 entre Cl 1A y 1C (Centro Recreacional Lourdes),True
+517269,Cl 1 entre Kr 42A y 43A,True
+517270,Tv 2A entre Cl 2Bis y Dg 2A,True
+517271,Tv 2A entre Kr 74Bis y 74,True
+517272,Cl 4 entre Kr 80 y 78 (Conexión con la estación Capri),True
+517273,Cl 2B entre Kr 78 y 80 (Portón de Napoles),True
+517275,Cl 2A Bis entre Kr 80 y 81 (Parada ubicada sobre calle 2A Bis con carrera 81. a un costado de estación de bombeo de Alto Nápoles. Sentido Norte - Sur.),True
+517276,Kr 89 con Cl 1B Oe (Rincón de la Arboleda),True
+517277,Kr 83 en la Y (Parada ubicada sobre carrera 83 con carrera 81. en la Y. Oriente - Occidente.),True
+517278,Dg 51 entre Cl 10 Oe y 9 Oe (Colegio Juan Pablo II),True
+517279,Cl 2 con Kr 53,True
+517280,Cl 9 entre Kr 41 y 40,True
+517290,,False
+517291,,False
+517292,,False
+517293,,False
+517294,,False
+517295,,False
+517296,,False
+517297,,False
+517298,,False
+517299,,False
+517300,,False
+517301,,False
+518001,Cl 8 entre Kr 14 y 14A (Colegio San Juan Bosco),True
+518003,Kr 39 entre Dg 30 y Cl 34C,True
+518004,Kr 39 entre Cl 31 y 29,True
+518005,Kr 39 entre Cl 31A y 32 (Ferroelectricos),True
+518006,Kr 39 entre Cl 32A y 32,True
+518009,Kr 39 entre Cl 26A y 26,True
+518010,Kr 39 entre Cl 25 y 26,True
+518011,Cl 27 entre Kr 32A y 32B,True
+518012,Kr 39 entre Cl 37 y 38,True
+518013,Kr 39 entre Cl 29 y 30C,True
+518016,Kr 23 entre Cl 26B y Tv 25 (Comfandi El Prado),True
+518018,Kr 23 con Cl 33E,True
+518019,Kr 23 entre Tv 29 y Cl 33B,True
+518020,Kr 23 entre Cl 33F y 33C,True
+518021,Kr 23 entre Cl 33C y 33F,True
+518022,Kr 23 entre Cl 36 y 34,True
+518023,Kr 23 entre Cl 36 y 38,True
+518024,Kr 23 entre Cl 41 y 39,True
+518025,Kr 23 entre Cl 39 y 41,True
+518027,Kr 23 entre Cl 43 y 44,True
+518031,Cl 52 entre Kr 20 y 22,True
+518033,Cl 27 entre Kr 36 y 35,True
+518034,Cl 27 entre Kr 33 y 33B,True
+518035,Cl 27 entre Kr 33A y 33,True
+518036,Cl 27 entre Kr 31 y 31B,True
+518037,Cl 27 entre Kr 31A y 31,True
+518038,Kr 32 entre Cl 35 y 34,True
+518040,Cl 25 entre Kr 32B y 32A,True
+518045,Cl 28 entre Tv 25 y Kr 24A (Conexión con la estación Santa Mónica),True
+518046,Cl 28 con Cl 27,True
+518058,Cl 36 entre Kr 29 y 29C,True
+518069,Kr 32 entre Cl 34 y 35,True
+518070,Kr 32 entre Cl 32 y 31A,True
+518071,Kr 32 entre Cl 32 y 32A,True
+518072,Kr 32 entre Cl 30A y 29,True
+518073,Kr 32 entre Cl 30 y 31,True
+518074,Kr 39 entre Cl 19 y 18,True
+518075,Kr 23 entre Cl 28A y 28,True
+518077,Kr 23 entre Cl 49 y 48,True
+518081,Kr 32 entre Cl 26B y 27,True
+518082,Kr 23 entre Kr 18 y Cl 25 (Talleres de EMCALI),True
+518083,Cl 27 entre Kr 28 y 27,True
+518084,Cl 27 entre Kr 25B y Cl 28,True
+518085,Cl 28 entre Kr 23C y 23B (Conexión con la estación Santa Mónica),True
+518097,Kr 17 Bis con Cl 29 (Estación de servicio),True
+518098,Cl 30 entre Kr 17F y Cl 33A,True
+518102,Cl 44 entre Kr 26 y 24C (Unidad Recreativa La Tortuga),True
+518103,Cl 44 entre Kr 24B y 23,True
+518105,Cl 30 entre Kr 17D y 17F,True
+518125,Kr 32 entre Dg 30 y Cl 35H,True
+518128,Kr 32 entre Dg 30 y Cl 35E,True
+518131,Kr 29 entre Cl 35F Bis y 35G (Conexión con la estación Conquistadores),True
+518132,Cl 44 entre Tv 29 y Kr 28F (Conexión con la estación Conquistadores),True
+518133,Cl 44 entre Kr 28E y 28D,True
+518134,Cl 44 entre Kr 28A y 28,True
+518135,Cl 44 entre Kr 26L y 26K (El popalito),True
+518137,Cl 52 entre Kr 25 y 25A,True
+518143,Cl 44 entre Kr 28D y 28D1,True
+518152,Cl 33A entre Kr 17F4 y 17F5,True
+518153,Cl 52 entre Kr 22 y 20,True
+518154,Kr 23 entre Cl 25 y Kr 23A Bis,True
+518156,Cl 44 entre Kr 21 y 19,True
+518157,Cl 44 entre Kr 20 y 22,True
+518158,Cl 44 entre Kr 24 y 24A,True
+518159,Cl 44 entre Kr 25 y 25A,True
+518160,Cl 44 entre Cl 43 y 42A,True
+518161,Cl 44 entre Kr 28 y 28A,True
+518162,Cl 44 entre Kr 28E1 y Tv 29 (Conexión con la estación Conquistadores),True
+518163,Cl 44 entre Kr 21 y 19,True
+518165,Kr 39 entre Cl 26C y 26B (Polideportivo),True
+518175,,False
+518176,,False
+518177,,False
+518185,Kr 27 entre Cl 70B y 70C,True
+518188,Kr 27 entre Cl 70E y 70D,True
+518194,Cl 27 entre Kr 26 y 27,True
+519013,Cl 25 entre Kr 3 y 4 (Estación de servicio),True
+519015,Cl 10 entre Kr 32A y 33,True
+519016,Cl 10 entre Kr 33 y 32A,True
+519017,Cl 10 entre Kr 30 y 32 (Colseguros),True
+519018,Dg 23 entre Kr 31 y Cl 10B (Puente peatonal Colseguros),True
+519019,Dg 23 entre Cl 11 y 10B,True
+519020,Dg 23 entre Cl 10B y 12B,True
+519021,Cl 13 entre Kr 23D y 24,True
+519022,Cl 13 entre Dg 23 y Kr 23D (La Luna),True
+519025,Cl 13 entre Kr 20 y 21,True
+519026,Cl 13 entre Kr 21 y 20,True
+519027,Cl 9 entre Kr 32A y 32,True
+519028,Cl 9 entre Kr 31 y 30,True
+519029,Cl 9 entre Kr 28 y 27 (Galería Alameda),True
+519030,Cl 9 entre Kr 23D y 23C (Galería Alameda),True
+519031,Cl 9 entre Kr 19 y 17 (Antes de Estacion de Servicio),True
+519034,Kr 5 entre Cl 21 y 22,True
+519035,Kr 5 entre Cl 24 y 25 (Antes de la Cl 25),True
+519038,Av 4 Oe entre Cl 4 Oe y Av 4A Oe (Parada ubicada sobre avenida 4N entre calle 4 Oeste y carrera 1. a 20m del puente de carrera 1. En sentido Sur - Norte.),True
+519039,Av 4 Oe entre Cl 6 Oe y Av 5 Oe (Edificio Rio Aguacatal),True
+519040,Kr 1 entre Cl 9 Oe y 10 Oe (Capricho Moda),True
+519041,Cl 7 Oe con Av 1 Oe (La Portada al Mar),True
+519043,Kr 1 con Cl 5 Oe (Museo La Tertulia),True
+519045,Kr 8 entre Cl 25 y 24,True
+519047,Kr 8 entre Cl 16 y 15,True
+519048,Kr 5 entre Cl 15 y 16 (Centro Comercial El Diamante),True
+519049,Kr 5 entre Cl 19 y 20 (Parque San Nicolas),True
+519050,,False
+519051,,False
+519052,,False
+519054,Kr 8 entre Cl 20 y 19,True
+519059,Cl 10 entre Kr 19 y 20,True
+519062,Cl 10 entre Kr 22 y 23,True
+519065,,False
+519066,,False
+519067,,False
+519068,,False
+519069,Cl 5 entre Kr 5 y 6 (Frente a Comfenalco),True
+519070,Kr 4 entre Cl 9 y 8 (Cámara de Comercio de Cali),True
+519071,Kr 4 entre Cl 5 y 4 (CAMACOL),True
+519072,Kr 3 entre Cl 1 Oe y 2 Oe (Centro de atención Emcali),True
+519073,Kr 2 entre Cl 2 Oe y 3 Oe (Parada ubicada sobre carrera 2 entre calle 2 y 3 Oeste. Edificio Peñon de Antaño. En sentido Oriente - Occidente.),True
+519074,Kr 1 entre Cl 11 Oe y 12 Oe (Frente al Edificio Santa Teresita),True
+50050,RÍO CALI A1,True
+500500,RÍO CALI A1,True
+50060,TORRE DE CALI A1,True
+500600,TORRE DE CALI A1,True
+500601,TORRE DE CALI B1,True
+500602,TORRE DE CALI A2,True
+500603,TORRE DE CALI B2,True
+50065,PILOTO B1,True
+500650,PILOTO B1,True
+50070,SAN NICOLÁS B1,True
+500700,SAN NICOLÁS B1,True
+500750,LA ERMITA A1,True
+500751,LA ERMITA A2,True
+50080,PLAZA DE CAYCEDO A1,True
+500800,PLAZA DE CAYCEDO A1,True
+500850,CENTRO A1,True
+500851,CENTRO A2,True
+500950,FRAY DAMIÁN A1,True
+50100,SAN BOSCO B1,True
+501000,SAN BOSCO A1,True
+501001,SAN BOSCO B1,True
+501002,SAN BOSCO A2,True
+501003,SAN BOSCO B2,True
+50105,7 DE AGOSTO B1,True
+501050,7 DE AGOSTO A1,True
+501051,7 DE AGOSTO B1,True
+501052,7 DE AGOSTO A2,True
+501053,7 DE AGOSTO B2,True
+501100,EL TRÉBOL A1,True
+501101,EL TRÉBOL B1,True
+501150,VILLACOLOMBIA A1,True
+501151,VILLACOLOMBIA B1,True
+501200,CHAPINERO A1,True
+501201,CHAPINERO B1,True
+501250,ATANASIO GIRARDOT A1,True
+501251,ATANASIO GIRARDOT B1,True
+501300,FLORESTA A1,True
+501301,FLORESTA B1,True
+501350,BELALCÁZAR A1,True
+501351,BELALCÁZAR B1,True
+50140,SAN PASCUAL A2,True
+501401,SAN PASCUAL B1,True
+501402,SAN PASCUAL A2,True
+501403,SAN PASCUAL B2,True
+501405,SAN PASCUAL B3,True
+50145,SUCRE B2,True
+501452,,False
+50150,PETECUY B2,True
+501500,PETECUY B1,True
+501501,PETECUY B2,True
+501502,PETECUY B3,True
+50155,SAN PEDRO B2,True
+501550,SAN PEDRO B1,True
+501551,SAN PEDRO B2,True
+501552,SAN PEDRO B3,True
+50160,SANTA LIBRADA B1,True
+501600,SANTA LIBRADA A1,True
+501601,SANTA LIBRADA B1,True
+501602,SANTA LIBRADA A2,True
+501603,SANTA LIBRADA B2,True
+50165,MANZANA DEL SABER A1,True
+501650,MANZANA DEL SABER A1,True
+501651,MANZANA DEL SABER B1,True
+501652,MANZANA DEL SABER A2,True
+501653,MANZANA DEL SABER B2,True
+50170,ESTADIO B1,True
+501700,ESTADIO A1,True
+501701,ESTADIO B1,True
+501702,ESTADIO A2,True
+501703,ESTADIO B2,True
+50175,TEQUENDAMA B1 (Telepacífico),True
+501750,TEQUENDAMA A1 (Telepacífico),True
+501751,TEQUENDAMA B1 (Telepacífico),True
+501752,TEQUENDAMA A2 (Telepacífico),True
+501753,TEQUENDAMA B2 (Telepacífico),True
+50180,LIDO A1,True
+501800,LIDO A1,True
+501801,LIDO B1,True
+501802,LIDO A2,True
+501803,LIDO B2,True
+50185,UNIDAD DEPORTIVA A2,True
+501850,UNIDAD DEPORTIVA A1,True
+501851,UNIDAD DEPORTIVA B1,True
+501852,UNIDAD DEPORTIVA A2,True
+501853,UNIDAD DEPORTIVA B2,True
+501854,UNIDAD DEPORTIVA A3,True
+501855,UNIDAD DEPORTIVA B3,True
+501900,GUADALUPE A1,True
+501901,GUADALUPE B1,True
+501950,PAMPALINDA A1,True
+501951,PAMPALINDA B1,True
+502000,REFUGIO A1,True
+502001,REFUGIO B1,True
+502050,CALDAS A1,True
+502051,CALDAS B1,True
+50210,CAPRI B2,True
+502100,CAPRI A1,True
+502101,CAPRI B1,True
+502102,CAPRI A2,True
+502103,CAPRI B2,True
+50215,MELÉNDEZ A1,True
+502150,MELÉNDEZ A1,True
+502151,MELÉNDEZ B1,True
+502200,BUITRERA A1,True
+502201,BUITRERA B1,True
+502250,UNIVALLE A1,True
+502251,UNIVALLE B1,True
+50230,UNIVERSIDADES A2,True
+502300,UNIVERSIDADES A1,True
+502301,UNIVERSIDADES B1,True
+502302,UNIVERSIDADES A2,True
+502303,UNIVERSIDADES B2,True
+502304,UNIVERSIDADES C1,True
+502305,UNIVERSIDADES D1,True
+502309,UNIVERSIDADES D3,True
+502310,UNIVERSIDADES C3,True
+502311,UNIVERSIDADES D5,True
+502312,UNIVERSIDADES C4,True
+502313,UNIVERSIDADES D2,True
+502314,UNIVERSIDADES C2,True
+502315,UNIVERSIDADES D4,True
+502350,VERSALLES A1,True
+502351,VERSALLES B1,True
+502400,LAS AMÉRICAS A1,True
+502401,LAS AMÉRICAS B1,True
+502450,PRADOS DEL NORTE A1,True
+502451,PRADOS DEL NORTE B1,True
+502500,VIPASA A1,True
+502501,VIPASA B1,True
+502550,ÁLAMOS A1,True
+502551,ÁLAMOS B1,True
+502600,NUEVO LATIR B1,True
+502601,NUEVO LATIR A1,True
+502650,AMANECER B1,True
+502651,AMANECER A1,True
+502700,TRONCAL UNIDA B1,True
+502701,TRONCAL UNIDA A1,True
+502750,CONQUISTADORES B1,True
+502751,CONQUISTADORES A1,True
+502800,VILLANUEVA B1,True
+502801,VILLANUEVA A1,True
+502850,SANTA MÓNICA B1,True
+502851,SANTA MÓNICA A1,True
+502900,PRIMITIVO B1,True
+502901,PRIMITIVO A1,True
+502950,CIEN PALOS B1,True
+502951,CIEN PALOS A1,True
+50300,CALIPSO B3,True
+503001,CALIPSO B1,True
+503002,CALIPSO B2,True
+503003,CALIPSO B3,True
+503004,CALIPSO A4,True
+503005,CALIPSO A5,True
+503006,CALIPSO A6,True
+503007,CALIPSO B4,True
+503008,CALIPSO B5,True
+503009,CALIPSO B6,True
+503010,CALIPSO A1,True
+503011,CALIPSO A2,True
+503012,CALIPSO A3,True
+50340,,False
+503401,,False
+50345,,False
+503451,,False
+50350,,False
+503501,,False
+50355,,False
+503551,,False
+50400,PASO DEL COMERCIO C6,True
+504001,PASO DEL COMERCIO A2,True
+504003,PASO DEL COMERCIO C4,True
+504004,PASO DEL COMERCIO C4,True
+504006,PASO DEL COMERCIO C6,True
+504008,,False
+504009,PASO DEL COMERCIO A2,True
+504010,PASO DEL COMERCIO A3,True
+504011,PASO DEL COMERCIO A4,True
+504016,PASO DEL COMERCIO B3,True
+504018,PASO DEL COMERCIO A2,True
+50405,SIMÓN BOLÍVAR B3,True
+504051,SIMÓN BOLÍVAR A2,True
+504052,SIMÓN BOLÍVAR A3,True
+504053,,False
+504055,SIMÓN BOLÍVAR A6,True
+504056,SIMÓN BOLÍVAR B1,True
+504057,SIMÓN BOLÍVAR B2,True
+504058,SIMÓN BOLÍVAR B3,True
+504059,SIMÓN BOLÍVAR B4,True
+504061,,False
+504066,SIMÓN BOLÍVAR C5,True
+504067,SIMÓN BOLÍVAR B4,True
+504068,SIMÓN BOLÍVAR C7,True
+504069,SIMÓN BOLÍVAR C8,True
+504070,SIMÓN BOLÍVAR C9,True
+50410,,False
+504103,AGUABLANCA A4,True
+504105,AGUABLANCA B1,True
+504106,AGUABLANCA B2,True
+504107,AGUABLANCA B3,True
+504108,AGUABLANCA B4,True
+504109,AGUABLANCA B5,True
+504110,AGUABLANCA C1,True
+504112,AGUABLANCA C3,True
+504113,AGUABLANCA C4,True
+504114,AGUABLANCA C5,True
+504115,AGUABLANCA C6,True
+504116,AGUABLANCA C7,True
+504117,AGUABLANCA C8,True
+504118,AGUABLANCA C9,True
+504250,,False
+504253,,False
+504301,,False
+504302,,False
+504350,,False
+504351,,False
+504401,,False
+504402,,False
+504450,,False
+504451,,False
+504501,,False
+504502,,False
+504550,,False
+504553,,False
+504601,,False
+504602,,False
+504651,,False
+504652,,False
+504701,,False
+504702,,False
+504800,,False
+504801,,False
+504850,,False
+504851,Cl 70 entre Dg 15 y 13 (Puente peatonal),True
+504900,,False
+504901,,False
+504950,,False
+504951,,False
+505000,,False
+505001,,False
+505050,,False
+505051,,False
+505100,EL DIAMANTE A1,True
+505101,EL DIAMANTE B1,True
+505150,ANTONIO NARIÑO A1,True
+505151,ANTONIO NARIÑO B1,True
+505201,CIUDAD MODELO B1,True
+505202,CIUDAD MODELO A2,True
+505250,REPÚBLICA DE ISRAEL A1,True
+505253,REPÚBLICA DE ISRAEL B2,True
+505301,VILLA DEL SUR B1,True
+505302,VILLA DEL SUR A2,True
+505351,MARIANO RAMOS B1,True
+505352,MARIANO RAMOS A2,True
+50540,,False
+505400,CAÑAVERALES A1,True
+505401,CAÑAVERALES B1,True
+511000,Kr 84 entre Cl 54 y 55,True
+511001,Kr 84 entre Cl 55 y 56,True
+511002,Kr 80 entre Cl 14 y 16,True
+511005,Cl 13 entre Kr 100 y 86 (Universidad del Valle - Agora),True
+511006,Cl 13 entre Kr 89 y 100 (Unicentro Cali),True
+511008,Cl 13 entre Kr 85 y 87 (Multicentro),True
+511009,Cl 13 entre Kr 80 y 81 (La 14 de Pasoancho),True
+511010,Cl 13 entre Kr 87 y 89 (Multicentro),True
+511011,Calle 13 con Kr 86,True
+511012,Cl 13 con Kr 83 (Parque del Ingenio),True
+511013,Kr 70 entre Cl 14 y 16,True
+511014,Kr 80 entre Cl 16 y 15,True
+511015,Kr 83 entre Cl 16 y 14 P1 (Parque del Ingenio),True
+511017,Kr 83 entre Cl 16 y 14 P2 (Parque del Ingenio),True
+511019,Cl 42 entre Kr 84 y 85 (Parada ubicada sobre calle 42 entre  carrera 84 y 85 en sentido Norte - Sur.),True
+511020,Cl 25 entre Kr 114A y 118 (Universidad Autónoma de Occidente),True
+511021,Cl 25 entre Kr 117 y 115 (Universidad Autónoma de Occidente),True
+511022,Cl 34 con Kr 100,True
+511023,Cl 34 entre Kr 100 y 102,True
+511024,Cl 53 entre Kr 99 y 98C,True
+511031,Kr 127 entre 18A y 18 (Iglesia La Maria),True
+511033,Cl 25 entre Kr 99 y 98B (Parada ubicada sobre calle 25 entre carrrera 98 y 98B sentido Sur - Norte. Almacen la 14 del Lili),True
+511034,Kr 99 entre Cl 25 y 34 (La 14 - Valle de Lili),True
+511035,Kr 122 entre Cl 16 y 15 (Colegio Claret),True
+511036,Kr 122 entre Cl 15 y 16 (Liceo Quial),True
+511037,Kr 122 entre Cl 13 y 12 (Fundación Universidad Catolica),True
+511038,Kr 122 entre Cl 12 y 13 (Fundación Universidad Catolica),True
+511039,Kr 122 entre Cl 12 y 6 (Universidad San Buenventura),True
+511040,Kr 122 entre Cl 5 y 9 (Universidad San Buenventura),True
+511043,Kr 118 entre Cl 25 y 22 (Colegio Sagrada Familia),True
+511044,Kr 118 entre Cl 20 y 18 (Urbanización),True
+511045,Kr 122 entre Cl 17A y 16 (Parada ubicada sobe la carrera 122 entre calles 17 y 16A en sentido Oriente-Occidente),True
+511046,Cl 18 entre Kr 122 y 121 (Carulla),True
+511048,Vía La Buitrera - La Riverita_1 (Parada ubicada en la vía La Buitrera Km 2.5 sobre interseccion con vía a La Riverita. Sentido Occidente - Oriente.),True
+511049,Puesto de Salud La Buitrera (Parada ubicada sobre la vía Buitrera. frente al puesto de salud La Buitrera. Sentido Sur -  Norte.),True
+511050,Km 3 Vía la Buitrera (Colegio Diana Oese),True
+511051,Vía La Buitrera El Portento_1 (Parada ubicada sobre la vía Buitrera. sector el Portento. Callejón la T. Sentido Norte - Sur.),True
+511052,Vía La Buitrera P10 (Girasoles Web Cafe),True
+511053,Vía La Buitrera P11 (Sector Las Piedras Km 5),True
+511054,Vía La Buitrera P23 (Las Piedras),True
+511056,Vía la Buitrera Finca Santana (Parada ubicada sobre la vía Buitrera. Sentido Oriente - Occidente. Callejón los Pinos.),True
+511059,La Buitrera Inicio de ruta (Tienda Inicio de Ruta),True
+511061,Vía La Buitrera Villa Gloria (Parada ubicada sobre la vía Buitrera. Sentido Occidente - Oriente. frente a Finca Santa Ana.),True
+511062,Vía La Buitrera P21 (Golden Net),True
+511064,Vía La Buitrera P24 (Sector Girasoles),True
+511066,Ferretería La Buitrera (Parada ubicada sobre la vía Buitrera. Centro Cultural Yalulo. Sentido Norte - Sur.),True
+511067,Vía La Buitrera I.E. La Buitrera (Parada ubicada sobre la vía Buitrera. frente a Institución Educativa La Buitrera. Sentido Norte - Sur.),True
+511068,Vía La Buitrera - La Riverita_2 (Parada ubicada en la vía La Buitrera Km 2.5 a 20m de interseccion con vía a La Riverita. Sentido Occidente - Oriente.),True
+511069,Cl 13 entre Kr 101A y 102 (Ciudad Campestre),True
+511070,Vía La Buitrera Villa Libia (Parada ubicada en la vía La Buitrera en el Sector los Pinos. Sentido Occidente - Oriente.),True
+511071,Vía La Buitrera Los Pinos (Parada ubicada en la vía La Buitrera en el Sector los Pinos. Sentido Occidente - Oriente.),True
+511072,Cl 4 Oe entre Kr 94 y 94-1 (Parada ubicada sobre calle 4 Oeste entre carrera 93E y 94 1. Sentido Sur -  Norte.),True
+511073,Vía La Buitrera Jardín Creart (Parada ubicada frente al Club del Sena Vía la Buitrera Km 3. Sentido  Oriente - Occidente.),True
+511074,Vía La Buitrera Club SENA (Parada ubicada sobre la vía Buitrera. frente al club deportivo Em Sena. Sentido Occidente - Oriente.),True
+511075,Vía La Buitrera Colacteos (Parada ubicada sobre la vía Buitrera. frente al Liceo Entre-Rios. A 60m de Colacteos. Sentido  Oriente -  Occidente.),True
+511076,Liceo Entre Ríos La Buitrera (Parada ubicada sobre la vía Buitrera. a 30m del Liceo Entre-Rios y 90m de Colacteos en sentido Occidente - Oriente.),True
+511077,Vía La Buitrera P12 (Duquelandia),True
+511078,Vía La Buitrera P13 (Parada ubicada sobre la vía Buitrera. Sentido Sur - Norte. Frente a la panaderia Nueva Vida.),True
+511079,Vía La Buitrera P14 (Colegio Las Lajas),True
+511080,Vía La Buitrera P17 (Mi Capricho Km 6),True
+511081,La Buitrera Fin de ruta (Km 7 Fin de ruta),True
+511082,Vía La Buitrera P20 (Colegio Las Lajas Bajando),True
+511083,Vía La Buitrera P22 (Fatima),True
+511084,Vía La Buitrera El Portento_2 (Parada ubicada sobre la vía Buitrera. sector el Portento. a  20m del Callejón la T. Sentido Sur - Norte.),True
+511085,Kr 143 con Cl 42 (Parada ubicada sobre Vía principal de Cascajal. En sentido Oriente - Occidente.),True
+511086,Cl 18 entre Kr 137 y 142 (Parada ubicada sobre la calle 18 sentido Norte-Sur entre las carreras 137 y 142),True
+511087,Cl 18 entre Kr 142 y 137 (Parada ubicada sobre la calle 18 sentido Sur-Norte entre las carreras 142 y 137),True
+511090,Cl 42 entre Kr 81A y 81 (Parada ubicada sobre calle 42 entre  carrera 81A y 81 en sentido Sur - Norte),True
+511098,Cl 42 entre Kr 85E y 85D (Parada ubicada sobre calle 42 entre  carrera 85E  Y 85D en sentido Sur - Norte.),True
+511099,Cl 42 entre Kr 84 y 83E (Parada ubicada sobre calle 42 entre  carrera 84 Y 83E en sentido Sur - Norte.),True
+511100,Kr 99 entre Cl 45 y 42 (Parada ubicada sobre carrera 99 entre calle 45 y 42 en sentido Oriente-Occidente),True
+511104,Cl 14 entre Kr 83 y 84 (El Ingenio),True
+511105,Cl 14 entre Kr 85A y 85B (Parada ubicada sobre calle 14 entre carrera 85 y 85A en sentido Norte -  Sur.),True
+511106,Kr 80 entre Cl 46 y 48 (Frente al parque),True
+511107,Kr 99 entre Cl 42 y 45,True
+511110,Vía Cali - Puerto Tejada P1 (Fundación Universitaria San Martín),True
+511111,Vía Puerto Tejada entre Cl 25 y Kr 122 (Vivero),True
+511112,Vía Cali - Puerto Tejada P3 (Colegio Ingles De Los Andes),True
+511113,Vía Cali - Puerto Tejada P4 (Colegio Fray Damian),True
+511114,Vía Cali - Puerto Tejada P5 (Crucero Cali - Puerto Tejada - Cascajal),True
+511115,Vía Hormiguero P11 (Parada ubicada sobre Vía principal del Hormiguero. En sentido Oriente - sur. A 7m de la intersección con la Vía a Puerto Tejada.),True
+511116,Vía Hormiguero P3 (Casa 089),True
+511117,Vía Hormiguero P4 (Parada ubicada sobre Vía principal del Hormiguero. En sentido Occidente - Oriente.),True
+511118,Vía Hormiguero P6 (Fin de ruta),True
+511119,Vía Hormiguero P8 (Casa 122),True
+511120,Vía Hormiguero P9 (Casa 087),True
+511121,Via Hormiguero P1 (Vía principal Hormiguero - Hogar Infantil),True
+511122,Vía Cali - Puerto Tejada P6 (Vía Cali - Puerto Tejada),True
+511123,Kr 143 - Cascajal P1 (Puesto de Salud),True
+511124,Kr 143 - Cascajal P2 (Urbanización Flamenco),True
+511125,Kr 143 - Cascajal P3 (Centro Educativo El Hormiguero),True
+511126,Kr 143 - Cascajal P5 (Casa 152),True
+511127,Kr 143 - Cascajal P6 (EQUILAR - Casa 099),True
+511128,Kr 143 entre Cl 48 y 42 (Colegio Santa Maria de Pance),True
+511129,Kr 143 entre Cl 42 y 36 (Callejón Chaparral),True
+511130,Kr 143 con Cl 36 (Colegio La Presentacion),True
+511131,Vía Cali - Puerto Tejada P2 (Urbanización Maranon),True
+511132,Cl 36 entre Kr 128 y 129 (La Mazorca Tierna),True
+511133,Cl 36 entre Kr 129 y 134 (Frente a Zonamerica),True
+511134,Cl 36 entre Kr 146 y 148 (Estación de servicio),True
+511135,Cl 36 con Kr 164 (Hacienda La Gloria),True
+511136,Cl 36 entre Kr 129 y 128 (La Mazorca Especial),True
+511138,Cl 5 - Vía la Voragine (Melendez),True
+511139,Via la Voragine con Cl 2_1 (Acceso vial a La Buitrera),True
+511140,EcoParque Pance 1a entrada_1 (Vía La Voragine),True
+511141,EcoParque Pance 2a entrada_1 (Vía La Voragine),True
+511142,EcoParque Pance 3a entrada_1 (Vía La Voragine),True
+511143,EcoParque Pance 4a entrada_1 (Vía La Voragine),True
+511144,La Voragine Fin de ruta (Parada ubicada sobre la via que conduce de la entrada a La Voragine al Club del departamento frente al restaurante La Casa del Gallego),True
+511145,La Voragine Inicio de ruta (Parada ubicada sobre un costado del Club del Departamento junto a las casetas de venta de frutas y jugos),True
+511146,EcoParque Pance 4a entrada_2 (Vía La Voragine),True
+511147,EcoParque Pance 3a entrada_2 (Vía La Voragine),True
+511148,EcoParque Pance 2a entrada_2 (Vía La Voragine),True
+511149,EcoParque Pance 1a entrada_2 (Vía La Voragine),True
+511150,Via la Voragine con Cl 2_2 (Acceso vial a La Buitrera),True
+511151,Kr 122 con Cl 5 (La curva),True
+511153,Kr 109 entre Cl 49 y 50 (Centro de formación juvenil Valle del Lili),True
+511154,Kr 109 entre Cl 50 y 53 (Colegio Philadelphia),True
+511155,Kr 109 - Comfenalco_1 (Valle del Lili),True
+511156,Kr 109 - Colegio Juvenilla_1 (Parada ubicada sobre carrera 109. En sentido Sur -Oriente. Frente al Colegio Juvenilia.),True
+511157,Kr 109 - Club Cañasgordas (Parada ubicada sobre carrera 109. Frente a Club Cañasgordas.),True
+511158,Kr 109 - Colegio Juvenilla_2 (Parada ubicada sobre carrera 109. En sentido Sur -Oriente. Frente al Colegio Juvenilia.),True
+511159,Kr 109 - Comfenalco_2 (Valle del Lili),True
+511160,Kr 109 entre Cl 53 y 48_1 (Patio GIT Masivo),True
+511161,Kr 109 entre Cl 53 y 48_2 (Centro de formación juvenil Valle del Lili),True
+511162,Kr 109 entre Cl 26 y 25 (Salida Kr 109),True
+511163,Kr 95 entre Cl 4 y 3D (Parada ubicada sobre carrera 95 entre calle 4 y 3C. frente a centro comercial Los Mangos. Sentido Oriente - Occidente.),True
+511164,Kr 95 entre Cl 3 y Kr 95A (Parada ubicada sobre calle 2B entre calle 3 y carrera 95A. Sentido Oriente - Occidente.),True
+511166,Kr 94C entre Cl 2 y 1A Oe (Parada ubicada sobre carrera 94C entre calle 1B y 1. Sentido  Oriente - Occidente.),True
+511167,Kr 95 con Cl 1A Oe (Parada ubicada sobre calle 2 Oeste entre carrera 95 y calle 1 Bis Oeste. Sentido Occidente - Oriente.),True
+511168,Kr 96 entre Cl 1 Oe y 2 Oe (Parada ubicada sobre carrera 96 entre calle 1 y 2 Oeste. Sentido Occidente - Oriente.),True
+511169,Cl 4 Oe entre Kr 94B y 94A (Parada ubicada sobre calle 4 Oeste a 20m de intersección con carrera 95A. Sentido Oriente - Occidente.),True
+511170,Cl 4 Oe entre Kr 94A y 94 (Capilla La Inmaculada),True
+511171,Cl 4 Oe entre Kr 94Bis y 94A (Parada ubicada sobre calle 4 Oeste entre carrera 94 Bis y 94A. Sentido Sur -  Norte.),True
+511172,Kr 96 entre Cl 3 Oe y 1 Oe (Casa sobre la roca),True
+511173,Kr 95 entre Cl 1A Oe y 1A (El Mirador),True
+511174,Kr 94C entre Cl 1 Oe y 1B (Parada ubicada sobre carrera 94C entre calle 1A Oeste y 1. Sentido  Occidente - Oriente.),True
+511175,Kr 94B entre Cl 2 y 2B (Parada ubicada sobre carrera 94B entre calle 2A y 2B. Sentido Occidente - Oriente.),True
+511176,Cl 2B entre Kr 95A y 94D (Parada ubicada sobre calle 2B entre carrera 95A y 94D. Sentido Occidente - Oriente.),True
+511177,Kr 95 entre Cl 3 y 3C (Parada ubicada sobre carrera 95 entre calle 3 y 3B. Panaderia Listo Pan. Sentido Occidente - Oriente.),True
+511178,Cl 16 entre Kr 100 y 102 (Parada ubicada sobre la calle 16 entre las carreras 100 y 102 sentido Norte-Sur frente al Montana Desing Center),True
+511179,Cl 18 entre Kr 105 y Cl 16 (Parada ubicada sobre la calle 18 entre la glorieta de la carrera 105 y la calle 16 en sentido Norte-Sur Junto al instituto Berlitz),True
+511180,Cl 18 entre Kr 130 y 137 (Colegio Mayor San Francisco de Asís),True
+511181,Cl 18 entre Kr 137 y 130 (Parada ubicada sobre la calle 18 sentido Sur-Norte entre las carreras 137 y 130 frente al colegio Mayor San Francisco de Asís),True
+511182,Kr 94C con Cl 1C (Antes de la Y),True
+511183,Kr 102 entre Cl 12 y 11B (Ciudad Jardin),True
+511184,Cl 36 entre Kr 134 y 129 (Zonamerica),True
+511185,,False
+511186,Kr 94B entre Cl 2A y 2 (Parada ubicada sobre carrera 94B entre calle 2A y 2. Sentido  Oriente - Occidente.),True
+511187,Kr 100 entre Cl 11 y 12 (Conexión con la estación Buitrera),True
+511189,Vía Hormiguero P2,True
+511191,Vía Hormiguero P10,True
+511192,Cl 18 entre Kr 106 y 108 (Parada ubicada sobre la calle 18 en sentido Norte-Sur entre la calle 16 y el puente vehicular que cruza la quebrada),True
+511193,Cl 18 entre Kr 106 y 114 (Colegio Bennett),True
+511194,Cl 18 entre Kr 114B y 115 (Estación de servicio),True
+511195,Cl 18 entre Kr 121 y 122 (Clínica del rayón),True
+511196,"Cl 18 entre Kr 122 y 125 (Centro Comercial Lyrata Plaza, frente a la Universidad ICESI)",True
+511197,Cl 18 entre Kr 125 y 125A (Parada ubicada sobre la calle18 sentido Norte-Sur entre las carreras 125 y 127 después de la intersección con la carrera 125),True
+511198,Cl 18 entre Kr 126 y 127 (Iglesia La Maria),True
+511199,Cl 18 entre Kr 127 y 130_1 (Tiendas D1),True
+511201,Cl 18 con Kr 137_1 (Sede Deportiva La Candela - América de Cali),True
+511202,Cl 18 con Kr 142_1 (Parada ubicada sobre la calle 18 sentido Norte-Sur frente a la intersección de la carrera 142 y junto a pórtico de acceso a lote),True
+511203,Cl 18 entre Kr 142 y 146 (Frente a The British School),True
+511204,Cl 18 - Comfandi Pance (Retorno),True
+511206,Cl 18 con Kr 168_2 (Centro Campestre Comfandi Pance),True
+511207,Cl 18 entre Kr 146 y 142 (British School),True
+511208,Cl 18 con Kr 142_2 (Parada ubicada sobre la calle 18 en sentido Sur-Norte. después del British School y llegando a la esquina de la intersección con la carrera 142),True
+511209,Cl 18 con Kr 137_2 (Parada ubicada sobre la calle 18 sentido Sur-Norte antes del cruce con la carrera 137 frente a las canchas del Boca Junior - La Candela),True
+511210,Cl 18 entre Kr 130 y 127C_1 (Colegio Coomeva),True
+511211,Kr 143 - Cascajal P4,True
+511212,Cl 18 entre Kr 127C y 127 (Frente a Super Inter La Maria),True
+511213,Cl 18 entre Kr 127 y 125 (Terrazas de Pance),True
+511215,Kr 125 con Cl 23A (Colegio Nuestra Señora del Rosario),True
+511216,,False
+511221,Kr 168 con Cl 36 (Entrada Comfandi Pance),True
+511222,Cl 25 entre Kr 98B y 98,True
+511223,Cl 42 entre Kr 99 y 98A (Unidad residencial),True
+511224,Cl 45 entre Kr 103 y 102 (Parada ubicada sobre la Calle 42 entre las carreras 103 y 102 en sentido Norte-Sur.),True
+511225,Cl 45 entre Kr 100 y 99 (Parada ubicada sobre calle 45 entre carrera 100 y 99 en sentido Occidente-Oriente),True
+511226,Kr 99 entre Cl 34 y 25 (La 14 - Valle de Lili),True
+511228,Cl 48 entre Kr 92 y 90 (Parada ubicada sobre calle 48 entre carreras 92 y 90 en sentido sur-norte),True
+511229,Cl 18 entre Kr 127 y 130_2 (Frente al Colegio Coomeva),True
+511230,Cl 48 entre Kr 90 y 92 (Parada ubicada sobre calle 48 entre  carrera 90 Y 92 en sentido Norte - Sur.),True
+511232,"Cl 36 entre Kr 125 y 127 (Parada ubicada sobre la calle 25 sentido Norte-Sur después del cruce vehicular de la carrera 125. junto a restaurante ""Fogón de Leña"")",True
+511234,Cl 13 entre Kr 100 y 86_2 (Universidad del Valle - Entrada Unicentro),True
+511235,Kr 80 entre Cl 5 y 6A (Parada ubicada sobre carrera 80 entre calle 5 y 6A. a 30m de la porteria de la Unidad Residencial Valle de La Ferreira Unidad 2. En sentido Occidente - Oriente.),True
+511236,Cl 18 entre Kr 152 y 156 (Parada ubicada sobre la calle 18 sentido Norte-Sur aproximadamente a 60 metros de la intersección con la carrera 148),True
+511237,Cl 16 entre Kr 93 y 92 (Urbanización San Joaquín),True
+511242,Kr 86 entre Cl 17 y 18 (Urbanización San Joaquín),True
+511243,Kr 80 entre Cl 13A1 y 13B (Parada ubicada sobre carrera 80 entre calle 13A1 y 13B en sentido Occidente - Oriente.),True
+511244,Cl 18 con Kr 159_1 (Parada ubicada sobre la calle 18 en sentido Norte-Sur después de la intersección con carrera 159. diagonal al club de tenis Marcetennis),True
+511245,Cl 18 con Kr 159_2 (Parada ubicada sobre la calle 18 en sentido Sur-Norte después de la intersección con carrera 159. diagonal al club de tenis Marcetennis),True
+511246,Cl 18 con Kr 154 (Parada ubicada sobre la calle 18 entre las carreras 159 y 154 sentido Sur-Norte aproximadamente a 30 metros de la intersección con la carrera 154),True
+511247,Cl 18 con Kr 168_1 (Centro Campestre Comfandi Pance),True
+511248,Cl 36 entre Kr 141 y 143 (Cerca a la sede Deportiva Cascajal - América de Cali),True
+511249,Cl 18 entre Kr 118 y 115 (Parada ubicada sobre la calle 18 sentido Sur-Norte entre las carreras 118 y 115 frente a la estación de servicio de Terpel),True
+511250,Cl 18 con Kr 111 (Centro Comercial Hacienda Campestre),True
+511251,Cl 25 con Kr 111 (Alférez Real),True
+511254,Kr 127 entre Cl 36 y 25 (Estación de servicio),True
+511255,Kr 127 entre Cl 21A y 21 (Colegio Montezori),True
+511256,Cl 25 entre Kr 121 y 122 (Crucero Puerto Tejada),True
+511257,Cl 25 entre Kr 121 y 120 (Ciudad Pacífica),True
+511259,Cl 25 entre Kr 122 y 125,True
+511261,"Cl 18 entre Kr 121 y 118 (Parque Cañasgordas, frente a la Pontificia Universidad Javeriana)",True
+511264,Cl 18 entre Kr 109 y 106A (Parada ubicada sobre la calle 18 entre las carreras 106A y 109 sentido Sur-Norte despues del puente vehicular que cruza la quebrada),True
+511265,Cl 16 con Kr 103 (Antes del puente del Río Lili),True
+511266,Kr 109 entre Cl 24 y 22 (Universidad Libre),True
+511267,Cl 48 entre Kr 86 y 85D (Parada ubicada sobre calle 48 entre carreras 86 y 85 en sentido sur-norte frente a zona de locales comerciales de la unidad residencial Colores de Santa Sofía),True
+511268,Cl 48 entre Kr 84 y 83E (Parada ubicada sobre calle 48 entre carreras 83E y 84 en sentido sur-norte frente supermercado Surtifamiliar),True
+511269,Cl 48 entre Kr 83A y 82A (Parada ubicada sobre calle 48 entre  carrera 83A y 82A en sentido Sur - Norte),True
+511270,Cl 48 entre Kr 81 y 80 (Parada ubicada sobre calle 48 entre  carrera 81 y 80 en sentido Sur - Norte),True
+511271,Kr 80 entre Cl 46 y 45 (Parada ubicada sobre carrera 80 entre calle 45 y 46 sentido Oriente - Occidente. Parque el Caney.),True
+511272,Cl 42 con Kr 80 (Parada ubicada sobre calle 42 con  carrera 80. Frente al supermercado Olimpica.),True
+511273,Cl 42 entre Kr 81 y 84 (Parada ubicada sobre calle 42 entre  carrera 81 y 84 en sentido Norte - Sur),True
+511274,Kr 83C entre Cl 38 y 34,True
+511275,Cl 25 entre Kr 83C y 83,True
+511276,Cl 25 entre Kr 83A y 83B (Parada ubicada sobre calle 25 con carrera 83B. bajo puente peatonal de carrera 83B.En sentido Norte - Sur.),True
+511277,Cl 25 entre Kr 90 y 86 (Parada ubicada sobre calle 25 entre carrera 90 y 86. detrás de la unidad residencial Manzanares del Lili. En sentido Sur - Norte.),True
+511278,Cl 25 entre Kr 85C y 86 (Estación de servicio),True
+511279,Cl 25 entre Kr 89 y 94 (Parada ubicada sobre calle 25 entre carrera 89 y 94. En sentido Norte - Sur.),True
+511280,MELÉNDEZ C6 (Conexión con la estación Meléndez),True
+511281,Cl 25 entre Kr 98 y 100 (Centro Comercial Jardín Plaza),True
+511283,Cl 25 entre Kr 96 y 94 (Makro Valle de Lili),True
+511284,Cl 25 entre Kr 95 y 98 (Clinica Valle del Lili),True
+511286,Kr 94 entre Cl 4D y 4C (Fundación Universidad Catolica),True
+511288,Kr 92 entre Cl 4 y 3A (Unidad Residencia Horizontes),True
+511289,MELÉNDEZ C4 (Conexión con la estación Meléndez),True
+511290,MELÉNDEZ C2 (Conexión con la estación Meléndez),True
+511291,MELÉNDEZ C5 (Conexión con la estación Meléndez),True
+511292,Kr 94 entre Cl 4 y 4A (Super Inter),True
+511293,Cl 2 entre Kr 93 y 94 (Parada ubicada sobre calle 2 con carrera 93 y 94. En sentido Norte - Sur.),True
+511294,MELÉNDEZ C1 (Conexión con la estación Meléndez),True
+511296,MELÉNDEZ C3 (Conexión con la estación Meléndez),True
+511297,Kr 109 entre Cl 22 y 19 (Parada ubicada sobre la carrera 109 entre las calles 22 y 19 sentido Oriente-Occidente),True
+511298,Cl 25 entre Kr 85 y 83C (Parada ubicada sobre calle 25 entre carrera 83C y 85. MEDVET medicina veterinaria. En sentido Sur - Norte.),True
+511301,Cl 16 entre Kr 90 y 89 (Parada ubicada sobre calle 16 entre carrera 90 y 89 en sentido Sur - Norte. Urbanización San Joaquin.),True
+511302,Cl 19 entre Kr 109 y 111 (Condominio TAÍNO),True
+511305,Kr 86 entre Cl 14 y 16 (Universidad del Valle - Entrada por El Ingenio),True
+511309,Kr 56 entre Cl 13G y 13F,True
+511310,Kr 56 entre Cl 13E y 14 (IPS Primero de Mayo),True
+511311,Kr 56 entre Cl 13F y 13 (Unidad residencial),True
+511312,Kr 56 entre Cl 13 y 13C (Unidad residencial),True
+511313,Kr 56 entre Cl 13 y 12A,True
+511315,Kr 56 entre Cl 11A y 11 (Frente a la Oficina de Registros Publicos),True
+511316,Kr 56 entre Cl 10A y 11A (CVC),True
+511318,Cl 42 entre Kr 96 y 98 (Parada ubicada sobre calle 42 entre carrrera 96 y 98 sentido Norte - Sur.),True
+511319,Cl 42 entre Kr 97A y 97 (Parada ubicada sobre calle 42 entre  carrera 99 Y 98A a en sentido Sur -Norte),True
+511320,Cl 42 entre Kr 94A y 95 (Parada ubicada sobre calle 42 entre carrrera 94A y 95 sentido Norte - Sur.),True
+511321,Cl 42 entre Kr 95 y 94A (Parada ubicada sobre calle 42 entre  carrera 95 Y 94A a en sentido Sur -Norte),True
+511322,"Cl 42 entre Kr 91 y 92 (Parada ubicada sobre calle 42 entre carrrera 91 y 92 sentido Norte - Sur. Jardín infantil ""Mentes psico dinámicas.)",True
+511323,Cl 42 entre Kr 92 y 91 (Parada ubicada sobre calle 42 entre  carrera 92 Y 91 a en sentido Sur -Norte),True
+511324,Cl 42 entre Kr 85C y 85E (Parada ubicada sobre calle 42 entre  carrera 85C  Y 85E en sentido Sur - Norte.),True
+511329,Cl 42 entre Kr 98 y 98B (Parada ubicada sobre calle 42 entre carrrera 98 y 98B sentido Norte - Sur.),True
+511334,Cl 36 entre Kr 127 y 128 (Institución Universitaria Antonio José Camacho),True
+511335,Cl 36 entre Kr 134 y 139 (Parada ubicada en la berma sobre la calle 36 sentido Norte-Sur. frente a lote Abandonado. aproximadamente a 2 metros del poste eléctrico),True
+511336,Cl 24A con Kr 111,True
+511337,Cl 36 con Kr 148 (Camposanto Metropolitano del Sur),True
+511338,Kr 168 con Cl 25 (Centro Campestre Comfandi Pance),True
+511339,Cl 36 con Kr 180 (El Castillo),True
+511341,Cl 36 entre Kr 148 y 146 (Universidad Antonio Nariño),True
+511342,"Cl 5 entre Kr 84A y 84 (Bahía paralela al SOLO BUS, frente al Super Inter)",True
+511343,Cl 36 entre Kr 139 y 134 (Belleza Express),True
+511344,Cl 36 entre Kr 128 y 127 (Institución Universitaria Antonio José Camacho),True
+511345,Kr 100 con Cl 1E Oe_P2 (Parada con cobertizo),True
+511346,Cl 18 entre Kr 115 y 111 (Parada ubicada sobre la calle 18 sentido Sur-Norte entre las carreras 115 y 114),True
+511347,Cl 18 entre Kr 114 y 114B (Parada ubicada sobre la calle 18 sentido Norte-Sur entre las carreras 114 y 115),True
+511348,Cl 13 entre Kr 83 y 81,True
+511349,Cl 16 entre Kr 98 y 94 (Universidad del Valle sede Meléndez),True
+511350,Cl 4 Oe con Kr 94 (Parada ubicada sobre calle 4 Oeste entre carrera 93A y 93E. Sentido Sur -  Norte.),True
+511351,Cl 4 Oe con Kr 91 (Polvorines),True
+511352,Cl 4 Oe con Kr 89 (Punto de retorno de ruta),True
+511353,Cl 4 Oe con Kr 90 (Polvorines),True
+511354,Cl 4 Oe con Kr 92 (Parada ubicada sobre calle 4 Oeste entre carrera 92 y 91. Sentido Sur -  Norte.),True
+511356,Kr 109 con Kr 118_1 (Parada ubicada sobre intersección de carrera 118 y 109. sentido Oriente - Occidente.),True
+511357,Kr 109 con Kr 118_2 (Parada ubicada sobre intersección de carrera 118 y 109. sentido Occidente - Oriente.),True
+511360,Cl 18 entre Kr 130 y 127C_2 (Colegio Luis Horacio Gomez),True
+511361,Cl 18 entre Kr 118 y 120 (Pontificia Universidad Javeriana),True
+511368,Cl 2C Oe con Kr 96 (Fundación Carvajal),True
+511369,Kr 83 con Cl 2C Oe (Cinco esquinas),True
+511372,Kr 93 entre Cl 1 y 2 (Parada ubicada sobre carrera 93A con calle 1A. En sentido Occidente - Oriente.),True
+511375,Cl 4C entre Kr 87 y 88,True
+511376,Kr 92 entre Cl 4C y 4,True
+511377,Kr 94A entre Cl 3A y 3B (Parada ubicada carrera 93 entre calle 3A - 3B. frente a Polideportivo Horizontes. Sentido Occidente -  Oriente.),True
+511379,Vía La Buitrera P9 (Parada ubicada sobre la vía Buitrera. Villa Rosalba. Sentido Sur - Norte.),True
+511380,Vía La Buitrera P25 (Parada ubicada sobre la vía Buitrera. Villa Rosalba. Sentido Norte - Sur.),True
+511381,Hecienda la Rivera EMCALI_1 (Vía La Voragine),True
+511382,Hecienda la Rivera EMCALI_2 (Vía La Voragine),True
+511383,Vía Hormiguero P5 (Colegio La Asuncion),True
+511384,Vía Hormiguero P7 (Parada ubicada sobre Vía principal del Hormiguero. En sentido Oriente - Occidente.),True
+511386,Cl 42 entre Kr 111 y 109 (Urbanización Porto Alegre),True
+511387,Cl 42 entre Kr 112 y 111 (Parada ubicada sobre la calle 42 entre las calles 112 y 111 sentido Sur-Norte aproximadamente a 15 metros de la intersección con la carrera 111),True
+511388,Cl 5 entre Kr 85 y 86 (Estación de Servicio),True
+511389,,False
+511394,Cl 2B Oe entre Kr 93Bis y 93A (Fundación Carvajal),True
+511399,Kr 93A entre Cl 2B y 1B Oe (Alto Melendez),True
+511400,Kr 94 entre Cl 2 y 2A (Parada ubicada sobre carrera 94A entre calle 2 y 2A. En sentido Occidente - Oriente.),True
+511401,Kr 94A entre Cl 2B y 2C (Supermercado),True
+511403,Kr 102 entre Cl 42 y 45 (Parque del Jarillon Río Lili),True
+511404,Cl 48 entre Kr 99 y 100,True
+511407,Kr 99 entre Cl 50 y 48 (Parada ubicada sobre la carrera 99 entre calle 60 en  sentido Oriente-Occidente),True
+511408,Kr 99 con Cl 45 (Parada ubicada sobre carrera 99 con calle 45 en sentido Oriente-Occidente),True
+511409,Kr 109 entre Cl 43 y 44 (Manantial de la bocha),True
+511410,Kr 109 entre Cl 46 y 48 (Parada ubicada sobre carrera 109 entre calle 46 y 48. En sentido Occidente - Oriente.),True
+511411,Cl 49 entre Kr 109 y 111 (Parada ubicada sobre calle 49 entre carrera  109 y 111. en la zona posterior de la Unidad residencial Manantial de la Bocha. Parque 4. En sentido Norte - Sur.),True
+511412,Kr 109 con Cl 44 (Manantial de la bocha),True
+511414,Cl 42 entre Kr 113 y 115 (Valparaiso),True
+511416,Cl 48 entre Kr 94 y 95 (Arrecifes del Lili),True
+511417,Cl 48 entre Kr 96 y 97 (Unidad residencial),True
+511419,Kr 86 entre Cl 35 y 34 (Altos del Caney),True
+511420,Kr 85C entre Cl 33 y 28 (Parada ubicada sobre carrera 85E entre calle 33 y 28 en sentido Oriente - occidente.),True
+511421,Kr 85C entre Cl 18 y 17 (Parada ubicada sobre carrera 85C entre calle 18 y  17. En sentido Oriente - Occidente.),True
+511422,Cl 16 entre Kr 85B y 85A (Parada ubicada sobre calle 16 entre carrera 85B y 85A en sentido Sur - Norte. Parada ubicada frente al edificio Euskady.),True
+511423,Cl 16 entre Kr 83C y 83B (El Ingenio),True
+511424,Cl 16 entre Kr 73 y 76,True
+511425,Cl 16 entre Kr 83B y 83C (Parque El Ingenio),True
+511426,Cl 16 entre Kr 85 y 85A (El Ingenio),True
+511427,Kr 86 entre Cl 25 y 28 (Unidad residencial),True
+511428,Kr 86 entre Cl 34 y 42 (Unidad residencial),True
+511432,Cl 4 entre Kr 95 y 96 (Parada ubicada sobre la calle 4 entre carrera 95 y 96. Sentido Norte - Sur.),True
+511433,Cl 4 entre Kr 96 y 98 (Parada ubicada sobre la calle 4 entre carrera 96 y 98. Sentido Sur - Norte.),True
+511438,Kr 100B con Cl 1Bis Oe_P1 (Parada ubicada en  el cruce de la carrera 100B con Calle 1 Bis. Sentido Oriente - Occidente.),True
+511439,Kr 100A2 entre Cl 1C Oe y Kr 100A1 (Parada ubicada sobre la carrera 100B. Sentido Sur - Norte.),True
+511440,Kr 100 con Cl 1E Oe_P1 (Junto al Parqueadero),True
+511441,Kr 100 con Cl 1B Oe (Punto de retorno de ruta),True
+511443,Kr 100A entre Kr Cl 1D Oe y 1C Oe (Subida),True
+511445,Kr 100A2 entre Kr 100A1 y Cl 1C Oe (Parada ubicada sobre la carrera 100B. Sentido Norte - Sur.),True
+511446,Kr 100B con Cl 1Bis Oe_P2 (Parada ubicada en  el cruce de la carrera 100B con Calle 1 Bis. Sentido Occidente - Oriente.),True
+511447,Kr 98 entre Cl 3C y 4 (Parada ubicada sobre la carrera 98 entre calle 3C y 4. Sentido Sur - Norte.),True
+511448,Cl 4 entre Kr 96 y 95 (Parada ubicada sobre la calle 4 entre carrera 96 y 95. Sentido Sur - Norte.),True
+511449,Kr 83 entre Cl 1A1 y 1 (Parada ubicada sobre carrera 83 con calle 1A1 y 1. En sentido Oriente - Occidente.),True
+511452,Kr 78 entre Cl 3 y 2C (Parada ubicada sobre carrera 78 entre calle 3 y 3A. Sentido Oriente - Occidente.),True
+511453,Kr 78 entre Cl 3D y 3A (Parada ubicada sobre carrera 78 entre calle 3D y 3A. Sentido Oriente - Occidente.),True
+511456,Kr 99 entre Cl 45 y 48 (Parada ubicada sobre carrera 99 entre calle 45 Y 48 en sentido Occidente-Oriente),True
+511457,Kr 99 entre Cl 48 y 50,True
+511461,Iglesia La Buitrera (Parada ubicada sobre la vía Buitrera. Callejón la T. Colacteos. Sentido Occidente - Oriente.),True
+511462,Vía La Buitrera P15 (Tienda),True
+511463,Vía La Buitrera Callejón La T (Parada ubicada sobre la vía Buitrera. Callejón la T. Colacteos. Sentido  Oriente -  Occidente.),True
+511464,Kr 83C entre Cl 50 y 48A (Parada ubicada sobre carrera 83C entre calle 50 y 48 en sentido Oriente - Occidente),True
+511465,Kr 83C entre Cl 48A y 48 (Parada ubicada sobre carrera 83C entre calle 50 y 48 en sentido Oriente-Occidente),True
+511467,Kr 83C con Cl 48A (Parada ubicada sobre carrera 83C entre calle 48Bis y 50 en sentido Occidente-Oriente),True
+511468,Cl 42 entre Kr 83C y 83B (Senderos del Caney),True
+511469,Cl 48 entre Kr 81 y 82 (Parada ubicada sobre calle 48 entre  carrera 81 y 82 en sentido Norte - Sur),True
+511473,Kr 85D entre Cl 55 y 54 (Caseta de vigilancia),True
+511474,Cl 54 entre Kr 85D y 85C (Parada ubicada sobre calle 54 y carrera 85D y 85C en sentido Sur - Norte),True
+511475,Cl 54 entre Kr 84 y 85C (Unidad residencial),True
+511476,Cl 53 entre Kr 83E y 83C,True
+511478,Kr 86 entre Cl 45 y 48 (Policlinica Caney),True
+511479,Cl 48 entre Kr 99 y 98B (Parada ubicada sobre calle 48 entre  carrera 98B Y 98a en sentido Norte - Sur.),True
+511480,Cl 48 entre Kr 97 y 96A (Parada ubicada sobre calle 48 entre carrera 97 y 96A en sentido Sur-Norte),True
+511481,Cl 48 entre Kr 94A y 94 (Parada ubicada sobre calle 48 entre carrera 94A y 94 en sentido Sur-Norte),True
+511483,Kr 99 con Cl 53 (Parada ubicada sobre carrera 99 entre calle 53 y 50 en sentido Oriente-Occidente),True
+511484,Cl 48 entre Kr 98 y 98B (Parada ubicada sobre calle 48 entre carrera 98A y 98B en sentido Norte-Sur),True
+511485,Kr 83C entre Cl 30 y 34,True
+511486,Vía La Buitrera P18 (Mi Capricho Km 6),True
+511487,Kr 100B con Cl 1_P1 (Unidad Mirador Campestre),True
+511488,Kr 100B con Cl 1_P2 (Frente a la unidad Mirador Campestre),True
+511489,Cl 48 entre Kr 82 y 83A (Parada ubicada sobre calle 48 entre  carrera 82 y 83A en sentido Norte - Sur),True
+511490,Cl 48 entre Kr 83E y 85 (Parada ubicada sobre calle 48 entre carrera 83E Y 85 en sentido Norte - Sur. Aproximadamente a 100 m. hacia el sur. del supermercado Mercar.),True
+511491,Cl 48 entre Kr 85E y 86 (Parada ubicada sobre calle 48 entre  carrera 85E Y 86 en sentido Norte - Sur.),True
+511492,Cl 56 entre Kr 85C y 85D (Parada ubicada sobre calle 56 entre carrera 85C y 85D en sentido Norte - Sur-),True
+511493,Vía Puerto Tejada con Kr 122 (Fundación Universitaria San Martín),True
+511494,Kr 99 entre Cl 53 y 54 (Parada ubicada sobre carrera 99 con Calle 53 en sentido Occidente- Oriente),True
+511496,Kr 125 con Cl 19 (Parada ubicada sobre la carrera 125 entre las calles 19 y 22 sentido Occidente-Oriente junto al primer parqueadero de visitantes),True
+511497,Cl 1E Oe entre Kr 100A2 y 100A Bis (CDI Altos de Santa Elena),True
+511499,Kr 100A entre Kr Cl 1C Oe y 1D Oe (Bajada),True
+511500,Cl 1E Oe entre Kr 100A Bis y 100A2 (CDI Altos de Santa Elena),True
+511502,Kr 99 con Cl 50 (Parada ubicada sobre carrera 99 entre calle 50 y 53 en sentido Oriente-Occidente frente a las oficinas de constructora Meléndez),True
+511503,Cl 49 entre Kr 111 y 112 (Parada ubicada sobre calle 49 entre carrera  111 y 112. frente a parqueadero del Conjunto Residencial Ciprés. En sentido Norte - Sur.),True
+511504,Cl 48 entre Kr 111 y 109 (Parada ubicada sobre calle 48 entre carrera  111 y 109. a un costado de Unidad residencial Manantial de la Bocha. Parque 4. En sentido Sur - Norte.),True
+511505,Cl 48 entre Kr 109 y 111 (Parada ubicada sobre calle 48 entre carrera  109 y 111. Parque principal Bochalema. En sentido Norte - Sur.),True
+511506,Kr 112 entre Cl 46 y 44 (Parada ubicada sobre carrera 112 entre calle 46 y 44. Condominio Unidad Palmeras de la Bocha. En sentido  Oriente - Occidente.),True
+511507,Kr 112 entre Cl 44 y 43 (Parada ubicada sobre carrera 112 entre calle 44 y 43. Unidad Residencial Entreverdes. En sentido  Oriente - Occidente.),True
+511509,Kr 100 entre Cl 16 y 13 (Universidad del Valle - Entrada motos),True
+511510,Cl 13 entre Kr 100 y 86_1 (Universidad del Valle - Entrada peatonal),True
+511513,Cl 42 entre Kr 122 y 121A (Ciudad Pacífica),True
+511514,Kr 121A entre Cl 45 y 47 (Parada ubicada sobre carrera 121A entre calle 45 y 47. En sentido Occidente - Oriente.),True
+511515,Kr 121A entre Cl 47 y 47A (Unidad residencial Acuarela II),True
+511516,Cl 48 entre Kr 121A y 122 (Parada ubicada sobre calle 48 entre carrera 121A y  122. En sentido Norte - Sur.),True
+511517,Kr 122 entre Cl 47A y 47 (Parada ubicada sobre carrera 122 entre calle 47A y 47. En sentido Oriente - Occidente.),True
+511518,Kr 122 entre Cl 45 y 44 (Parada ubicada sobre carrera 122 entre calle 45 y 44. En sentido Oriente - Occidente.),True
+511519,Kr 122 entre Cl 42 y 30 (Parada ubicada sobre carrera 122 entre calle 42 y 30. En sentido Oriente - Occidente.),True
+511521,Kr 99 entre Cl 48 y 45,True
+511527,,False
+511528,Cl 42 entre Kr 115 y 116,True
+511532,Cl 53 con Kr 84,True
+511533,Cl 48 entre Kr 101 y 99A,True
+511534,Cl 54 con Kr 85C,True
+511535,Cl 56 con Kr 85C,True
+511536,Cl 3 con Kr 99,True
+511537,Cl 3 con Kr 98,True
+511539,Kr 122 entre Cl 42 y 30 (Parada ubicada sobre carrera 122 entre calle 42 y 30. En sentido Oriente - Occidente.),True
+511540,Cl 60 entre Kr 98F y 98E,True
+511541,Cl 60 entre Kr 98D y 98C,True
+511542,Cl 60 entre Kr 98C y 98B,True
+511543,Cl 60 entre Kr 98 y 97Bis,True
+511544,Cl 59 con Kr 96,True
+511545,Cl 59 entre Kr 95 y Cl 58,True
+511546,Cl 61 entre Cl 58 y Kr 95,True
+511547,Cl 61 con Kr 95,True
+511548,Cl 60 entre Kr 97Bis y 98,True
+511549,Cl 60 entre Kr 98B y 98C,True
+511550,Cl 60 con Kr 98D,True
+511551,Cl 60 con Kr 98F,True
+511552,Kr 98C entre Cl 53 y 55,True
+511553,Cl 55 con Kr 98,True
+511554,Kr 96 entre Cl 55 y 53,True
+511555,Cl 53 entre Kr 96 y 98,True
+511556,Cl 53 entre Kr 98 y 98B,True
+511557,Cl 53 entre Kr 98C y 99,True
+511558,,False
+511559,,False
+511565,Cl 25 entre Kr 126 y Tv 131,True
+511566,Cl 25 con Tv 131,True
+511567,Cl 25 entre Cl 30 y Kr 121,True
+511568,Cl 25 ente Kr 112 y 111,True
+511570,Cl 60 entre Kr 119 y 119A,True
+511571,Kr 119A entre Cl 60 y y 60B,True
+511572,Cl 60B entre Kr 119A y 119B,True
+511573,Kr 119B entre Cl 60B y y 60,True
+511574,Cl 60 entre Kr 119B y 119A,True
+511575,Cl 60 entre Kr 119A y 119,True
+511580,Cl 13 entre Kr 81 y 80 (Alkosto),True
+511590,Cl 60 entre Kr 118 y 118A,True
+511591,Cl 60 con Kr 118,True
+511592,Kr 109 entre Cl 60 y 60 Bis,True
+511593,Kr 109 entre Cl 60 Bis y 60A,True
+511594,Cl 60B entre Kr 109 y 108,True
+511596,Kr 109 entre Cl 60A y 60 Bis,True
+511597,Kr 109 entre Cl 60 Bis y 60,True
+511598,Kr 108 entre Cl 60B y 60A,True
+512001,Av 2A entre Cl 12N y 10N P1 (Plazoleta Jairo Varela - CAM),True
+512002,Cl 18 entre Kr 125 y 122 (Universidad ICESI),True
+512003,Cl 70 entre Av 3BN y 3CN,True
+512004,Cl 70 entre Av 4 y 3C P2,True
+512005,Av 6A con Cl 35N P1 (World Trade Center),True
+512006,Av 6N entre Cl 34 y 35 (CAI Chipichape),True
+512007,Av 6A entre Cl 27N y 26N P2 (El Molino),True
+512008,Av 6N entre Cl 21 y 22 (Alianza Francesa),True
+512009,Av 2A entre Cl 12N y 10N P2 (Plazoleta Jairo Varela - CAM),True
+512014,Av 2A con Cl 67N (Portal del Río),True
+512015,Cl 44 entre Av 3DN y 3EN (Parque Vipasa),True
+512017,Cl 70 entre Av 4N y 6N (Antes de la glorieta de Menga),True
+512018,Cl 70 entre Av 6N y 4N (Parque del Amor),True
+512020,Av 3 con Cl 23DN P1 (Terminal de Transporte),True
+512021,Av 3N entre Cl 32A y 33 (Clinica SaludCoop),True
+512022,Av 3N entre Cl 31 y 30 (Antigüo Rumbodromo),True
+512023,Av 3N entre Cl 24 y 23D (Nueva Clinica Rafael Uribe Uribe),True
+512024,Cl 21 entre Av 4N y 3N (Conexión con la estación Versalles),True
+512028,Cl 75CN entre Av 2A y 2A Bis,True
+512029,Cl 75CN entre Av 2ABis y 2B,True
+512032,Av 2B entre Cl 73N y Av 2B1 (Parque Infantil),True
+512033,Av 2AN entre Cl 71N y 70N,True
+512034,Av 3 entre Cl 59N y 61AN,True
+512035,Av 2N entre Cl 57AN y 57N (Sector Ciudadela Alamos),True
+512037,Av 6N Bis entre Av 6AN y Cl 31 (Santa Monica Plaza),True
+512038,Cl 44 entre Av 3HN y 4N,True
+512039,Cl 44 entre Av 4BN y 6N,True
+512040,Av 6 entre Cl 45N y 47N P2 (Frente a Panadería Kuty),True
+512041,Av 6 entre Cl 48N y 49N (Frente a Las Vallas),True
+512042,Cl 52N entre Av 5A y 5,True
+512043,Cl 52N entre Av 4A y 4 (Don Jacobo),True
+512044,Cl 52N entre Av 3H y 3F (Frente al Éxito la Flora),True
+512045,Cl 52N con Av 5B,True
+512046,Cl 25 entre Av 2D y 2C (Clinica de los Remedios),True
+512047,Cl 52N entre Av 4 y 4B,True
+512048,Cl 52N entre Av 5B y 6 (Unidad Residencial Patios de la Flora),True
+512054,Cl 34 entre Av 3CN y 4N,True
+512055,Av 2BN entre Cl 34 y 35 (Concesionario de Autos),True
+512056,Av 2BN entre Cl 31 y 34 (CAI Bulevar),True
+512057,Av 2BN entre Cl 25 y 24 (Nueva Clinica Rafael Uribe Uribe),True
+512061,Cl 73 entre Av 3N y 2CN (Estación de servicio),True
+512062,Cl 73 entre Av 2B3 y 2B2N,True
+512064,Cl 74N entre Av 2BN y 2CN (Unidad residencial),True
+512065,Cl 73Bis N con Av 2B1,True
+512068,Cl 52N entre Av 3A y 3A Bis (Conexión con la estación Álamos),True
+512069,Cl 18 entre Av 5AN y 6N (Clinica de Occidente),True
+512070,Cl 18 entre Av 3N y 4N (Four Point Sheraton),True
+512072,Av 6N entre Cl 16 y 18 (Oasis de la 6N),True
+512081,Av 3N entre Cl 52 y 55 (Conexión con la estación Álamos),True
+512085,Av 2C entre Cl 60 y 59AN,True
+512086,Av 2D entre Cl 57BN y 57AN,True
+512087,Av 2E entre Cl 55BN y 55AN,True
+512089,Cl 75 entre Av 2B y 2A (Parque),True
+512090,Av 2N entre Cl 75A y 75BN (Caseta de vigilancia),True
+512091,Av 2N entre Cl 75CN y 75DN,True
+512092,Av 2A con Cl 75HN (Conjunto Cerrado Guadalupe),True
+512093,Av 2CN entre Cl 75C y 75 (Unidad residencial),True
+512100,Cl 44 entre Av 2D y 2E (Plaza Norte),True
+512101,Av 2N entre Av 1 y Cl 4 (Auto Sura),True
+512102,,False
+512103,Av 4 entre Cl 10N y 12N (Plazoleta Jairo Varela),True
+512104,Av 6 entre Cl 13N y 15N (Edificio Univalle),True
+512105,Cl 34 entre Av 2E y 2BN (Cancha de Futbol 5),True
+512109,,False
+512111,,False
+512112,Av 2F entre Av 3 y Cl 25 (Terminal de Transporte),True
+512115,Cl 34 entre Av 2B y 2F,True
+512120,Av 2CN entre Cl 74 y 75 (Unidad residencial),True
+512121,Av 2BN entre Cl 75C y 75 (Unidad residencial),True
+512122,Cl 74 entre Av 2B2 y 2B1,True
+512123,Av 6N entre Cl 52 y 58 (Unidad Residencial Patios de la Flora),True
+512124,Cl 62A entre Av 2N y 2B (Ciudadela los Álamos),True
+512130,Cl 44 entre Av 5N y 4N,True
+512132,Cl 44 entre Av 2G y 2E,True
+512133,Av 3 entre Cl 17N y 15N (Conexión con la estación Torre de Cali),True
+512134,Cl 52 entre Av 2G y 2H,True
+512140,Av 6 entre Cl 50N y 52N,True
+512144,Cl 55N entre Av 2F y 2H (Centro Comercial Pacara),True
+512147,Av 6AN entre Cl 22 y 23 (Davivienda),True
+512148,Av 6N entre Cl 26A y 27,True
+512149,Av 6 entre Cl 28N y 29AN P1 (Antonio Jose Camacho),True
+512153,Av 2GN entre Cl 57 y 57A,True
+512154,Av 6N entre Cl 30 y 34 (La 14 Bulevar),True
+512163,Cl 44 entre Av 3G y 3EN,True
+512164,Cl 44 entre Av 3D y 3B (Conexión con la estación Vipasa),True
+512178,Cl 21 entre Av 5BN y 5AN,True
+512181,Av 2N entre Cl 62AN y 62N (Sector Ciudadela Alamos),True
+512184,Av 2G entre Cl 59N y 60N (Unidad Recreativa Rincon de Pacara),True
+512185,Cl 61 entre Av 2GN y 2BN (Unidad residencial Santa Angela),True
+512186,Av 3N entre Cl 61A y 70,True
+512187,Cl 74 entre Av 2B1 y 2B,True
+512194,Cl 34 entre Av 2N Bis y 2BN,True
+512195,Av 2B entre Cl 28N y 26N,True
+512200,Cl 70 entre Av 3C y 3 P1 (Centro de Diagnóstico Automotor del Valle - CDAV),True
+512203,Av 6A con Cl 35N P2 (World Trade Center),True
+512205,Av 6A entre Cl 25N y 24AN P2 (FISCALÍA),True
+512206,Av 3 con Cl 23DN P2 (Terminal de Transporte),True
+512207,Av 6 con Cl 49N (Frente a Las Vallas),True
+512208,Cl 44 entre Av 3AN y 3DN,True
+512209,Av 6 entre Cl 52N y 67N P2 (Centro Empresa),True
+512210,Av 6 con Cl 67N P2 (DELIMA MARSH),True
+512211,Av 6 entre Cl 23N y 24N P2 (Aqui es Juaco),True
+512212,Av 6 entre Cl 28N y 29AN P2 (Antonio Jose Camacho),True
+512213,Av 6 entre Cl 37AN y 37BN P1 (Frente al centro Comercial Chipichape),True
+512214,Av 6 entre Cl 40N y 42N P2,True
+512215,Cl 73 entre Av 2C y 2B6,True
+512220,Cl 52N entre Av 3F y 4 (Éxito la Flora),True
+513000,Cl 84 entre Kr 3AN y 3N,True
+513001,Kr 1 entre Cl 62 y 62A (Conexión con la estación Chiminangos),True
+513002,Av 4 Oe con Av 4A Oe,True
+513003,Av 1N entre Cl 7 y 6 (Bellas Artes),True
+513006,Cl 73 entre Kr 1A3 y 1A4,True
+513007,Cl 73 entre Kr 1A45 y 1A5,True
+513008,Cl 73 entre Kr 1A7 y 1A8 (Sobre el separador vial),True
+513009,Cl 73 entre Kr 1A12 y 1A13,True
+513014,Cl 70 entre Kr 1C1 y 1D,True
+513015,Av 6 entre Cl 38N y 36N P1 (Almacén Éxito - Centro Comercial Chipichape),True
+513016,Av 6 entre Cl 37AN y 37BN P2 (Frente al centro Comercial Chipichape),True
+513024,Kr 4N entre Cl 72 y 72BIS (Polideportivo),True
+513025,Kr 4N entre Cl 72G y 72H,True
+513026,Kr 4N entre Cl 76 y 77,True
+513027,Kr 4N entre Cl 82 y 83,True
+513029,Cl 84 entre Kr 2AN y 2BisN,True
+513030,Cl 84 entre Kr 1GN y 1HN,True
+513032,Kr 5N entre Cl 68N y 69N,True
+513033,Kr 4AN entre Cl 70 y 71,True
+513034,Kr 4N entre Cl 71F y 71H,True
+513037,Cl 52 entre Kr 1D y 1C3,True
+513038,Cl 52 entre Kr 1B1 y 1B,True
+513041,Kr 4N entre Cl 84 y 83,True
+513042,Kr 4N entre Cl 78 y 77,True
+513043,Kr 4N entre Cl 72K y 72J,True
+513044,Kr 4N entre Cl 72D y 72B,True
+513045,Kr 4N entre Cl 72A y 72,True
+513046,Kr 4N entre Cl 71E y 71D,True
+513047,Kr 4N entre Cl 71 y 70 (Estación de servicio),True
+513053,Kr 3N entre Cl 72C y 72D,True
+513054,Kr 3N entre Cl 74 y 75,True
+513055,Kr 3N entre Cl 83A y 84,True
+513058,Kr 1 entre Cl 62A y 66 (Puente peatonal),True
+513059,Cl 66 entre Kr 1A y 1A6 (Frente unidad residencial Villa Almendros),True
+513073,Kr 5N entre Cl 58N y 59N,True
+513077,Kr 3 entre Cl 58 y 59,True
+513078,Kr 3 entre Cl 59D y 60,True
+513079,Kr 3 entre Cl 63 y 63B,True
+513080,Kr 3 entre Cl 65B y 69,True
+513082,Kr 5 entre Cl 70 y 69 (Despues de la Estacion de Servicio),True
+513083,Kr 5 entre Cl 65A y 64B,True
+513084,Kr 5 entre Cl 62B y 62,True
+513085,Cl 62 entre Kr 4C y 4B,True
+513086,Kr 5N entre Cl 61N y Cl 62N,True
+513088,Kr 1 entre Cl 55 y 56 (Conexión con la estación Flora Industrial),True
+513089,Cl 56 entre Kr 1B y 1C (Unidad residencial),True
+513090,Cl 47 entre Kr 1B y 1A,True
+513091,Cl 73A entre Kr 1B1 y 1B2,True
+513092,Kr 2 entre Cl 53 y 52B,True
+513093,Cl 52 entre Kr 2C y 2E,True
+513094,Kr 3 entre Cl 52 y 53 (Centro Comercial UNICO),True
+513095,Kr 3 entre Cl 56 y 57 (Servicios de Transito),True
+513096,Kr 3 entre Cl 60 y 59D,True
+513097,Kr 3 entre Cl 59 y 58,True
+513098,Kr 3 entre Cl 57 y 58 (Frente a Servicios de Transito),True
+513099,Kr 3 entre Cl 54 y 53 (Detras del SENA),True
+513100,Cl 52 entre Kr 3 y 2 P1 (SENA Salomia),True
+513101,Cl 52 entre Kr 3 y 2 P2 (SENA Salomia),True
+513102,Cl 52 entre Kr 1E y 1D2,True
+513106,Cl 70 entre Kr 3 y 4C P2 (Metro de la 70),True
+513109,,False
+513117,Kr 1D entre Cl 71A y 72,True
+513118,Kr 5 entre Cl 28 y 29,True
+513119,Kr 5 entre Cl 32 y 33 (Galería Porvenir),True
+513121,Kr 5 entre Cl 34 y 35,True
+513122,Kr 5 entre Cl 38 y 36A,True
+513123,Kr 5 entre Cl 37 y 38 (Frente al Comfandi de las Delicias),True
+513124,Kr 5 entre Cl 44 y 43,True
+513125,Cl 73A entre Kr 1C1 y 1C,True
+513126,Cl 73A entre Kr 1A15 y 1A14 (IE Pedro Antonio Molina),True
+513127,Kr 5 entre Cl 46 y 47,True
+513129,Kr 2 entre Cl 52 y 56 (SENA Salomia - Entrada estudiantes),True
+513130,Kr 2 entre Cl 57 y 56,True
+513131,Kr 2 entre Cl 57 y 58,True
+513132,Kr 2 entre Cl 60 y 59B,True
+513133,Kr 2 entre Cl 59A y 60,True
+513134,Kr 2 entre Cl 62 y 60,True
+513135,Kr 2 entre Cl 61A y 62,True
+513136,Kr 2 entre Cl 64 y 62,True
+513138,Kr 2 entre Cl 67 y 66,True
+513141,Cl 73 entre Kr 7 y 2F (PTAR),True
+513142,Cl 73 entre Kr 4 y 3,True
+513143,Cl 73 entre Kr 1I y 1J,True
+513144,Cl 73 entre Kr 1G y 1F,True
+513145,Kr 1J entre Cl 71A y 70C (Polideportivo La Rivera 1),True
+513146,,False
+513147,Cl 52 entre Kr 3 y 4C (Centro Comercial UNICO),True
+513148,Kr 5 entre Cl 52 y 47,True
+513149,Cl 34 entre Kr 6A y 7,True
+513150,Cl 73 entre Kr 1D y 1C1,True
+513151,Cl 73 entre Kr 1A14 y 1A13,True
+513152,Cl 73 entre Kr 1A8 y 1A7,True
+513153,Cl 73 entre Kr 1A4E y 1A4D,True
+513154,Kr 1D entre Cl 75 y 76,True
+513155,Kr 1D entre Cl 78 y 79,True
+513158,Cl 73 entre Kr 1B2 y 1B3,True
+513159,Cl 73 entre Kr 1E y 1F,True
+513160,Cl 73 entre Kr 2A y 2B,True
+513161,Cl 73A entre Kr 3 y 4 (Bahía junto al CAI - PTAR),True
+513162,Cl 73A con Kr 5,True
+513163,Cl 73 entre Kr 1A2C y 1A2B,True
+513164,Cl 62 entre Kr 1Bis y 1A,True
+513165,Cl 73 entre Kr 1A1 y K1,True
+513166,Cl 62A entre Kr 1B4 y 1B5 (ChimiSexta),True
+513167,Cl 62A entre Kr 1A8 y 1A7 (ChimiSexta),True
+513168,Cl 66 con Kr 1A15 (Parque de Chiminangos),True
+513173,Kr 5N entre Cl 61N y 60N,True
+513174,Kr 5N entre Cl 57N y 56N,True
+513175,Kr 5N entre Cl 55 y 52,True
+513176,Kr 5N entre Cl 52 y 51,True
+513177,Kr 5N entre Cl 48N y 47N,True
+513178,Kr 5N entre Cl 46 y 45A,True
+513182,Kr 1 entre Cl 47 y 50 (Conexión con la estación Salomia),True
+513183,Cl 62 entre Kr 1B y 1C,True
+513188,Kr 5 entre Cl 55 y 54 (Unidad residencial),True
+513189,Kr 5 entre Cl 58 y 56,True
+513190,Kr 5 entre Cl 60 y 59 (Supermercado),True
+513191,Cl 52 entre Kr 7N y 9N,True
+513192,Cl 52 entre Kr 1 y 1B,True
+513193,Cl 52 entre Kr 1B y 1D (Centro Comercial Carrera),True
+513194,Cl 52 entre Kr 1D2 y 1E (Boutique Chavez),True
+513195,Kr 2 entre Cl 49 y 47,True
+513196,Cl 47 entre Kr 1D Bis y 1D,True
+513197,Kr 1D entre Cl 56 y 58,True
+513198,Kr 1D entre Cl 59 y 59B,True
+513199,Kr 1D entre Cl 60A y 60A1,True
+513200,Cl 62 entre Kr 1D y 1DBis,True
+513201,Cl 62 entre Kr 1G y 1G1,True
+513202,Cl 62 entre Kr 2 y 2B1 (Parque Los Almendros),True
+513204,Kr 1 entre Cl 38 y 34 (Makro Cali Norte),True
+513205,Cl 34 entre Kr 2AN y 5N,True
+513206,Kr 5N entre Cl 38A y 39,True
+513207,Kr 5N entre Cl 42 y 42A,True
+513208,Kr 5N entre Cl 45 y 45A,True
+513209,Cl 56 con Kr 1 (Conexión con la estación Flora Industrial),True
+513210,Kr 5N entre Cl 51A y 51B,True
+513211,Kr 5N entre Cl 63N y 65N,True
+513212,Cl 62 entre Kr 1D y 1C,True
+513214,Cl 62 entre Kr 1A6 y 1Bis (Unidad residencial),True
+513215,Kr 2 entre Cl 70 y 69,True
+513216,Cl 44 entre Kr 6N y 5N (Taller de maderas),True
+513217,Kr 1D con Cl 67 (Parque de Alcala),True
+513218,Cl 44 entre Kr 1D1 y 1D,True
+513219,Cl 44 entre Kr 1D1 y 1H,True
+513220,Cl 44 entre Kr 2 y 2B,True
+513221,Kr 1D entre Cl 63 y 62,True
+513222,Cl 44 entre Kr 7 y 6A,True
+513223,Kr 1D con Cl 61A,True
+513224,Cl 44 entre Kr 2 y 1E,True
+513225,Cl 34 entre Kr 7 y 5A,True
+513227,Kr 1D entre Cl 59 y 58,True
+513231,Cl 70 entre Kr 1B y 1B1,True
+513232,Cl 44 entre Kr 4E y 4B (Colegio Cendoe),True
+513233,Cl 44 entre Kr 6B y 6C,True
+513234,Cl 44 entre Kr 4B y 4E (Manuel Santiago Vallecilla),True
+513235,Cl 44 entre Kr 2N y 3AN (Helados DANCALI),True
+513236,Cl 44 entre Kr 6N y 7N,True
