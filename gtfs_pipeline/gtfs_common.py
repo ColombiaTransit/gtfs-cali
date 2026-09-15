@@ -20,6 +20,18 @@ STOPS_INFO_LAYER_ID = 0
 # LATITUD, LONGITUD). STOPID matches our GStopID-derived stop_id exactly.
 STOPS_INFO_FEATURE_SERVICE_URL = "https://services9.arcgis.com/8rJ42n9yWry0I4K4/arcgis/rest/services/ptosparadas/FeatureServer"
 
+# A third open-data item, "rutas" (Rutas del MIO), carries real route names
+# and schedule metadata - the main GTFS FeatureServer's Lines table has
+# only route_id and route_type. Hub dataset slug's item id and layer 0:
+ROUTES_INFO_ITEM_ID = "b157f8746f0649339d3aba1d2dd0a3d5"
+ROUTES_INFO_ARCGIS_ITEM_URL = f"https://www.arcgis.com/sharing/rest/content/items/{ROUTES_INFO_ITEM_ID}?f=json"
+ROUTES_INFO_LAYER_ID = 0
+# Confirmed live endpoint (fields verified: FID, RUTA, NOMBRE, DIA_TIPO,
+# VARIANTE, DIA_VARI, ID_SERVICI, SERVICIO, TIPOLOGIA, FECHA_IMPL, PSO,
+# OBSERVACIO, HABIL, SABADO, DOM_FEST, FRANJA, LONGITUD, FINALIZA, PSO_IMPL,
+# Shape__Length - plus real LineString/MultiLineString route geometry).
+ROUTES_INFO_FEATURE_SERVICE_URL = "https://services9.arcgis.com/8rJ42n9yWry0I4K4/arcgis/rest/services/rutas/FeatureServer"
+
 # Max distance (meters) for matching a GTFS stop to a ptosparadas point by
 # nearest-neighbor when no reliable shared ID field is found.
 STOPS_ENRICH_MAX_DISTANCE_M = 30

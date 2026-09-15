@@ -138,6 +138,60 @@ detection needs adjusting (`NAME_HINTS_PRIMARY` / `NAME_HINTS_SECONDARY` /
 `ID_HINTS` at the top of `stops_enrich.py`). A full per-stop audit trail
 is written to `build/report/stop_enrichment.csv`.
 
+## Step 1.6 — `enrich_routes.py` / `routes_enrich.py`: cross-referencing real route names
+
+Metro Cali also publishes "rutas" (Rutas del MIO, confirmed live at
+`services9.arcgis.com/.../services/rutas/FeatureServer/0`) — the GTFS
+FeatureServer's `Lines` table has only `route_id` and `route_type`, no
+names at all. This dataset fills that gap, the same
+pure-logic/CLI-wrapper split as the stops enrichment:
+
+- **`routes_enrich.py`** — pure matching logic, covered by
+  `test_routes_enrich.py`.
+- **`enrich_routes.py`** — thin CLI wrapper.
+
+**Confirmed live fields**: `FID, RUTA, NOMBRE, DIA_TIPO, VARIANTE,
+DIA_VARI, ID_SERVICI, SERVICIO, TIPOLOGIA, FECHA_IMPL, PSO, OBSERVACIO,
+HABIL, SABADO, DOM_FEST, FRANJA, LONGITUD, FINALIZA, PSO_IMPL,
+Shape__Length`, plus real `LineString`/`MultiLineString` route geometry
+(not currently used for matching — a possible future check would be
+cross-validating it against our reconstructed `shapes.txt`).
+
+- **`RUTA`** (e.g. `"A01A"`, `"A11B"`, `"A02"`) is a base route code plus
+  an *optional* trailing letter for direction/variant — `A01A`/`A01B` are
+  the two directions of route `A01`; `A02` has only one variant so carries
+  no suffix. Matching strips a trailing letter only when what's left still
+  ends in a digit, so `"A02"` is correctly left alone.
+- **`NOMBRE`** (e.g. `"ESTACIÓN SAN BOSCO - CAM - CENTRO"`) is populated
+  on every row and becomes `route_long_name`.
+- Multiple `RUTA` rows can share a base code (one per direction). The row
+  whose `RUTA` equals the base code exactly (no suffix) is preferred as
+  the "primary" variant; otherwise the first one found is used, and a
+  diagnostic is logged whenever variants disagree on the name text so you
+  can sanity-check which one got picked.
+- Only trusted if base-code coverage against our `route_id` values clears
+  50% — otherwise it bails out with zero changes rather than guessing.
+
+Once a route gets a real `route_long_name`, `fix.py` also backfills
+`route_short_name = route_id` for it (previously that placeholder only
+fired when *both* names were missing) — GTFS only strictly requires one
+of the two, but a short code is recommended, and `route_id` here already
+doubles as a legitimate one (e.g. `"A01"`).
+
+Run it alongside the stop enrichment, between `download.py` and `fix.py`:
+
+```bash
+python download.py
+python enrich_stops.py
+python enrich_routes.py   # best-effort - safe to skip
+python fix.py
+python validate.py
+```
+
+`run_all.py` and the GitHub Action run both enrichment steps in order and
+treat both as non-fatal. A full per-route audit trail is written to
+`build/report/route_enrichment.csv`.
+
 ## Requirements
 
 ```bash
@@ -158,6 +212,7 @@ or run stages individually:
 ```bash
 python download.py       # -> build/gtfs_raw/*.txt
 python enrich_stops.py   # -> patches stop_name into build/gtfs_raw/stops.txt (best-effort)
+python enrich_routes.py  # -> patches route_long_name into build/gtfs_raw/routes.txt (best-effort)
 python fix.py             # -> build/gtfs_clean/*.txt and build/gtfs.zip
 python validate.py        # -> build/report/validation_report.txt
 ```

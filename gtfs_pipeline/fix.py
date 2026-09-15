@@ -226,6 +226,20 @@ def fix_routes(df, valid_agency_ids):
                            f"(sistemas@metrocali.gov.co) before publishing.")
         df.loc[missing_names, "route_short_name"] = df.loc[missing_names, "route_id"].astype(str)
 
+    # route_short_name is only conditionally required by the spec (required
+    # only if route_long_name is absent) but always recommended. Our
+    # route_id doubles as a legitimate short code (e.g. "A01"), so fill any
+    # remaining blanks - this covers routes enriched with a real
+    # route_long_name (via routes_enrich.py) that still had no short name.
+    still_blank_short = is_blank("route_short_name")
+    if still_blank_short.any() and not missing_names.all():
+        newly_filled = still_blank_short & ~missing_names
+        if newly_filled.any():
+            log("routes.txt", f"filled route_short_name with route_id for "
+                               f"{int(newly_filled.sum())} route(s) that had a "
+                               f"route_long_name but no short name")
+        df.loc[still_blank_short, "route_short_name"] = df.loc[still_blank_short, "route_id"].astype(str)
+
     before = len(df)
     df = df.drop_duplicates(subset=["route_id"])
     if len(df) != before:
