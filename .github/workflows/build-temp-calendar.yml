@@ -1,0 +1,100 @@
+name: (temp) Build temporary calendar
+
+# Manual-only, exploratory workflow for build_temp_calendar.py - see
+# gtfs_pipeline/temp_calendar.py for what this actually does and why.
+# Not wired into the main gtfs-pipeline.yml build: this doesn't commit
+# anything to the repo, it just uploads calendar.txt/calendar_dates.txt
+# (plus the console log with the cross-check result) as a workflow
+# artifact so they can be inspected before deciding whether to promote
+# this into the real pipeline.
+#
+# Delete this file once the HABIL/SABADO/DOM_FEST hypothesis has been
+# confirmed or rejected against real service_id values and either wired
+# into gtfs-pipeline.yml properly or abandoned.
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: "Calendar start date (YYYYMMDD)"
+        required: false
+        default: "20260101"
+      end_date:
+        description: "Calendar end date (YYYYMMDD)"
+        required: false
+        default: "20261231"
+
+concurrency:
+  group: build-temp-calendar
+  cancel-in-progress: true
+
+env:
+  PIPELINE_DIR: gtfs_pipeline
+  COMMITTED_ZIP_PATH: data/gtfs.zip   # produced by the main gtfs-pipeline.yml workflow
+
+jobs:
+  build-temp-calendar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: pip install -r requirements.txt
+
+      - name: Unit-test the calendar logic first
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: |
+          python test_colombia_holidays.py
+          python test_temp_calendar.py
+
+      - name: Extract trips.txt from the last committed feed (for the cross-check)
+        run: |
+          mkdir -p "${PIPELINE_DIR}/build/gtfs_raw"
+          if [ -f "${COMMITTED_ZIP_PATH}" ]; then
+            unzip -p "${COMMITTED_ZIP_PATH}" trips.txt > "${PIPELINE_DIR}/build/gtfs_raw/trips.txt" \
+              && echo "Extracted trips.txt from ${COMMITTED_ZIP_PATH} for the service_id cross-check." \
+              || echo "trips.txt not found inside ${COMMITTED_ZIP_PATH} - cross-check will be skipped."
+          else
+            echo "No committed feed at ${COMMITTED_ZIP_PATH} yet - cross-check will be skipped. " \
+                 "(build_temp_calendar.py still runs fine without it.)"
+          fi
+
+      - name: Build temporary calendar.txt / calendar_dates.txt
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: |
+          python build_temp_calendar.py \
+            --start "${{ inputs.start_date }}" \
+            --end "${{ inputs.end_date }}" \
+            | tee build/temp_calendar_log.txt
+
+      - name: Upload results as a workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: temp-calendar
+          path: |
+            ${{ env.PIPELINE_DIR }}/build/gtfs_raw/calendar.txt
+            ${{ env.PIPELINE_DIR }}/build/gtfs_raw/calendar_dates.txt
+            ${{ env.PIPELINE_DIR }}/build/temp_calendar_log.txt
+          retention-days: 14
+
+      - name: Summary
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: |
+          {
+            echo "### Temporary calendar build"
+            echo ""
+            echo "Range: \`${{ inputs.start_date }}\` - \`${{ inputs.end_date }}\`"
+            echo ""
+            echo "\`\`\`"
+            grep -A5 "Cross-check against real" build/temp_calendar_log.txt || echo "(no trips.txt available for cross-check)"
+            echo "\`\`\`"
+            echo ""
+            echo "Full files are attached as the \`temp-calendar\` artifact on this run."
+          } >> "$GITHUB_STEP_SUMMARY"
