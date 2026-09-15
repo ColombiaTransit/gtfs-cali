@@ -233,7 +233,10 @@ def main():
         calendar_internal, layers["CalendarExceptions"], layers["Runs"]
     )
     calendar_df = calendar_internal.drop(columns=["_internal_id"]) if not calendar_internal.empty else calendar_internal
-    calendar_dates_df = R.build_calendar_dates(layers["CalendarExceptions"])
+    calendar_dates_df = R.build_calendar_dates(
+        layers["CalendarExceptions"],
+        calendar_df,
+    )
 
     print("Building stop sequences per pattern (LineVariants x LineVariantElements)...")
     stop_sequences, geometries = R.build_stop_sequence_per_pattern(
