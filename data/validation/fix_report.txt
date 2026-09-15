@@ -2,5 +2,5 @@ GTFS fix report
 ================
 
 [stops.txt] SOURCE DATA GAP: 121 stop(s) have no stop_name in the source - filled with a placeholder ('Parada <stop_id>'). Get real names from Metro Cali (sistemas@metrocali.gov.co) before publishing.
-[routes.txt] SOURCE DATA GAP: 94 route(s) have neither route_short_name nor route_long_name in the source - filled route_short_name with route_id as a placeholder. Get real route names from Metro Cali (sistemas@metrocali.gov.co) before publishing.
+[routes.txt] SOURCE DATA GAP: 39 route(s) have neither route_short_name nor route_long_name in the source - filled route_short_name with route_id as a placeholder. Get real route names from Metro Cali (sistemas@metrocali.gov.co) before publishing.
 [shapes.txt] dropped 4 rows with missing required fields
