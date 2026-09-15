@@ -192,6 +192,46 @@ python validate.py
 treat both as non-fatal. A full per-route audit trail is written to
 `build/report/route_enrichment.csv`.
 
+## Step 4 — `validate_routes_geometry.py`: does our reconstruction match reality?
+
+This answers the same question as `enrich_stops.py`'s spatial fallback, but
+for routes: not "does the ID match" (that's `routes_enrich.py`) but **"does
+our reconstructed path actually trace the same real-world road as Metro
+Cali's own official line?"** It's a geometric ground-truth check on the
+whole reconstruction pipeline (join logic, stop sequencing, shape building
+in `reconstruct.py`) — not spec validation, and genuinely independent of
+everything else, since it compares against a separately-maintained dataset.
+
+**Method**: for each of our reconstructed `shapes.txt` shapes, compare it
+against every `rutas` direction/variant sharing that route's base code
+(reusing `routes_enrich.build_route_variant_map`), using **mean
+nearest-vertex distance** — for every point on our shape, the distance to
+the closest point on the candidate line, averaged both directions. The
+closest-matching variant wins. Classified `OK` (≤30m — normal GPS/digitizing
+noise between two independent datasets), `WARN` (≤100m), `FAIL` (>100m —
+worth investigating), or `NO_CANDIDATE` (route_id has no matching `rutas`
+entry at all).
+
+This is a real bug detector, not just a formality — verified in testing: a
+shape deliberately built to match `A01A`'s real geometry scored `OK` at
+~16m; a shape deliberately built as an unrelated line scored `FAIL` at
+~53km. If your reconstruction has a join bug (wrong `LineVariantElements`
+picked up, wrong `shape_id` assigned), this is what catches it.
+
+Run after `fix.py` (it reads the *cleaned* `shapes.txt`/`trips.txt`):
+
+```bash
+python fix.py
+python validate_routes_geometry.py   # informational, never blocks the pipeline
+python validate.py
+```
+
+Non-fatal in CI too — it's purely diagnostic. Full per-shape results go to
+`build/report/shape_geometry_validation.csv`; the console output also
+prints the worst-scoring shapes so you don't have to open the CSV to spot
+trouble. Covered by `test_shape_geometry_validate.py` (identical-line,
+known-offset, best-candidate-selection, and full end-to-end cases).
+
 ## Requirements
 
 ```bash
