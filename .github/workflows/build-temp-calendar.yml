@@ -53,18 +53,30 @@ jobs:
         run: |
           python test_colombia_holidays.py
           python test_temp_calendar.py
+          python test_diagnose_service_ids.py
+          python test_diagnose_service_id_daytypes.py
 
-      - name: Extract trips.txt from the last committed feed (for the cross-check)
+      - name: Extract data from the last committed feed
         run: |
           mkdir -p "${PIPELINE_DIR}/build/gtfs_raw"
           if [ -f "${COMMITTED_ZIP_PATH}" ]; then
-            unzip -p "${COMMITTED_ZIP_PATH}" trips.txt > "${PIPELINE_DIR}/build/gtfs_raw/trips.txt" \
-              && echo "Extracted trips.txt from ${COMMITTED_ZIP_PATH} for the service_id cross-check." \
-              || echo "trips.txt not found inside ${COMMITTED_ZIP_PATH} - cross-check will be skipped."
+            for f in trips.txt calendar_dates.txt routes.txt stop_times.txt; do
+              unzip -p "${COMMITTED_ZIP_PATH}" "$f" > "${PIPELINE_DIR}/build/gtfs_raw/$f" 2>/dev/null \
+                && echo "Extracted $f from ${COMMITTED_ZIP_PATH}." \
+                || echo "$f not found inside ${COMMITTED_ZIP_PATH} - steps needing it will be skipped."
+            done
           else
-            echo "No committed feed at ${COMMITTED_ZIP_PATH} yet - cross-check will be skipped. " \
-                 "(build_temp_calendar.py still runs fine without it.)"
+            echo "No committed feed at ${COMMITTED_ZIP_PATH} yet - the cross-check and " \
+                 "diagnostics below will be skipped. (build_temp_calendar.py still runs fine without it.)"
           fi
+
+      - name: Diagnose what the real service_id values actually represent (exception dates)
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: python run_diagnose_service_ids.py | tee build/service_id_diagnostic.txt
+
+      - name: Diagnose real service_id day-types (rutas HABIL/SABADO/DOM_FEST windows)
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: python run_diagnose_service_id_daytypes.py | tee build/service_id_daytype_diagnostic.txt
 
       - name: Build temporary calendar.txt / calendar_dates.txt
         working-directory: ${{ env.PIPELINE_DIR }}
@@ -82,6 +94,10 @@ jobs:
             ${{ env.PIPELINE_DIR }}/build/gtfs_raw/calendar.txt
             ${{ env.PIPELINE_DIR }}/build/gtfs_raw/calendar_dates.txt
             ${{ env.PIPELINE_DIR }}/build/temp_calendar_log.txt
+            ${{ env.PIPELINE_DIR }}/build/service_id_diagnostic.txt
+            ${{ env.PIPELINE_DIR }}/build/service_id_daytype_diagnostic.txt
+            ${{ env.PIPELINE_DIR }}/build/report/service_id_daytype_analysis.csv
+            ${{ env.PIPELINE_DIR }}/build/report/service_id_daytype_summary.csv
           retention-days: 14
 
       - name: Summary
@@ -92,8 +108,19 @@ jobs:
             echo ""
             echo "Range: \`${{ inputs.start_date }}\` - \`${{ inputs.end_date }}\`"
             echo ""
+            echo "#### service_id cross-check (HABIL/SABADO/DOM_FEST hypothesis)"
             echo "\`\`\`"
             grep -A5 "Cross-check against real" build/temp_calendar_log.txt || echo "(no trips.txt available for cross-check)"
+            echo "\`\`\`"
+            echo ""
+            echo "#### Real service_id diagnostic (exception dates)"
+            echo "\`\`\`"
+            cat build/service_id_diagnostic.txt
+            echo "\`\`\`"
+            echo ""
+            echo "#### Real service_id diagnostic (rutas day-type windows)"
+            echo "\`\`\`"
+            cat build/service_id_daytype_diagnostic.txt
             echo "\`\`\`"
             echo ""
             echo "Full files are attached as the \`temp-calendar\` artifact on this run."
