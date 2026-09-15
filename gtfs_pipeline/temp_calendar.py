@@ -82,7 +82,7 @@ def cross_check_against_real_service_ids(real_service_ids, day_type_service_ids=
     return matched, unmatched_real, unmatched_daytype
 
 
-def add_festivo_exceptions(calendar_df, calendar_dates_df=None):
+def add_festivo_exceptions(calendar_df, calendar_dates_df=None, exclude_stale_existing=False):
     """Given a GTFS-shaped calendar.txt (service_id, monday..sunday,
     start_date, end_date) and an optional existing GTFS-shaped
     calendar_dates.txt (service_id, date, exception_type), returns a new
@@ -96,12 +96,46 @@ def add_festivo_exceptions(calendar_df, calendar_dates_df=None):
           (exception_type=1), unless the festivo is itself a Sunday
     Never overrides an existing (service_id, date) exception - explicit
     data always wins.
+
+    If calendar_dates_df is provided, its dates are checked against the
+    calendar_df's own start_date/end_date range. Real source data has
+    turned out to be a year stale before (2025 exceptions inside a feed
+    meant to describe 2026 service) - if NONE of the existing rows fall
+    inside the requested range, that's flagged loudly as likely-stale
+    rather than silently treated as current, authoritative data. Pass
+    exclude_stale_existing=True to drop such rows from the output
+    entirely instead of just warning about them.
     """
     existing_pairs = set()
     base_rows = []
     if calendar_dates_df is not None and not calendar_dates_df.empty:
-        base_rows = calendar_dates_df.to_dict("records")
-        existing_pairs = set(zip(calendar_dates_df["service_id"], calendar_dates_df["date"]))
+        working_df = calendar_dates_df
+
+        overall_start = calendar_df["start_date"].min() if "start_date" in calendar_df.columns and len(calendar_df) else None
+        overall_end = calendar_df["end_date"].max() if "end_date" in calendar_df.columns and len(calendar_df) else None
+
+        if overall_start and overall_end and "date" in working_df.columns:
+            in_range_mask = working_df["date"].between(overall_start, overall_end)
+            n_out = int((~in_range_mask).sum())
+            if n_out and n_out == len(working_df):
+                min_d, max_d = working_df["date"].min(), working_df["date"].max()
+                diag(f"WARNING: existing calendar_dates.txt has {len(working_df)} row(s), but ALL "
+                     f"of them ({min_d} to {max_d}) fall OUTSIDE the requested calendar range "
+                     f"({overall_start} to {overall_end}) - this data looks STALE (a previous "
+                     f"year/vigencia), not current for this period. It's being kept in the output "
+                     f"anyway (pass exclude_stale_existing=True to drop it) but should NOT be "
+                     f"treated as describing real current service.")
+                if exclude_stale_existing:
+                    diag(f"Excluding all {n_out} stale row(s) from the output "
+                         f"(exclude_stale_existing=True).")
+                    working_df = working_df[in_range_mask]
+            elif n_out:
+                diag(f"NOTE: {n_out}/{len(working_df)} existing calendar_dates.txt row(s) fall "
+                     f"outside the requested range ({overall_start}-{overall_end}) - kept as-is "
+                     f"(most rows are in-range, so this doesn't look like wholesale staleness).")
+
+        base_rows = working_df.to_dict("records")
+        existing_pairs = set(zip(working_df["service_id"], working_df["date"]))
 
     new_rows = []
     n_suppressed = 0

@@ -105,6 +105,54 @@ def test_saturday_festivo_suppresses_sabado():
     print("test_saturday_festivo_suppresses_sabado: PASS")
 
 
+def test_stale_existing_exceptions_flagged_but_kept_by_default():
+    """Reproduces the real scenario: the committed feed's calendar_dates.txt
+    turned out to contain 2025 dates while building a calendar for 2026.
+    These must be flagged as stale, NOT silently treated as current, but
+    kept in the output by default (never silently discard real data)."""
+    cal = TC.build_temporary_calendar("20260101", "20261231")
+    stale_2025 = pd.DataFrame([
+        {"service_id": "8099041", "date": "20250315", "exception_type": "2"},
+        {"service_id": "8099148", "date": "20250601", "exception_type": "1"},
+    ])
+    result = TC.add_festivo_exceptions(cal, stale_2025)
+    # stale rows are still present in the output (default = kept, just warned)
+    assert ("8099041", "20250315", "2") in {(r["service_id"], r["date"], r["exception_type"]) for _, r in result.iterrows()}
+    # real 2026 festivo exceptions were still generated correctly regardless
+    assert ("HABIL", "20260101", "2") in {(r["service_id"], r["date"], r["exception_type"]) for _, r in result.iterrows()}
+    print("test_stale_existing_exceptions_flagged_but_kept_by_default: PASS")
+
+
+def test_stale_existing_exceptions_excluded_when_requested():
+    cal = TC.build_temporary_calendar("20260101", "20261231")
+    stale_2025 = pd.DataFrame([
+        {"service_id": "8099041", "date": "20250315", "exception_type": "2"},
+    ])
+    result = TC.add_festivo_exceptions(cal, stale_2025, exclude_stale_existing=True)
+    pairs = {(r["service_id"], r["date"]) for _, r in result.iterrows()}
+    assert ("8099041", "20250315") not in pairs, pairs
+    # the 2026 festivo generation still happened
+    assert ("HABIL", "20260101") in pairs, pairs
+    print("test_stale_existing_exceptions_excluded_when_requested: PASS")
+
+
+def test_mostly_in_range_existing_data_not_flagged_as_stale():
+    """If only a handful of rows fall outside the range (not all of them),
+    that's not wholesale staleness - don't raise the loud warning."""
+    cal = TC.build_temporary_calendar("20260101", "20261231")
+    mostly_current = pd.DataFrame([
+        {"service_id": "X", "date": "20260615", "exception_type": "1"},
+        {"service_id": "X", "date": "20260820", "exception_type": "1"},
+        {"service_id": "X", "date": "20251231", "exception_type": "1"},  # one stray old row
+    ])
+    result = TC.add_festivo_exceptions(cal, mostly_current)
+    pairs = {(r["service_id"], r["date"]) for _, r in result.iterrows()}
+    # all three rows kept (no exclusion requested, and not wholesale-stale anyway)
+    assert ("X", "20260615") in pairs
+    assert ("X", "20251231") in pairs
+    print("test_mostly_in_range_existing_data_not_flagged_as_stale: PASS")
+
+
 if __name__ == "__main__":
     test_build_temporary_calendar_flags()
     test_unknown_service_id_raises()
@@ -113,4 +161,7 @@ if __name__ == "__main__":
     test_add_festivo_exceptions_jan_2026()
     test_add_festivo_exceptions_respects_existing_calendar_dates()
     test_saturday_festivo_suppresses_sabado()
+    test_stale_existing_exceptions_flagged_but_kept_by_default()
+    test_stale_existing_exceptions_excluded_when_requested()
+    test_mostly_in_range_existing_data_not_flagged_as_stale()
     print("\nAll temp_calendar.py tests passed.")

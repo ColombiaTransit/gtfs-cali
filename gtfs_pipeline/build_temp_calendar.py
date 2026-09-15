@@ -26,9 +26,13 @@ Run between download.py and fix.py if you want to try this:
 
 This OVERWRITES build/gtfs_raw/calendar.txt and calendar_dates.txt. The
 existing calendar_dates.txt (Metro Cali's real CalendarExceptions, already
-in GTFS shape at this point in the pipeline) is preserved and stays
-authoritative - festivo exceptions are only added where nothing explicit
-already exists for that (service_id, date) pair.
+in GTFS shape at this point in the pipeline) is checked against the
+requested date range: if it's all inside the range, it stays authoritative
+and festivo exceptions only fill gaps. If it's ALL outside the range (seen
+in practice: a committed feed's calendar_dates.txt turned out to be from
+2025 while building a calendar for 2026), that's flagged loudly as likely
+stale rather than silently trusted - pass --exclude-stale to drop it from
+the output instead of just warning.
 """
 import argparse
 
@@ -41,7 +45,7 @@ DEFAULT_START = "20260101"
 DEFAULT_END = "20261231"
 
 
-def main(start_date=DEFAULT_START, end_date=DEFAULT_END):
+def main(start_date=DEFAULT_START, end_date=DEFAULT_END, exclude_stale=False):
     ensure_dirs()
     calendar_df = TC.build_temporary_calendar(start_date, end_date)
     print(f"Built temporary calendar.txt ({start_date} - {end_date}):\n")
@@ -52,13 +56,16 @@ def main(start_date=DEFAULT_START, end_date=DEFAULT_END):
             f"{RAW_DIR}/calendar_dates.txt", dtype=str, keep_default_na=False, na_values=[""]
         )
         print(f"\nFound existing calendar_dates.txt ({len(existing_calendar_dates)} row(s)) - "
-              f"kept authoritative, festivo exceptions only fill gaps.")
+              f"kept authoritative, festivo exceptions only fill gaps. (See below for a "
+              f"staleness check against the requested {start_date}-{end_date} range.)")
     except FileNotFoundError:
         print("\nNo existing calendar_dates.txt found - starting from an empty exceptions set.")
         existing_calendar_dates = None
 
     print()
-    calendar_dates_df = TC.add_festivo_exceptions(calendar_df, existing_calendar_dates)
+    calendar_dates_df = TC.add_festivo_exceptions(
+        calendar_df, existing_calendar_dates, exclude_stale_existing=exclude_stale
+    )
 
     try:
         trips_df = pd.read_csv(f"{RAW_DIR}/trips.txt", dtype=str, keep_default_na=False, na_values=[""])
@@ -92,5 +99,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--start", default=DEFAULT_START, help="YYYYMMDD, default 2026-01-01")
     parser.add_argument("--end", default=DEFAULT_END, help="YYYYMMDD, default 2026-12-31")
+    parser.add_argument("--exclude-stale", action="store_true",
+                         help="Drop existing calendar_dates.txt rows entirely if ALL of them "
+                              "fall outside the --start/--end range (e.g. leftover exceptions "
+                              "from a previous year's vigencia). Default: keep them, just warn.")
     args = parser.parse_args()
-    main(args.start, args.end)
+    main(args.start, args.end, exclude_stale=args.exclude_stale)
