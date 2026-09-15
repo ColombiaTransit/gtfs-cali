@@ -65,11 +65,78 @@ loudly-logged placeholders so the feed is at least spec-valid, but you
 should get the real values from Metro Cali (sistemas@metrocali.gov.co)
 before treating this as a final, publishable feed:
 
-- `stops.txt`: no `stop_name` → placeholder `"Parada <stop_id>"`
+- `stops.txt`: no `stop_name` → **`enrich_stops.py` tries to fill this in
+  first** (see below); whatever it can't resolve falls back to a
+  placeholder `"Parada <stop_id>"`
 - `routes.txt`: no `route_short_name`/`route_long_name` → placeholder
   `route_short_name = route_id`
 - No `Agency` table at all → a fixed record (`KNOWN_AGENCY` in
   `gtfs_common.py`) is used; double-check the URL/contact info there.
+
+## Step 1.5 — `enrich_stops.py` / `stops_enrich.py`: cross-referencing real stop names
+
+Metro Cali publishes a **separate** ArcGIS Hub dataset, "ptosparadas"
+(Paradas en Corredores Troncales, Pretroncales y Alimentadores del MIO,
+confirmed live at
+`services9.arcgis.com/.../services/ptosparadas/FeatureServer/0`),
+that carries human-readable stop info — the GTFS FeatureServer's `Stops`
+layer has none at all. This step cross-references the two and patches
+`stop_name` into the raw `stops.txt` before `fix.py` runs. It's split into:
+
+- **`stops_enrich.py`** — pure matching logic, no network calls, fully
+  covered by `test_stops_enrich.py`.
+- **`enrich_stops.py`** — thin CLI wrapper: resolves the item, fetches the
+  layer, calls `stops_enrich.enrich_stops()`, writes the result back.
+
+**Confirmed live fields**: `FID, STOPID, DIRECCION, COMPLEMENT, DESCRIP,
+T_PARADA, CORREDOR, BARRIO, SECTOR, ZONA, FOTO_1, FOTO_2, FUENTE, LATITUD,
+LONGITUD`. Two things about this schema aren't obvious and matter for
+correctness:
+
+- **`STOPID`** is the real join key — it matched our `stop_id` with 100%
+  coverage in testing. `FID` is just a row sequence number (1, 2, 3...)
+  and is explicitly excluded from ID candidates so it can't win by
+  spurious numeric collision.
+- **There's no `NOMBRE` field.** `DIRECCION` (cross-streets, e.g. `"Av 15
+  Oe entre Cl 7 Oe y 8 Oe"`) is populated on nearly every row and is what
+  becomes `stop_name`. `DESCRIP` looks name-like by keyword but is almost
+  always a single blank space — picking it naively would silently write
+  blank names. `COMPLEMENT` (a landmark, e.g. `"Bajo Aguacatal"`), when
+  present, gets appended in parentheses: `"Av 15 Oe entre Cl 7 Oe y 8 Oe
+  (Bajo Aguacatal)"`.
+
+Matching strategy, tried in order and logged:
+
+1. **Exact ID match** on `STOPID` (or any other field that looks ID-like
+   and clears a coverage bar of ≥50%), with leading-zero/format
+   normalization (`"01001"` == `"1001"`).
+2. **Spatial nearest-neighbor** for anything not matched by ID — nearest
+   ptosparadas point within `STOPS_ENRICH_MAX_DISTANCE_M` (default 30m)
+   via haversine distance. Robust regardless of ID-scheme differences,
+   since both datasets describe the same physical stops.
+
+Run it between `download.py` and `fix.py`:
+
+```bash
+python download.py
+python enrich_stops.py   # best-effort - safe to skip, prints why if it can't help
+python fix.py
+python validate.py
+```
+
+`run_all.py` and the GitHub Action already run it in the right order, and
+treat it as non-fatal (a failure here just means `stops.txt` keeps the
+placeholder-name behavior instead of losing the whole pipeline run).
+
+`test_stops_enrich.py` covers ID matching (including leading-zero
+normalization), the spatial fallback, an unmatchable outlier stop, the
+no-name-column case, and — critically — the real `DIRECCION`/`COMPLEMENT`/
+blank-`DESCRIP` schema shape, with fabricated data. If Metro Cali changes
+these field names, `enrich_stops.py` prints the full discovered column
+list and sample values on every run so you can see immediately if
+detection needs adjusting (`NAME_HINTS_PRIMARY` / `NAME_HINTS_SECONDARY` /
+`ID_HINTS` at the top of `stops_enrich.py`). A full per-stop audit trail
+is written to `build/report/stop_enrichment.csv`.
 
 ## Requirements
 
@@ -89,9 +156,10 @@ python run_all.py
 or run stages individually:
 
 ```bash
-python download.py   # -> build/gtfs_raw/*.txt
-python fix.py         # -> build/gtfs_clean/*.txt and build/gtfs.zip
-python validate.py    # -> build/report/validation_report.txt
+python download.py       # -> build/gtfs_raw/*.txt
+python enrich_stops.py   # -> patches stop_name into build/gtfs_raw/stops.txt (best-effort)
+python fix.py             # -> build/gtfs_clean/*.txt and build/gtfs.zip
+python validate.py        # -> build/report/validation_report.txt
 ```
 
 Final feed: **`build/gtfs.zip`**

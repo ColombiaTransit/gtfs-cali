@@ -8,6 +8,22 @@ import unicodedata
 ITEM_ID = "163af9c688444778b74150cd84f64a8b"
 ARCGIS_ITEM_URL = f"https://www.arcgis.com/sharing/rest/content/items/{ITEM_ID}?f=json"
 
+# A second, separate open-data item that appears to carry real, human-readable
+# stop names/corridor info ("ptosparadas" = "puntos de paradas"), which the
+# main GTFS FeatureServer's Stops layer lacks entirely. Hub dataset slugs are
+# "{itemId}_{layerIndex}", so layer 0 of this item:
+STOPS_INFO_ITEM_ID = "327b08a72e294824b4c4710c73449804"
+STOPS_INFO_ARCGIS_ITEM_URL = f"https://www.arcgis.com/sharing/rest/content/items/{STOPS_INFO_ITEM_ID}?f=json"
+STOPS_INFO_LAYER_ID = 0
+# Confirmed live endpoint (fields verified: FID, STOPID, DIRECCION, COMPLEMENT,
+# DESCRIP, T_PARADA, CORREDOR, BARRIO, SECTOR, ZONA, FOTO_1, FOTO_2, FUENTE,
+# LATITUD, LONGITUD). STOPID matches our GStopID-derived stop_id exactly.
+STOPS_INFO_FEATURE_SERVICE_URL = "https://services9.arcgis.com/8rJ42n9yWry0I4K4/arcgis/rest/services/ptosparadas/FeatureServer"
+
+# Max distance (meters) for matching a GTFS stop to a ptosparadas point by
+# nearest-neighbor when no reliable shared ID field is found.
+STOPS_ENRICH_MAX_DISTANCE_M = 30
+
 # Confirmed live endpoint (from https://services9.arcgis.com/8rJ42n9yWry0I4K4/arcgis/rest/services/GTFS/FeatureServer/layers).
 # download.py resolves the item dynamically first and falls back to this if that fails,
 # since Metro Cali could repoint the item to a new service in a future "vigencia".
