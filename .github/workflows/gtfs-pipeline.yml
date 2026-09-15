@@ -38,11 +38,22 @@ jobs:
 
       - name: Unit-test the join/reconstruction logic
         working-directory: ${{ env.PIPELINE_DIR }}
-        run: python test_reconstruct.py
+        run: |
+          python test_reconstruct.py
+          python test_stops_enrich.py
+          python test_routes_enrich.py
 
       - name: Download GTFS source layers from ArcGIS
         working-directory: ${{ env.PIPELINE_DIR }}
         run: python download.py
+
+      - name: Enrich stop names from ptosparadas (best-effort)
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: python enrich_stops.py || echo "Enrichment failed or found nothing - continuing with placeholder names."
+
+      - name: Enrich route names from rutas (best-effort)
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: python enrich_routes.py || echo "Enrichment failed or found nothing - continuing with placeholder names."
 
       - name: Fix / normalize the feed
         working-directory: ${{ env.PIPELINE_DIR }}
@@ -93,6 +104,12 @@ jobs:
           cp "${PIPELINE_DIR}/build/gtfs.zip" "${OUTPUT_ZIP_PATH}"
           cp "${PIPELINE_DIR}/build/report/canonical/report.json" "${OUTPUT_REPORT_DIR}/report.json"
           cp "${PIPELINE_DIR}/build/report/fix_report.txt" "${OUTPUT_REPORT_DIR}/fix_report.txt"
+          if [ -f "${PIPELINE_DIR}/build/report/stop_enrichment.csv" ]; then
+            cp "${PIPELINE_DIR}/build/report/stop_enrichment.csv" "${OUTPUT_REPORT_DIR}/stop_enrichment.csv"
+          fi
+          if [ -f "${PIPELINE_DIR}/build/report/route_enrichment.csv" ]; then
+            cp "${PIPELINE_DIR}/build/report/route_enrichment.csv" "${OUTPUT_REPORT_DIR}/route_enrichment.csv"
+          fi
 
       - name: Commit updated feed to the repo
         if: success()
