@@ -45,6 +45,8 @@ from collections import Counter
 
 import pandas as pd
 
+from colombia_holidays import colombian_holidays
+
 from gtfs_common import (
     KNOWN_AGENCY, SCHEDULE_ALIGNMENT_OVERRIDE, TIME_UNIT_OVERRIDE,
 )
@@ -153,15 +155,250 @@ def build_calendar(calendars_df):
     return df
 
 
-def build_calendar_dates(exceptions_df):
-    if exceptions_df is None or exceptions_df.empty:
-        return None
-    df = pd.DataFrame()
-    df["service_id"] = exceptions_df["GServiceID"].astype(str)
-    df["date"] = exceptions_df.get("ExceptionDate")
-    df["exception_type"] = exceptions_df.get("GExceptionType")
-    return df
+def build_calendar_dates(exceptions_df, calendar_df=None):
+    """
+    Build GTFS calendar_dates.txt from Metro Cali's CalendarExceptions
+    and add Colombian national public holidays.
 
+    Metro Cali's CalendarExceptions remain authoritative for exceptions
+    explicitly published by Metro Cali.
+
+    Colombian national holidays are added so that the Sunday/holiday
+    service pattern can operate on holidays that fall on weekdays.
+
+    For a holiday:
+      - services that normally operate that weekday are removed
+      - a Sunday/holiday service is added
+
+    The function does NOT create a new service_id. It looks for an
+    existing calendar service whose Sunday flag is enabled. This avoids
+    assuming that Metro Cali necessarily names that service "DOM_FEST".
+
+    If no Sunday service exists, Colombian holiday exceptions are not
+    invented. A diagnostic is emitted instead.
+    """
+
+    # Start with the exceptions explicitly supplied by Metro Cali.
+    if exceptions_df is None or exceptions_df.empty:
+        rows = []
+    else:
+        rows = []
+
+        for _, row in exceptions_df.iterrows():
+            rows.append(
+                {
+                    "service_id": str(row["GServiceID"]),
+                    "date": row.get("ExceptionDate"),
+                    "exception_type": row.get("GExceptionType"),
+                }
+            )
+
+    if calendar_df is None or calendar_df.empty:
+        return (
+            pd.DataFrame(
+                rows,
+                columns=["service_id", "date", "exception_type"],
+            )
+            if rows
+            else None
+        )
+
+    required_calendar_columns = {
+        "service_id",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+        "start_date",
+        "end_date",
+    }
+
+    missing = required_calendar_columns - set(calendar_df.columns)
+
+    if missing:
+        diag(
+            "WARNING: Cannot add Colombian holidays because calendar.txt "
+            f"is missing columns: {sorted(missing)}"
+        )
+        return (
+            pd.DataFrame(
+                rows,
+                columns=["service_id", "date", "exception_type"],
+            )
+            if rows
+            else None
+        )
+
+    # Find services that already operate on Sunday.
+    sunday_services = calendar_df[
+        calendar_df["sunday"].fillna(0).astype(str).isin(["1", "1.0", "True"])
+    ]
+
+    if sunday_services.empty:
+        diag(
+            "WARNING: No Sunday service found in calendar.txt; "
+            "Colombian national holiday exceptions were not added."
+        )
+        return (
+            pd.DataFrame(
+                rows,
+                columns=["service_id", "date", "exception_type"],
+            )
+            if rows
+            else None
+        )
+
+    # Normally there should be one Sunday/holiday service. If there are
+    # several, choose the first one and report the ambiguity rather than
+    # inventing a new service_id.
+    if len(sunday_services) > 1:
+        diag(
+            "WARNING: Multiple Sunday services found in calendar.txt: "
+            f"{sunday_services['service_id'].astype(str).tolist()}. "
+            f"Using {str(sunday_services.iloc[0]['service_id'])!r} "
+            "as the holiday service."
+        )
+
+    holiday_service_id = str(sunday_services.iloc[0]["service_id"])
+
+    # Determine the years covered by calendar.txt.
+    def parse_gtfs_date(value):
+        if pd.isna(value):
+            return None
+
+        text = str(value).strip()
+
+        if text.endswith(".0"):
+            text = text[:-2]
+
+        return pd.to_datetime(text, format="%Y%m%d").date()
+
+    years = set()
+
+    for value in calendar_df["start_date"]:
+        parsed = parse_gtfs_date(value)
+        if parsed:
+            years.add(parsed.year)
+
+    for value in calendar_df["end_date"]:
+        parsed = parse_gtfs_date(value)
+        if parsed:
+            years.add(parsed.year)
+
+    weekday_columns = [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+    ]
+
+    for year in sorted(years):
+        for holiday_date, holiday_name in colombian_holidays(year).items():
+
+            date_string = holiday_date.strftime("%Y%m%d")
+
+            # Only modify service calendars that actually cover this date.
+            active_services = []
+
+            for _, service in calendar_df.iterrows():
+                start_date = parse_gtfs_date(service["start_date"])
+                end_date = parse_gtfs_date(service["end_date"])
+
+                if start_date is None or end_date is None:
+                    continue
+
+                if not (start_date <= holiday_date <= end_date):
+                    continue
+
+                weekday_column = weekday_columns[holiday_date.weekday()]
+                value = service[weekday_column]
+
+                if str(value).strip() in {"1", "1.0", "True"}:
+                    active_services.append(str(service["service_id"]))
+
+            # If Sunday/holiday service is already active on this date,
+            # nothing needs to be added.
+            if holiday_service_id in active_services:
+                continue
+
+            # Remove weekday service for the holiday.
+            for service_id in active_services:
+                rows.append(
+                    {
+                        "service_id": service_id,
+                        "date": date_string,
+                        "exception_type": 2,
+                    }
+                )
+
+            # Add Sunday/holiday service.
+            rows.append(
+                {
+                    "service_id": holiday_service_id,
+                    "date": date_string,
+                    "exception_type": 1,
+                }
+            )
+
+            diag(
+                f"Added Colombian holiday: {date_string} "
+                f"({holiday_name}) -> {holiday_service_id}"
+            )
+
+    df = pd.DataFrame(
+        rows,
+        columns=["service_id", "date", "exception_type"],
+    )
+
+    if df.empty:
+        return None
+
+    # Normalize dates so duplicate detection works even when the source
+    # contains datetime objects rather than YYYYMMDD strings.
+    def normalize_date(value):
+        if pd.isna(value):
+            return value
+
+        if hasattr(value, "strftime"):
+            return value.strftime("%Y%m%d")
+
+        text = str(value).strip()
+
+        if text.endswith(".0"):
+            text = text[:-2]
+
+        # Already YYYYMMDD.
+        if len(text) == 8 and text.isdigit():
+            return text
+
+        parsed = pd.to_datetime(value, errors="coerce")
+
+        if pd.notna(parsed):
+            return parsed.strftime("%Y%m%d")
+
+        return text
+
+    df["date"] = df["date"].map(normalize_date)
+    df["service_id"] = df["service_id"].astype(str)
+
+    # GTFS requires at most one exception for a given service_id/date.
+    # Preserve the first occurrence, which means Metro Cali's explicit
+    # CalendarExceptions remain authoritative if they overlap a generated
+    # Colombian holiday exception.
+    df = df.drop_duplicates(
+        subset=["service_id", "date"],
+        keep="first",
+    )
+
+    return df.sort_values(
+        ["date", "service_id"]
+    ).reset_index(drop=True)
 
 def calendar_id_lookup(calendar_internal_df):
     """{Calendars.ID -> GServiceID}"""
