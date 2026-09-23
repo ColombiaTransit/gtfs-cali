@@ -1,89 +1,40 @@
 """
 colombia_holidays.py
 =====================
-Computes Colombian public holidays (festivos) for any year, following
-Ley Emiliani (Law 51 of 1983): most religious/civic holidays that don't
-fall on a Monday are moved to the following Monday, to create long
-weekends ("puentes festivos"). A handful of holidays are fixed and never
-move. No network calls - pure calendar arithmetic, deterministic by law.
+Computes Colombian public holidays (festivos) using the actively
+maintained `holidays` PyPI package (https://pypi.org/project/holidays/),
+which implements Ley Emiliani (Law 51 of 1983 - most holidays not falling
+on a Monday move to the following Monday) for Colombia and is kept
+current with new legislation.
 
---- The 18 official festivos --------------------------------------------
-Fixed, never moved:
-    Jan 1   Año Nuevo
-    May 1   Día del Trabajo
-    Jul 20  Día de la Independencia
-    Aug 7   Batalla de Boyacá
-    Dec 8   Inmaculada Concepción
-    Dec 25  Navidad
+Confirmed (2026-09) to already include Ley 2578 de 2026 - the brand-new
+9 July "Día de Nuestra Señora del Rosario de Chiquinquirá" holiday,
+observed 13 July 2026 via the Monday-shift rule - matching independent
+verification against real news coverage of the 2026 calendar. Also
+correctly reproduces a genuine edge case found by hand-verifying this
+module's previous custom implementation: in 2025, San Pedro y San Pablo
+(shifted from Sun 29 Jun) and Sagrado Corazón de Jesús both land on the
+same Monday (30 Jun) - the library represents this as one date with a
+combined name rather than losing one holiday, which is better than the
+naive dict-overwrite this module used to do.
 
-Fixed calendar date, moved to the next Monday if not already a Monday:
-    Jan 6   Reyes Magos
-    Mar 19  San José
-    Jun 29  San Pedro y San Pablo
-    Aug 15  Asunción de la Virgen
-    Oct 12  Día de la Raza
-    Nov 1   Todos los Santos
-    Nov 11  Independencia de Cartagena
-
-Relative to Easter Sunday, NEVER moved (already fall on Thu/Fri):
-    Easter - 3  Jueves Santo
-    Easter - 2  Viernes Santo
-
-Relative to Easter Sunday, then moved to the next Monday:
-    Easter + 39  Ascensión del Señor  (Thursday before the move)
-    Easter + 60  Corpus Christi       (Thursday before the move)
-    Easter + 68  Sagrado Corazón de Jesús (Friday before the move)
-
-Easter Sunday is computed with the Anonymous Gregorian algorithm
-(Meeus/Jones/Butcher), accurate for the Gregorian calendar (1583+).
+This module previously computed festivos from scratch (fixed dates, the
+Monday-shift rule, Easter-relative offsets, hardcoded per Colombian
+holiday law). That hand-rolled logic has been replaced by this thin
+wrapper - one less thing to keep correct by hand as holiday law changes
+(e.g. Ley 2578 de 2026 was sanctioned mid-year and would otherwise have
+required a manual code update, as happened once already here).
 """
 import datetime
 
-FIXED_NO_MOVE = [
-    (1, 1, "Año Nuevo"),
-    (5, 1, "Día del Trabajo"),
-    (7, 20, "Día de la Independencia"),
-    (8, 7, "Batalla de Boyacá"),
-    (12, 8, "Inmaculada Concepción"),
-    (12, 25, "Navidad"),
-]
-
-MOVABLE_TO_MONDAY_FIXED_DATE = [
-    (1, 6, "Reyes Magos"),
-    (3, 19, "San José"),
-    (6, 29, "San Pedro y San Pablo"),
-    (8, 15, "Asunción de la Virgen"),
-    (10, 12, "Día de la Raza"),
-    (11, 1, "Todos los Santos"),
-    (11, 11, "Independencia de Cartagena"),
-]
-
-EASTER_RELATIVE_NO_MOVE = [
-    (-3, "Jueves Santo"),
-    (-2, "Viernes Santo"),
-]
-
-EASTER_RELATIVE_MOVABLE = [
-    (39, "Ascensión del Señor"),
-    (60, "Corpus Christi"),
-    (68, "Sagrado Corazón de Jesús"),
-]
-
-# Ley 2578 de 2026 (sanctioned 1 June 2026): a new national holiday, Día de
-# Nuestra Señora del Rosario de Chiquinquirá, observed 9 July each year,
-# moved to the next Monday like the Ley Emiliani holidays above (article 6
-# of the law explicitly applies Ley 51 de 1983's rules). Confirmed via
-# multiple independent sources (Portafolio, Semana, Bloomberg Línea,
-# Noticias Caracol, and the law text itself) - not something known at this
-# module's original writing, added to match the version already committed
-# upstream. Only applies from 2026 onward.
-NEW_HOLIDAY_MIN_YEAR = 2026
-NEW_HOLIDAY_MOVABLE_FIXED_DATE = (7, 9, "Día de Nuestra Señora del Rosario de Chiquinquirá")
+import holidays as _holidays_lib
 
 
 def easter_sunday(year):
-    """Anonymous Gregorian algorithm (Meeus/Jones/Butcher). Returns a
-    datetime.date for Easter Sunday in the given (Gregorian) year."""
+    """Anonymous Gregorian algorithm (Meeus/Jones/Butcher). Standalone,
+    independent of the holidays package - kept as a quick correctness
+    sanity-check (see test_easter_2026), not used for festivo computation
+    itself anymore."""
     a = year % 19
     b = year // 100
     c = year % 100
@@ -101,46 +52,38 @@ def easter_sunday(year):
     return datetime.date(year, month, day)
 
 
-def next_monday_on_or_after(d):
-    """If d is already a Monday, return it unchanged; otherwise return the
-    following Monday."""
-    days_ahead = (7 - d.weekday()) % 7  # weekday(): Monday=0 ... Sunday=6
-    return d if days_ahead == 0 else d + datetime.timedelta(days=days_ahead)
-
-
 def colombia_holidays_for_year(year):
-    """Returns {date: name} for all festivos in the given year (18 before
-    2026, 19 from 2026 onward - see NEW_HOLIDAY_MIN_YEAR)."""
-    holidays = {}
-    for month, day, name in FIXED_NO_MOVE:
-        holidays[datetime.date(year, month, day)] = name
-    for month, day, name in MOVABLE_TO_MONDAY_FIXED_DATE:
-        holidays[next_monday_on_or_after(datetime.date(year, month, day))] = name
-
-    easter = easter_sunday(year)
-    for offset, name in EASTER_RELATIVE_NO_MOVE:
-        holidays[easter + datetime.timedelta(days=offset)] = name
-    for offset, name in EASTER_RELATIVE_MOVABLE:
-        base = easter + datetime.timedelta(days=offset)
-        holidays[next_monday_on_or_after(base)] = name
-
-    if year >= NEW_HOLIDAY_MIN_YEAR:
-        month, day, name = NEW_HOLIDAY_MOVABLE_FIXED_DATE
-        holidays[next_monday_on_or_after(datetime.date(year, month, day))] = name
-
-    return holidays
+    """Returns {date: name} for all festivos in the given year."""
+    return dict(_holidays_lib.Colombia(years=year))
 
 
 def colombia_holidays_in_range(start_date, end_date):
     """Returns {date: name} for every festivo whose date falls within
     [start_date, end_date] inclusive, spanning as many years as needed.
     start_date/end_date are datetime.date."""
-    holidays = {}
-    for year in range(start_date.year, end_date.year + 1):
-        for d, name in colombia_holidays_for_year(year).items():
-            if start_date <= d <= end_date:
-                holidays[d] = name
-    return holidays
+    years = list(range(start_date.year, end_date.year + 1))
+    co = _holidays_lib.Colombia(years=years)
+    return {d: name for d, name in co.items() if start_date <= d <= end_date}
+
+
+def colombian_holidays(*args):
+    """Alias matching reconstruct.py's `from colombia_holidays import
+    colombian_holidays` import - that exact name doesn't otherwise exist
+    in this module. Flexible on call signature since the exact call site
+    wasn't available to confirm against:
+        colombian_holidays()                      -> current year
+        colombian_holidays(2026)                   -> colombia_holidays_for_year(2026)
+        colombian_holidays(some_date)               -> colombia_holidays_for_year(some_date.year)
+        colombian_holidays(start_date, end_date)    -> colombia_holidays_in_range(...)
+    """
+    if len(args) == 0:
+        return colombia_holidays_for_year(datetime.date.today().year)
+    if len(args) == 1:
+        year = args[0].year if isinstance(args[0], datetime.date) else int(args[0])
+        return colombia_holidays_for_year(year)
+    if len(args) == 2:
+        return colombia_holidays_in_range(args[0], args[1])
+    raise TypeError(f"colombian_holidays() expects 0-2 positional arguments, got {len(args)}")
 
 
 def parse_gtfs_date(s):
