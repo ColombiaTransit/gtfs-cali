@@ -137,6 +137,32 @@ def test_colombian_holidays_alias_all_signatures():
     print("test_colombian_holidays_alias_all_signatures: PASS")
 
 
+def test_spanish_names_regardless_of_system_locale():
+    """Real CI failure, reproduced: holidays==0.105 falls back to the
+    runner's system locale (LANG/LC_ALL) instead of Colombia's own
+    default_language='es' when the locale looks English - GitHub Actions'
+    default locale silently produced English names ('Epiphany (observed)'
+    instead of 'Día de los Reyes Magos (observado)'). language='es' must
+    be passed explicitly in colombia_holidays_for_year/_in_range - this
+    locks that in so it can't silently regress. Can't change this
+    process's already-loaded locale mid-test, so this re-imports a fresh
+    subprocess under an English-like locale instead."""
+    import subprocess
+    import sys
+    code = (
+        "import colombia_holidays as CH, datetime;"
+        "h = CH.colombia_holidays_for_year(2026);"
+        "name = h[datetime.date(2026, 1, 12)];"
+        "assert 'Reyes' in name, f'got English fallback: {name!r}';"
+        "print('OK')"
+    )
+    env = {"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8", "PATH": __import__("os").environ.get("PATH", "")}
+    result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=env)
+    assert result.returncode == 0 and "OK" in result.stdout, \
+        f"stdout={result.stdout!r} stderr={result.stderr!r}"
+    print("test_spanish_names_regardless_of_system_locale: PASS")
+
+
 if __name__ == "__main__":
     test_easter_2026()
     test_fixed_holidays_never_move()
@@ -148,4 +174,5 @@ if __name__ == "__main__":
     test_holidays_in_range_spans_multiple_years()
     test_gtfs_date_roundtrip()
     test_colombian_holidays_alias_all_signatures()
+    test_spanish_names_regardless_of_system_locale()
     print("\nAll colombia_holidays.py tests passed.")

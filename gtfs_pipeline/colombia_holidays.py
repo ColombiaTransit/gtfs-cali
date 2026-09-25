@@ -53,8 +53,16 @@ def easter_sunday(year):
 
 
 def colombia_holidays_for_year(year):
-    """Returns {date: name} for all festivos in the given year."""
-    return dict(_holidays_lib.Colombia(years=year))
+    """Returns {date: name} for all festivos in the given year.
+
+    language="es" is passed explicitly - without it, the `holidays`
+    package falls back to the runner's system locale (LANG/LC_ALL) rather
+    than its own Colombia default_language="es", which silently produced
+    English names ("Epiphany (observed)" instead of "Día de los Reyes
+    Magos (observado)") in GitHub Actions' default locale while giving
+    Spanish locally where LANG happened to be unset. Pinning it makes the
+    output deterministic regardless of where this runs."""
+    return dict(_holidays_lib.Colombia(years=year, language="es"))
 
 
 def colombia_holidays_in_range(start_date, end_date):
@@ -62,7 +70,7 @@ def colombia_holidays_in_range(start_date, end_date):
     [start_date, end_date] inclusive, spanning as many years as needed.
     start_date/end_date are datetime.date."""
     years = list(range(start_date.year, end_date.year + 1))
-    co = _holidays_lib.Colombia(years=years)
+    co = _holidays_lib.Colombia(years=years, language="es")
     return {d: name for d, name in co.items() if start_date <= d <= end_date}
 
 
