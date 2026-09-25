@@ -6,18 +6,17 @@ on:
     - cron: "0 4 * * *"
   workflow_dispatch: {}
 
-# Avoid overlapping runs stepping on each other / the repo commit.
+# Avoid overlapping runs stepping on each other / the release update.
 concurrency:
   group: gtfs-pipeline
   cancel-in-progress: false
 
 permissions:
-  contents: write
+  contents: write   # needed to publish/update the GitHub Release
 
 env:
   PIPELINE_DIR: gtfs_pipeline          # folder containing download.py / fix.py / etc.
-  OUTPUT_ZIP_PATH: data/gtfs.zip       # where the final feed is committed in the repo
-  OUTPUT_REPORT_DIR: data/validation   # where the canonical validator report is committed
+  RELEASE_TAG: latest                  # rolling release - each run updates this one, doesn't pile up
   GTFS_VALIDATOR_VERSION: latest       # or pin e.g. "v5.0.1"
 
 jobs:
@@ -43,6 +42,7 @@ jobs:
           python test_stops_enrich.py
           python test_routes_enrich.py
           python test_shape_geometry_validate.py
+          python test_colombia_holidays.py
 
       - name: Download GTFS source layers from ArcGIS
         working-directory: ${{ env.PIPELINE_DIR }}
@@ -102,40 +102,43 @@ jobs:
           path: ${{ env.PIPELINE_DIR }}/build/report/canonical
           retention-days: 30
 
-      - name: Stage feed + report for commit
+      - name: Compute build metadata
+        if: success()
+        id: meta
+        run: echo "date=$(date -u +'%Y-%m-%d %H:%M UTC')" >> "$GITHUB_OUTPUT"
+
+      - name: Stage feed + reports for the release
         if: success()
         run: |
-          mkdir -p "$(dirname "${OUTPUT_ZIP_PATH}")" "${OUTPUT_REPORT_DIR}"
-          cp "${PIPELINE_DIR}/build/gtfs.zip" "${OUTPUT_ZIP_PATH}"
-          cp "${PIPELINE_DIR}/build/report/canonical/report.json" "${OUTPUT_REPORT_DIR}/report.json"
-          cp "${PIPELINE_DIR}/build/report/fix_report.txt" "${OUTPUT_REPORT_DIR}/fix_report.txt"
+          mkdir -p release_assets
+          cp "${PIPELINE_DIR}/build/gtfs.zip" release_assets/gtfs.zip
+          cp "${PIPELINE_DIR}/build/report/canonical/report.json" release_assets/validation_report.json
+          cp "${PIPELINE_DIR}/build/report/fix_report.txt" release_assets/fix_report.txt
           if [ -f "${PIPELINE_DIR}/build/report/stop_enrichment.csv" ]; then
-            cp "${PIPELINE_DIR}/build/report/stop_enrichment.csv" "${OUTPUT_REPORT_DIR}/stop_enrichment.csv"
+            cp "${PIPELINE_DIR}/build/report/stop_enrichment.csv" release_assets/stop_enrichment.csv
           fi
           if [ -f "${PIPELINE_DIR}/build/report/route_enrichment.csv" ]; then
-            cp "${PIPELINE_DIR}/build/report/route_enrichment.csv" "${OUTPUT_REPORT_DIR}/route_enrichment.csv"
+            cp "${PIPELINE_DIR}/build/report/route_enrichment.csv" release_assets/route_enrichment.csv
           fi
           if [ -f "${PIPELINE_DIR}/build/report/shape_geometry_validation.csv" ]; then
-            cp "${PIPELINE_DIR}/build/report/shape_geometry_validation.csv" "${OUTPUT_REPORT_DIR}/shape_geometry_validation.csv"
+            cp "${PIPELINE_DIR}/build/report/shape_geometry_validation.csv" release_assets/shape_geometry_validation.csv
           fi
 
-      - name: Commit updated feed to the repo
+      - name: Publish GitHub Release (rolling "latest")
         if: success()
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add "${OUTPUT_ZIP_PATH}" "${OUTPUT_REPORT_DIR}"
-          if git diff --cached --quiet; then
-            echo "No changes to commit (feed is identical to last run)."
-          else
-            git commit -m "chore: update GTFS feed [automated, $(date -u +'%Y-%m-%d')]"
-            git push
-          fi
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: "Latest GTFS feed"
+          make_latest: true
+          body: |
+            Automated build from commit `${{ github.sha }}` on ${{ steps.meta.outputs.date }}.
+            Passed the MobilityData canonical GTFS validator - see `validation_report.json` below.
+            Other attached files: `fix_report.txt` (what fix.py changed/flagged), and, when available,
+            `stop_enrichment.csv` / `route_enrichment.csv` / `shape_geometry_validation.csv`
+            (enrichment and geometry QA audit trails - see the pipeline README for what each means).
 
-      # --- Future step, once you're ready to also publish releases: ---
-      # - name: Create GitHub Release with gtfs.zip
-      #   if: success()
-      #   uses: softprops/action-gh-release@v2
-      #   with:
-      #     tag_name: gtfs-${{ github.run_number }}
-      #     files: ${{ env.OUTPUT_ZIP_PATH }}
+            This release is updated in place on every run (tag `${{ env.RELEASE_TAG }}`) rather than
+            creating a new one each time - old assets are replaced, not accumulated. Nothing is
+            committed back to the repo itself.
+          files: release_assets/*
