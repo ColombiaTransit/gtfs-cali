@@ -32,9 +32,11 @@ SERVICE_WEEKDAYS = {}
 DEFAULT_WEEKDAYS = (1, 1, 1, 1, 1, 1, 1)
 # Confirmed day type per real service_id, from diagnose_service_daytypes.py, e.g.
 # {"8099041": "HABIL", "8099042": "SABADO", "8099043": "DOM_FEST"}
-# Inferred from the poster diagnostic (run of 2026-11-17): 41/42 are the weekday and
-# Saturday services (weekday vs Saturday rests on the trip count: ASSUMPTION), 43/148 are
-# near-identical twins on the Sunday/festivo pattern. 43 = Sunday, 148 = festivo only.
+# Inferred from the schedule diagnostic (live run of 2026-11-17, all 94 routes decoded):
+# 41 = weekday (A11 05:00-23:18, E37 until 20:36, A14A present), 42 = Saturday (A11 until 14:57,
+# E37 until 14:38, A14B present), 43 = Sunday (A14B 06:00-22:17); 43 and 148 are near-identical
+# twins (76 routes each = the 76 routes that run on Sundays), so which of the two is "Sunday"
+# and which "festivo" cannot be told: 43 = Sunday, 148 = festivo only (calendar_dates only).
 SERVICE_DAYTYPE = {"8099041": "HABIL", "8099042": "SABADO",
                    "8099043": "DOM_FEST", "8099148": "FESTIVO"}
 DAYTYPE_FLAGS = {"HABIL": (1, 1, 1, 1, 1, 0, 0), "SABADO": (0, 0, 0, 0, 0, 1, 0),
@@ -55,7 +57,7 @@ def window(today=None, days=None):
     return today.strftime("%Y%m%d"), (today + timedelta(days=days)).strftime("%Y%m%d")
 
 
-def holiday_exceptions(calendar, festivos, service_daytype=None):
+def holiday_exceptions(calendar, festivos, service_daytype=None, service_ids=None):
     """calendar_dates rows for the festivos.
 
     On a festivo that falls Monday-Saturday the regular services running that weekday are
@@ -65,18 +67,19 @@ def holiday_exceptions(calendar, festivos, service_daytype=None):
     """
     service_daytype = SERVICE_DAYTYPE if service_daytype is None else service_daytype
     festivo_ids = {s for s, t in service_daytype.items() if t == "FESTIVO"}
+    if service_ids is not None:
+        festivo_ids &= {str(x) for x in service_ids}
     rows = []
     for d in sorted(festivos):
         wd = d.weekday()
         if wd == 6:
             continue
         ds = d.strftime("%Y%m%d")
+        for sid in sorted(festivo_ids):
+            rows.append({"service_id": sid, "date": ds, "exception_type": "1"})
         for _, r in calendar.iterrows():
-            sid = r["service_id"]
-            if sid in festivo_ids:
-                rows.append({"service_id": sid, "date": ds, "exception_type": "1"})
-            elif str(r[DAYS[wd]]) == "1":
-                rows.append({"service_id": sid, "date": ds, "exception_type": "2"})
+            if r["service_id"] not in festivo_ids and str(r[DAYS[wd]]) == "1":
+                rows.append({"service_id": r["service_id"], "date": ds, "exception_type": "2"})
     return pd.DataFrame(rows, columns=["service_id", "date", "exception_type"])
 
 
@@ -93,6 +96,15 @@ def apply_validity_override(calendar, calendar_dates, service_ids, today=None, d
         log(f"calendar.txt: dates of {len(calendar)} service_id(s) overridden to {start}-{end}")
     else:
         calendar, missing = None, sorted(service_ids)
+
+    # A festivo-only service is defined purely through calendar_dates.txt (type 1 on each
+    # festivo). A calendar.txt row with all weekday flags 0 would only trigger the validator's
+    # service_has_no_active_day_of_the_week warning. Needs the festivo dates, else keep the row.
+    if festivos:
+        festivo_only = [m for m in missing if SERVICE_DAYTYPE.get(str(m)) == "FESTIVO"]
+        if festivo_only:
+            log(f"calendar.txt: {festivo_only} defined in calendar_dates.txt only (festivo service)")
+            missing = [m for m in missing if m not in festivo_only]
 
     if missing:
         rows = []
@@ -119,7 +131,8 @@ def apply_validity_override(calendar, calendar_dates, service_ids, today=None, d
         if calendar_dates.empty:
             calendar_dates = None
     if festivos and any(t == "FESTIVO" for t in SERVICE_DAYTYPE.values()):
-        gen = holiday_exceptions(calendar, festivos)
+        gen = holiday_exceptions(calendar if calendar is not None else pd.DataFrame(columns=["service_id"] + DAYS),
+                                 festivos, service_ids=service_ids)
         if len(gen):
             calendar_dates = gen if calendar_dates is None else pd.concat(
                 [gen, calendar_dates], ignore_index=True).drop_duplicates(["service_id", "date"])
