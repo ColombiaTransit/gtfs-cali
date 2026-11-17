@@ -46,6 +46,7 @@ jobs:
           python test_validity_override.py
           python test_diagnose_service_daytypes.py
           python test_schedule_reference.py
+          python test_route_codes.py
           python test_name_case.py
 
       - name: Download GTFS source layers from ArcGIS
@@ -128,6 +129,9 @@ jobs:
           if [ -f "${PIPELINE_DIR}/build/report/route_enrichment.csv" ]; then
             cp "${PIPELINE_DIR}/build/report/route_enrichment.csv" release_assets/route_enrichment.csv
           fi
+          for f in service_id_daytype_diagnostic.csv service_id_mapping_proposed.json; do
+            if [ -f "${PIPELINE_DIR}/build/report/$f" ]; then cp "${PIPELINE_DIR}/build/report/$f" "release_assets/$f"; fi
+          done
           if [ -f "${PIPELINE_DIR}/build/report/shape_geometry_validation.csv" ]; then
             cp "${PIPELINE_DIR}/build/report/shape_geometry_validation.csv" release_assets/shape_geometry_validation.csv
           fi

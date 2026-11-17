@@ -64,26 +64,27 @@ def newest_snapshot(data_dir=DATA_DIR):
     return files[-1] if files else None
 
 
-def load_reference(session=None, data_dir=DATA_DIR, pdf_csv=PDF_CSV, log=print):
-    """Returns (table, sources) where sources maps route_code -> 'live'|'snapshot'|'pdf'."""
-    rows, label = None, None
+def load_listado_rows(session=None, data_dir=DATA_DIR, log=print):
+    """Raw listadoRutas.php rows: live first, else the newest snapshot. Returns (rows, label)."""
     try:
         import requests
         r = (session or requests).get(LISTADO_URL, timeout=30)
         r.raise_for_status()
         rows = r.json()
         if isinstance(rows, list) and rows:
-            label = "live"
-        else:
-            rows = None
+            return rows, "live"
     except Exception as e:
         log(f"  listadoRutas.php not usable ({type(e).__name__}) - using the newest snapshot")
-    if rows is None:
-        snap = newest_snapshot(data_dir)
-        if snap:
-            rows = json.load(open(snap, encoding="utf-8"))
-            label = "snapshot"
-            log(f"  using snapshot {os.path.basename(snap)}")
+    snap = newest_snapshot(data_dir)
+    if snap:
+        log(f"  using snapshot {os.path.basename(snap)}")
+        return json.load(open(snap, encoding="utf-8")), "snapshot"
+    return None, None
+
+
+def load_reference(session=None, data_dir=DATA_DIR, pdf_csv=PDF_CSV, log=print):
+    """Returns (table, sources) where sources maps route_code -> 'live'|'snapshot'|'pdf'."""
+    rows, label = load_listado_rows(session=session, data_dir=data_dir, log=log)
     table, sources = {}, {}
     if rows:
         table = table_from_listado(rows)
