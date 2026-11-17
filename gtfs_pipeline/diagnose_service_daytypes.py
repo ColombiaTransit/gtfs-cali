@@ -7,6 +7,9 @@ PDF dated Jan 2026) gives, per route, the operating window for L-V, Sabado and
 Domingo/Festivo. This script compares, per service_id, the first/last departure
 of every route with those windows and proposes a service_id -> day-type mapping.
 
+Reference windows come from schedule_reference.py (live listadoRutas.php, falling back to
+a dated snapshot and the poster).
+
 Run AFTER enrich_routes.py (routes.txt must carry the letter codes, e.g. A01A,
 in route_short_name) and BEFORE fix.py:
 
@@ -26,7 +29,9 @@ import sys
 import numpy as np
 import pandas as pd
 
+import schedule_reference as SR
 from gtfs_common import RAW_DIR, REPORT_DIR
+from schedule_reference import parse_window
 
 DAYTYPES = ["HABIL", "SABADO", "DOM_FEST"]
 PDF_COLS = {"HABIL": "habil", "SABADO": "sabado", "DOM_FEST": "dom_fest"}
@@ -41,23 +46,9 @@ def hhmm_to_min(s):
     return int(h) * 60 + int(m)
 
 
-def parse_window(text):
-    """'05:00-09:00 / 16:00-20:00' -> (300, 1200); 'NO OPERA'/empty -> None."""
-    if not isinstance(text, str) or "NO OPERA" in text.upper() or not text.strip():
-        return None
-    parts = re.findall(r"(\d{1,2}:\d{2})-(\d{1,2}:\d{2})", text)
-    if not parts:
-        return None
-    return min(hhmm_to_min(a) for a, _ in parts), max(hhmm_to_min(b) for _, b in parts)
-
-
 def load_pdf_table(path):
-    df = pd.read_csv(path, dtype=str).fillna("")
-    table = {}
-    for _, r in df.iterrows():
-        table[r["route_code"].strip().upper()] = {
-            dt: parse_window(r[col]) for dt, col in PDF_COLS.items()}
-    return table
+    """Kept for compatibility: the poster-only table."""
+    return SR.table_from_pdf_csv(path)
 
 
 def pdf_windows_for(code, table):
@@ -154,8 +145,10 @@ def main(raw_dir=RAW_DIR, pdf_csv=DEFAULT_PDF):
     trips = pd.read_csv(os.path.join(raw_dir, "trips.txt"), dtype=str)
     st = pd.read_csv(os.path.join(raw_dir, "stop_times.txt"), dtype=str,
                      usecols=["trip_id", "departure_time"])
-    pdf_table = load_pdf_table(pdf_csv)
-    print(f"PDF table: {len(pdf_table)} routes (poster dated Jan 2026 - routes added since are not covered)")
+    pdf_table, sources = SR.load_reference(pdf_csv=pdf_csv)
+    from collections import Counter
+    print(f"Schedule reference: {len(pdf_table)} routes, sources: {dict(Counter(sources.values()))} "
+          f"(live/snapshot = Metro Cali listadoRutas.php, pdf = poster of Jan 2026 for the rest)")
 
     detail, scores, unmatched = score_service_ids(trips, trip_spans(st), routes, pdf_table)
     if detail.empty:
@@ -170,19 +163,19 @@ def main(raw_dir=RAW_DIR, pdf_csv=DEFAULT_PDF):
     with open(os.path.join(REPORT_DIR, "service_id_mapping_proposed.json"), "w") as f:
         json.dump(mapping, f, indent=2)
 
-    print("\n=== Mean fit per service_id (1.0 = matches the PDF window perfectly) ===")
+    print("\n=== Mean fit per service_id (1.0 = matches the reference window perfectly) ===")
     print(scores.round(3).to_string())
     print("\n=== Proposed mapping ===")
     for sid, v in mapping.items():
         print(f"  {sid} -> {v['daytype']:<8} score={v['score']} margin={v['margin']} "
               f"({v['confidence']}; runner-up {v['runner_up']}; {v['trips']} trips on {v['routes']} routes)")
-    print("\nDistinguishing routes (Saturday differs from weekday in the PDF), per service_id:")
+    print("\nDistinguishing routes (Saturday differs from weekday in the reference), per service_id:")
     for code in ("A11", "A11B", "E37", "E51", "A14A", "A14B"):
         d = detail[detail["route"].str.startswith(code)]
         for _, r in d.iterrows():
             print(f"  {r['service_id']} {r['route']:<5} {r['first']}-{r['last']} ({r['trips']} trips) "
                   f"H={r['HABIL']} S={r['SABADO']} D={r['DOM_FEST']}")
-    print("\nCopy the confirmed mapping into validity_override.SERVICE_DAYTYPE.")
+    print("\nCompare with validity_override.SERVICE_DAYTYPE and update it if the evidence changes.")
     return mapping
 
 
