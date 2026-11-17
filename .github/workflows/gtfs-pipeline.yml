@@ -45,6 +45,7 @@ jobs:
           python test_colombia_holidays.py
           python test_validity_override.py
           python test_diagnose_service_daytypes.py
+          python test_name_case.py
 
       - name: Download GTFS source layers from ArcGIS
         working-directory: ${{ env.PIPELINE_DIR }}

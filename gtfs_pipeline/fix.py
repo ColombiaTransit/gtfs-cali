@@ -29,6 +29,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 
 import validity_override as VO
+from name_case import normalize_series
 from gtfs_common import (
     CALI_BBOX, CLEAN_DIR, FINAL_ZIP, RAW_DIR, REQUIRED_FILES, ensure_dirs,
 )
@@ -148,6 +149,10 @@ def fix_stops(df):
                           f"(sistemas@metrocali.gov.co) before publishing.")
         df.loc[missing_name, "stop_name"] = "Parada " + df.loc[missing_name, "stop_id"].astype(str)
 
+    df["stop_name"], n_case = normalize_series(df["stop_name"])
+    if n_case:
+        log("stops.txt", f"normalized ALL-CAPS/lower-case stop_name to title case for {n_case} stop(s)")
+
     df["stop_lat"] = pd.to_numeric(df["stop_lat"], errors="coerce")
     df["stop_lon"] = pd.to_numeric(df["stop_lon"], errors="coerce")
 
@@ -199,6 +204,11 @@ def fix_routes(df, valid_agency_ids):
             missing = df["agency_id"].isna()
             if missing.any():
                 df.loc[missing, "agency_id"] = next(iter(valid_agency_ids))
+
+    if "route_long_name" in df.columns:
+        df["route_long_name"], n_case = normalize_series(df["route_long_name"])
+        if n_case:
+            log("routes.txt", f"normalized ALL-CAPS/lower-case route_long_name for {n_case} route(s)")
 
     if "route_type" not in df.columns:
         df["route_type"] = "3"
