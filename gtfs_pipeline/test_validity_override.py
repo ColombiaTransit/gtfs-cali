@@ -28,13 +28,17 @@ def test_mapping_and_festivo_exceptions():
     flags = cal.set_index("service_id")
     assert flags.loc["8099041", ["monday", "friday", "saturday"]].tolist() == ["1", "1", "0"]
     assert flags.loc["8099042", "saturday"] == "1" and flags.loc["8099043", "sunday"] == "1"
-    assert flags.loc["8099148", ["monday", "saturday", "sunday"]].tolist() == ["0", "0", "0"]
+    assert "8099148" not in flags.index                       # festivo service: calendar_dates only
     got = {(r.service_id, r.date, r.exception_type) for r in cd.itertuples()}
     assert ("8099041", "20261208", "2") in got and ("8099148", "20261208", "1") in got  # Tue 8 Dec
     assert ("8099041", "20261225", "2") in got                                       # Fri 25 Dec
     assert ("8099042", "20270102", "2") in got and ("8099148", "20270102", "1") in got  # Sat 2 Jan
     assert not [r for r in got if r[1] == "20270103"]                                  # Sunday festivo
     assert not [r for r in got if r[0] == "8099043"]
+    # without festivo dates the festivo service keeps an all-zero calendar row (trips stay valid)
+    cal2, cd2, _, _ = VO.apply_validity_override(None, None, {"8099148"}, today=date(2026, 11, 17),
+                                                 days=183, log=lambda m: None, festivos=None)
+    assert list(cal2["service_id"]) == ["8099148"] and cal2.iloc[0][VO.DAYS].astype(int).sum() == 0
 
 
 def test_festivos_parsing_and_fallback():
