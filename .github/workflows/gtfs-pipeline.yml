@@ -43,6 +43,8 @@ jobs:
           python test_routes_enrich.py
           python test_shape_geometry_validate.py
           python test_colombia_holidays.py
+          python test_validity_override.py
+          python test_diagnose_service_daytypes.py
 
       - name: Download GTFS source layers from ArcGIS
         working-directory: ${{ env.PIPELINE_DIR }}
@@ -55,6 +57,10 @@ jobs:
       - name: Enrich route names from rutas (best-effort)
         working-directory: ${{ env.PIPELINE_DIR }}
         run: python enrich_routes.py || echo "Enrichment failed or found nothing - continuing with placeholder names."
+
+      - name: Diagnose service_id day types against the route poster (informational)
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: python diagnose_service_daytypes.py || echo "Day-type diagnostic failed - non-blocking."
 
       - name: Fix / normalize the feed
         working-directory: ${{ env.PIPELINE_DIR }}
