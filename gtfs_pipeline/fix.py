@@ -28,6 +28,7 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 
+import validity_override as VO
 from gtfs_common import (
     CALI_BBOX, CLEAN_DIR, FINAL_ZIP, RAW_DIR, REQUIRED_FILES, ensure_dirs,
 )
@@ -454,6 +455,15 @@ def main():
         print("ERROR: neither calendar.txt nor calendar_dates.txt yielded any service_id. Aborting.")
         return
 
+    vdays = VO.override_days()
+    window_dates = None
+    if vdays > 0:
+        print(f"Overriding feed validity: today + {vdays} days")
+        calendar, calendar_dates, vs, ve = VO.apply_validity_override(
+            calendar, calendar_dates, valid_service_ids, days=vdays,
+            log=lambda m: log("validity", m))
+        window_dates = (vs, ve)
+
     print("Fixing trips.txt")
     trips = fix_trips(raw["trips.txt"], valid_route_ids, valid_service_ids)
     valid_trip_ids = set(trips["trip_id"])
@@ -477,6 +487,8 @@ def main():
     if feed_info is None or feed_info.empty:
         print("Synthesizing feed_info.txt (none provided)")
         feed_info = synthesize_feed_info(calendar, calendar_dates)
+    if window_dates:
+        feed_info = VO.override_feed_info(feed_info, *window_dates)
 
     outputs = {
         "agency.txt": agency, "stops.txt": stops, "routes.txt": routes,
