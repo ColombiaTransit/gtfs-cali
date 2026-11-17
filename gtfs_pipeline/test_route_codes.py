@@ -36,7 +36,7 @@ def test_snapshot_covers_every_decodable_route():
     produced = {RC.decode_route_id(RC.encode_route_code(c)) for c in codes}
     assert produced == codes                                   # bijective for all 91 live codes
     routes = pd.DataFrame({"route_id": [RC.encode_route_code(c) for c in sorted(codes)] + ["3012", "373", "MIOCABLE"],
-                           "route_short_name": "", "route_long_name": ""})
+                           "route_short_name": "", "route_long_name": "", "route_type": "3"})
     out, audit = RFC.apply_route_codes(routes, rows)
     assert (audit.code_source != "undecodable").all() and len(out) == 94
     assert out.loc[out.route_id == "2211", "route_short_name"].iloc[0] == "P21A"
@@ -45,6 +45,8 @@ def test_snapshot_covers_every_decodable_route():
     assert out.loc[out.route_id == "3012", "route_short_name"].iloc[0] == "A01B"      # not in listado: code only
     assert audit.set_index("route_id").loc["3012", "in_listado"] == False
     assert out.loc[out.route_id == "MIOCABLE", "route_long_name"].iloc[0].startswith("MIO Cable")
+    assert out.loc[out.route_id == "MIOCABLE", "route_type"].iloc[0] == "6"      # gondola
+    assert (out.loc[out.route_id != "MIOCABLE", "route_type"] == "3").all()
 
 
 if __name__ == "__main__":

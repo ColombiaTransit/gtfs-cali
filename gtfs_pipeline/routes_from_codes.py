@@ -41,6 +41,9 @@ def apply_route_codes(routes_df, listado_rows):
     """Returns (routes_df, audit_df). Never touches ids it cannot decode."""
     names = long_names_from_listado(listado_rows or [])
     df = routes_df.copy()
+    if "route_type" not in df.columns:
+        df["route_type"] = "3"
+    df["route_type"] = df["route_type"].astype("object")
     for col in ("route_short_name", "route_long_name"):
         if col not in df.columns:
             df[col] = pd.NA
@@ -51,6 +54,7 @@ def apply_route_codes(routes_df, listado_rows):
         code, source, long_name, variant = None, "", None, ""
         if rid.upper() == RC.CABLE_ID:
             code, source, long_name = RC.CABLE_ID, "cable", RC.CABLE_LONG_NAME
+            df.at[i, "route_type"] = "6"   # GTFS: 6 = gondola / suspended cable car
         else:
             code = RC.decode_route_id(rid)
             source = "decoded" if code else "undecodable"
