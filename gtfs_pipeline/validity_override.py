@@ -32,9 +32,14 @@ SERVICE_WEEKDAYS = {}
 DEFAULT_WEEKDAYS = (1, 1, 1, 1, 1, 1, 1)
 # Confirmed day type per real service_id, from diagnose_service_daytypes.py, e.g.
 # {"8099041": "HABIL", "8099042": "SABADO", "8099043": "DOM_FEST"}
-SERVICE_DAYTYPE = {}
+# Inferred from the poster diagnostic (run of 2026-11-17): 41/42 are the weekday and
+# Saturday services (weekday vs Saturday rests on the trip count: ASSUMPTION), 43/148 are
+# near-identical twins on the Sunday/festivo pattern. 43 = Sunday, 148 = festivo only.
+SERVICE_DAYTYPE = {"8099041": "HABIL", "8099042": "SABADO",
+                   "8099043": "DOM_FEST", "8099148": "FESTIVO"}
 DAYTYPE_FLAGS = {"HABIL": (1, 1, 1, 1, 1, 0, 0), "SABADO": (0, 0, 0, 0, 0, 1, 0),
-                 "DOM_FEST": (0, 0, 0, 0, 0, 0, 1)}
+                 "DOM_FEST": (0, 0, 0, 0, 0, 0, 1),
+                 "FESTIVO": (0, 0, 0, 0, 0, 0, 0)}  # runs only on festivos, via calendar_dates
 
 
 def override_days():
@@ -50,7 +55,33 @@ def window(today=None, days=None):
     return today.strftime("%Y%m%d"), (today + timedelta(days=days)).strftime("%Y%m%d")
 
 
-def apply_validity_override(calendar, calendar_dates, service_ids, today=None, days=None, log=print):
+def holiday_exceptions(calendar, festivos, service_daytype=None):
+    """calendar_dates rows for the festivos.
+
+    On a festivo that falls Monday-Saturday the regular services running that weekday are
+    removed (type 2) and every FESTIVO service is added (type 1). A festivo on a Sunday
+    changes nothing: the Sunday service already runs and the FESTIVO twin stays off,
+    so the same trips are not offered twice.
+    """
+    service_daytype = SERVICE_DAYTYPE if service_daytype is None else service_daytype
+    festivo_ids = {s for s, t in service_daytype.items() if t == "FESTIVO"}
+    rows = []
+    for d in sorted(festivos):
+        wd = d.weekday()
+        if wd == 6:
+            continue
+        ds = d.strftime("%Y%m%d")
+        for _, r in calendar.iterrows():
+            sid = r["service_id"]
+            if sid in festivo_ids:
+                rows.append({"service_id": sid, "date": ds, "exception_type": "1"})
+            elif str(r[DAYS[wd]]) == "1":
+                rows.append({"service_id": sid, "date": ds, "exception_type": "2"})
+    return pd.DataFrame(rows, columns=["service_id", "date", "exception_type"])
+
+
+def apply_validity_override(calendar, calendar_dates, service_ids, today=None, days=None,
+                            log=print, festivos=None):
     """Returns (calendar, calendar_dates, start, end)."""
     start, end = window(today, days)
 
@@ -87,6 +118,12 @@ def apply_validity_override(calendar, calendar_dates, service_ids, today=None, d
         calendar_dates = calendar_dates[keep].reset_index(drop=True)
         if calendar_dates.empty:
             calendar_dates = None
+    if festivos and any(t == "FESTIVO" for t in SERVICE_DAYTYPE.values()):
+        gen = holiday_exceptions(calendar, festivos)
+        if len(gen):
+            calendar_dates = gen if calendar_dates is None else pd.concat(
+                [gen, calendar_dates], ignore_index=True).drop_duplicates(["service_id", "date"])
+            log(f"calendar_dates.txt: {len(gen)} festivo exception row(s) for {len(set(gen['date']))} festivo(s)")
     return calendar, calendar_dates, start, end
 
 

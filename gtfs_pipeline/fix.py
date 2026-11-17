@@ -451,6 +451,11 @@ def main():
         valid_service_ids |= set(calendar["service_id"])
     if calendar_dates is not None:
         valid_service_ids |= set(calendar_dates["service_id"])
+    if not valid_service_ids and VO.override_days() > 0 and raw.get("trips.txt") is not None:
+        # No calendar at all in the source: the validity override synthesizes one for the
+        # service_ids that the trips actually use.
+        valid_service_ids = set(clean_id_like(raw["trips.txt"]["service_id"].astype(str)).dropna())
+        log("validity", f"no calendar in the source - using the {len(valid_service_ids)} service_id(s) found in trips.txt")
     if not valid_service_ids:
         print("ERROR: neither calendar.txt nor calendar_dates.txt yielded any service_id. Aborting.")
         return
@@ -459,8 +464,13 @@ def main():
     window_dates = None
     if vdays > 0:
         print(f"Overriding feed validity: today + {vdays} days")
+        from fetch_festivos import get_festivos
+        _s, _e = VO.window(days=vdays)
+        _to_date = lambda x: datetime.strptime(x, "%Y%m%d").date()
+        festivos, fsrc = get_festivos(_to_date(_s), _to_date(_e), log=lambda m: log("validity", m))
+        log("validity", f"{len(festivos)} festivo(s) in the window, source: {fsrc}")
         calendar, calendar_dates, vs, ve = VO.apply_validity_override(
-            calendar, calendar_dates, valid_service_ids, days=vdays,
+            calendar, calendar_dates, valid_service_ids, days=vdays, festivos=festivos,
             log=lambda m: log("validity", m))
         window_dates = (vs, ve)
 
