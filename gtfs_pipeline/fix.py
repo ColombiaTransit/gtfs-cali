@@ -28,6 +28,7 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 
+import fares as FARES
 import validity_override as VO
 from name_case import normalize_series
 from gtfs_common import (
@@ -510,11 +511,16 @@ def main():
     if window_dates:
         feed_info = VO.override_feed_info(feed_info, *window_dates)
 
+    fare_attributes = raw.get("fare_attributes.txt")
+    if fare_attributes is None or fare_attributes.empty:
+        fare_attributes = FARES.default_fare_attributes(agency["agency_id"] if "agency_id" in agency else None)
+        print(f"Adding fare_attributes.txt: {FARES.FARE_PRICE} {FARES.FARE_CURRENCY} (fares.py, in force since {FARES.FARE_VALID_FROM})")
+
     outputs = {
         "agency.txt": agency, "stops.txt": stops, "routes.txt": routes,
         "trips.txt": trips, "stop_times.txt": stop_times,
         "calendar.txt": calendar, "calendar_dates.txt": calendar_dates,
-        "shapes.txt": shapes, "fare_attributes.txt": raw.get("fare_attributes.txt"),
+        "shapes.txt": shapes, "fare_attributes.txt": fare_attributes,
         "fare_rules.txt": raw.get("fare_rules.txt"), "frequencies.txt": raw.get("frequencies.txt"),
         "feed_info.txt": feed_info,
     }

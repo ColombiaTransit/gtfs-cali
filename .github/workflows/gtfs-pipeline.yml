@@ -50,6 +50,7 @@ jobs:
           python test_name_case.py
           python test_variant_report.py
           python test_shapes_from_rutas.py
+          python test_fares.py
 
       - name: Download GTFS source layers from ArcGIS
         working-directory: ${{ env.PIPELINE_DIR }}
