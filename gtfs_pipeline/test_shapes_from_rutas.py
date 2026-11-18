@@ -144,6 +144,25 @@ def test_build_uses_siur_when_rutas_has_no_line():
     assert rep2.iloc[0]["status"] != "applied"
 
 
+def test_static_osm_line_serves_both_directions():
+    import json, tempfile, os
+    pts = [(LON0, LAT0 + i * 0.002) for i in range(6)]
+    f = os.path.join(tempfile.mkdtemp(), "l.json")
+    json.dump({"elements": [{"type": "way", "id": 1, "geometry": [{"lat": la, "lon": lo} for lo, la in pts]}]}, open(f, "w"))
+    extra = S.variants_from_osm("X9", f)
+    routes = pd.DataFrame({"route_id": ["r"], "route_short_name": ["X9"]})
+    ids = ["a", "b", "c"]
+    stops = pd.DataFrame({"stop_id": ids, "stop_lon": [LON0] * 3, "stop_lat": [LAT0 + 0.001, LAT0 + 0.005, LAT0 + 0.009]})
+    trips = pd.DataFrame({"trip_id": ["t0", "t1"], "route_id": ["r", "r"], "service_id": ["8099041"] * 2, "direction_id": ["0", "1"]})
+    rows = [("t0", i, k + 1) for k, i in enumerate(ids)] + [("t1", i, k + 1) for k, i in enumerate(reversed(ids))]
+    stop_times = pd.DataFrame({"trip_id": [r[0] for r in rows], "stop_id": [r[1] for r in rows],
+                               "stop_sequence": [str(r[2]) for r in rows], "departure_time": ["08:00:00"] * 6})
+    sh, nt, rep = S.build(routes, trips, stop_times, stops, [], fallback=extra)
+    assert list(rep["status"]) == ["applied", "applied"] and set(rep["reason"]) == {"osm static"}
+    a, b = [sh[sh.shape_id == i] for i in nt.sort_values("trip_id").shape_id]
+    assert float(a.iloc[0].shape_pt_lat) < float(a.iloc[-1].shape_pt_lat) and float(b.iloc[0].shape_pt_lat) > float(b.iloc[-1].shape_pt_lat)
+
+
 if __name__ == "__main__":
     test_parse_ranges_and_windows()
     test_stops_in_order_pick_the_right_direction()
@@ -154,4 +173,5 @@ if __name__ == "__main__":
     test_rutas_unreachable_keeps_the_feed()
     test_split_rounds_and_siur_variants()
     test_build_uses_siur_when_rutas_has_no_line()
+    test_static_osm_line_serves_both_directions()
     print("All test_shapes_from_rutas.py tests passed.")
