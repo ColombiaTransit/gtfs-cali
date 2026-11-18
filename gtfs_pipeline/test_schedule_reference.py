@@ -35,19 +35,39 @@ def test_snapshot_fallback_and_pdf_only_codes():
     assert any("snapshot" in m for m in logs)
 
 
-def test_live_response_wins_over_snapshot():
-    class Live:
+def _session(payload):
+    class S:
         def get(self, *a, **k):
             class R:
                 def raise_for_status(self): pass
-                def json(self): return [{"route_code": "A01A", "habil": "6:00-7:00", "sabado": "NO OPERA", "dom_fest": "NO OPERA"}]
+                def json(self): return payload
             return R()
-    table, src = SR.load_reference(session=Live(), log=lambda m: None)
+    return S()
+
+
+def test_live_response_wins_over_snapshot():
+    rows = json.load(open(SR.newest_snapshot(), encoding="utf-8"))
+    live = [dict(r) for r in rows]
+    for r in live:
+        if r["route_code"] == "A01A":
+            r["habil"] = "6:00-7:00"
+    table, src = SR.load_reference(session=_session(live), log=lambda m: None)
     assert src["A01A"] == "live" and table["A01A"]["HABIL"] == (360, 420)
-    assert src["A02"] == "pdf"          # not in the (tiny) live answer -> poster fallback
+
+
+def test_incomplete_live_answer_is_rejected():
+    logs = []
+    tiny = [{"route_code": "A01A", "variante": "Hábil Normal - X", "habil": "6:00-7:00", "sabado": "NO OPERA", "dom_fest": "NO OPERA"}]
+    for bad in (tiny, [{"error": "boom"}], {"status": "error"}, [{"route_code": "A01A"}] * 200):
+        logs.clear()
+        table, src = SR.load_reference(session=_session(bad), log=logs.append)
+        assert src["A01A"] == "snapshot" and table["A01A"]["HABIL"] == (300, 1200), bad
+        assert any("rejected" in m for m in logs)
+    assert SR.listado_problem([], None) and SR.listado_problem("x", None)
 
 
 if __name__ == "__main__":
     test_parse_window_variants(); test_union_over_variants()
     test_snapshot_fallback_and_pdf_only_codes(); test_live_response_wins_over_snapshot()
+    test_incomplete_live_answer_is_rejected()
     print("All test_schedule_reference.py tests passed.")

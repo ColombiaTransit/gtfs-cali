@@ -48,6 +48,7 @@ jobs:
           python test_schedule_reference.py
           python test_route_codes.py
           python test_name_case.py
+          python test_variant_report.py
 
       - name: Download GTFS source layers from ArcGIS
         working-directory: ${{ env.PIPELINE_DIR }}
@@ -68,6 +69,10 @@ jobs:
       - name: Fix / normalize the feed
         working-directory: ${{ env.PIPELINE_DIR }}
         run: python fix.py
+
+      - name: Report Sunday/festivo stop-list variants per route (informational)
+        working-directory: ${{ env.PIPELINE_DIR }}
+        run: python variant_report.py || echo "Variant report failed - non-blocking."
 
       - name: Set up Java (for the canonical validator)
         uses: actions/setup-java@v4
@@ -129,7 +134,7 @@ jobs:
           if [ -f "${PIPELINE_DIR}/build/report/route_enrichment.csv" ]; then
             cp "${PIPELINE_DIR}/build/report/route_enrichment.csv" release_assets/route_enrichment.csv
           fi
-          for f in service_id_daytype_diagnostic.csv service_id_mapping_proposed.json; do
+          for f in service_id_daytype_diagnostic.csv service_id_mapping_proposed.json variant_stop_patterns.csv; do
             if [ -f "${PIPELINE_DIR}/build/report/$f" ]; then cp "${PIPELINE_DIR}/build/report/$f" "release_assets/$f"; fi
           done
           if [ -f "${PIPELINE_DIR}/build/report/shape_geometry_validation.csv" ]; then

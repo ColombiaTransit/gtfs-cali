@@ -119,8 +119,13 @@ def apply_validity_override(calendar, calendar_dates, service_ids, today=None, d
         unmapped = [s for s in missing if str(s) not in SERVICE_WEEKDAYS and str(s) not in SERVICE_DAYTYPE]
         log(f"calendar.txt: synthesized {len(rows)} service_id(s) for {start}-{end}")
         if unmapped:
-            log(f"WARNING: {len(unmapped)} service_id(s) have no confirmed weekday pattern and run "
-                f"EVERY DAY: {unmapped}. Fill in validity_override.SERVICE_DAYTYPE.")
+            msg = (f"{len(unmapped)} service_id(s) have no confirmed day type: {unmapped}. Metro Cali probably "
+                   f"issued new service ids; check build/report/service_id_mapping_proposed.json and fill in "
+                   f"validity_override.SERVICE_DAYTYPE.")
+            if os.environ.get("VALIDITY_ALLOW_UNMAPPED") == "1":
+                log(f"WARNING: {msg} They run EVERY DAY (VALIDITY_ALLOW_UNMAPPED=1).")
+            else:
+                raise ValueError(msg + " Set VALIDITY_ALLOW_UNMAPPED=1 to publish them as every-day services anyway.")
 
     if calendar_dates is not None and len(calendar_dates):
         keep = (calendar_dates["date"] >= start) & (calendar_dates["date"] <= end)
