@@ -14,13 +14,23 @@ import route_codes as RC
 # Preference when a code has several variants: the everyday route first.
 VARIANT_PRIORITY = ["hábil normal", "domingo normal", "sábado domingo normal", "hábil desvío",
                     "sábado domingo larga", "sábado domingo corta", "domingo desvío", "domingo ciclovía"]
-LABEL = re.compile(r"^\s*((?:h[aá]bil|s[aá]bado|domingo)[^-]*?)\s+-\s+(.*)$", re.I)
+DASH = r"[-\u2013\u2014]"
+LABEL = re.compile(r"^\s*((?:h[aá]bil|s[aá]bado|domingo)[^-\u2013\u2014]*?)\s+" + DASH + r"\s+(.*)$", re.I)
+STARTS_WITH_LABEL = re.compile(r"^\s*(?:h[aá]bil|s[aá]bados?|domingos?)\b", re.I)
 
 
 def split_variante(text):
     """'Hábil Normal - ESTACIÓN SAN BOSCO - CAM' -> ('hábil normal', 'ESTACIÓN SAN BOSCO - CAM')."""
-    m = LABEL.match(str(text or ""))
-    return (m.group(1).strip().lower(), m.group(2).strip()) if m else ("", str(text or "").strip())
+    text = str(text or "")
+    m = LABEL.match(text)
+    if not m:
+        return "", text.strip()
+    label, name = m.group(1).strip().lower(), m.group(2).strip()
+    while True:                      # a doubled label ("Domingo Ciclovía - Hábil Normal - X")
+        m = LABEL.match(name)
+        if not m:
+            return label, name
+        name = m.group(2).strip()
 
 
 def long_names_from_listado(rows):
@@ -29,8 +39,8 @@ def long_names_from_listado(rows):
     for r in rows:
         code = str(r.get("route_code", "")).strip().upper()
         label, name = split_variante(r.get("variante"))
-        if not code or not name:
-            continue
+        if not code or not name or STARTS_WITH_LABEL.match(name):
+            continue                 # no name, or a variant label we could not strip: never publish it
         rank = VARIANT_PRIORITY.index(label) if label in VARIANT_PRIORITY else len(VARIANT_PRIORITY)
         if code not in best or rank < best[code][0]:
             best[code] = (rank, name, label)

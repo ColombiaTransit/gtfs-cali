@@ -64,21 +64,49 @@ def newest_snapshot(data_dir=DATA_DIR):
     return files[-1] if files else None
 
 
+REQUIRED_KEYS = ("route_code", "variante", "habil", "sabado", "dom_fest")
+MIN_COVERAGE = 0.8      # live must still contain this share of the snapshot's route codes
+MIN_ROWS_NO_SNAPSHOT = 30
+
+
+def listado_problem(rows, reference_rows=None):
+    """None when `rows` looks like a complete listadoRutas.php answer, else a short reason."""
+    if not isinstance(rows, list) or not rows:
+        return "not a non-empty list"
+    if not all(isinstance(r, dict) for r in rows):
+        return "rows are not objects"
+    bad = [r for r in rows if any(k not in r for k in REQUIRED_KEYS)]
+    if bad:
+        return f"{len(bad)} row(s) miss one of {REQUIRED_KEYS}"
+    codes = {str(r["route_code"]).strip().upper() for r in rows if str(r.get("route_code", "")).strip()}
+    if reference_rows:
+        ref = {str(r.get("route_code", "")).strip().upper() for r in reference_rows} - {""}
+        if ref and len(codes & ref) < MIN_COVERAGE * len(ref):
+            return f"only {len(codes & ref)} of {len(ref)} known route codes present"
+    elif len(rows) < MIN_ROWS_NO_SNAPSHOT:
+        return f"only {len(rows)} rows"
+    return None
+
+
 def load_listado_rows(session=None, data_dir=DATA_DIR, log=print):
-    """Raw listadoRutas.php rows: live first, else the newest snapshot. Returns (rows, label)."""
+    """Raw listadoRutas.php rows: live first (only when it passes listado_problem), else the
+    newest snapshot. Returns (rows, label)."""
+    snap = newest_snapshot(data_dir)
+    snap_rows = json.load(open(snap, encoding="utf-8")) if snap else None
     try:
         import requests
         r = (session or requests).get(LISTADO_URL, timeout=30)
         r.raise_for_status()
         rows = r.json()
-        if isinstance(rows, list) and rows:
+        problem = listado_problem(rows, snap_rows)
+        if problem is None:
             return rows, "live"
+        log(f"  listadoRutas.php answer rejected ({problem}) - using the newest snapshot")
     except Exception as e:
         log(f"  listadoRutas.php not usable ({type(e).__name__}) - using the newest snapshot")
-    snap = newest_snapshot(data_dir)
-    if snap:
+    if snap_rows is not None:
         log(f"  using snapshot {os.path.basename(snap)}")
-        return json.load(open(snap, encoding="utf-8")), "snapshot"
+        return snap_rows, "snapshot"
     return None, None
 
 

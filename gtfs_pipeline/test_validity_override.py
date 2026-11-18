@@ -3,11 +3,27 @@ from datetime import date
 import validity_override as VO
 
 def test_synthesizes_and_drops_stale():
+    import os
+    os.environ["VALIDITY_ALLOW_UNMAPPED"] = "1"      # ids "1"/"2" have no confirmed day type
     cd = pd.DataFrame({"service_id": ["1", "1"], "date": ["20250101", "20261201"], "exception_type": ["1", "2"]})
     cal, cd2, s, e = VO.apply_validity_override(None, cd, {"1", "2"}, today=date(2026, 11, 17), days=183, log=lambda m: None)
     assert (s, e) == ("20261117", "20270519")
     assert set(cal["service_id"]) == {"1", "2"} and (cal["start_date"] == s).all()
     assert list(cd2["date"]) == ["20261201"]
+    del os.environ["VALIDITY_ALLOW_UNMAPPED"]
+
+
+def test_unmapped_service_ids_fail_hard():
+    import os
+    os.environ.pop("VALIDITY_ALLOW_UNMAPPED", None)
+    try:
+        VO.apply_validity_override(None, None, {"8099041", "999"}, today=date(2026, 11, 17), days=183, log=lambda m: None)
+    except ValueError as e:
+        assert "999" in str(e) and "SERVICE_DAYTYPE" in str(e)
+    else:
+        raise AssertionError("an unmapped service_id must stop the build")
+    cal, _, _, _ = VO.apply_validity_override(None, None, {"8099041"}, today=date(2026, 11, 17), days=183, log=lambda m: None)
+    assert list(cal["service_id"]) == ["8099041"]     # known ids are fine
 
 def test_keeps_weekdays_and_empty_dates_none():
     cal0 = pd.DataFrame([{"service_id": "A", "monday": "1", "tuesday": "0", "wednesday": "0", "thursday": "0",
@@ -58,6 +74,7 @@ def test_festivos_parsing_and_fallback():
 if __name__ == "__main__":
     test_synthesizes_and_drops_stale()
     test_keeps_weekdays_and_empty_dates_none()
+    test_unmapped_service_ids_fail_hard()
     test_mapping_and_festivo_exceptions()
     test_festivos_parsing_and_fallback()
     print("All test_validity_override.py tests passed.")

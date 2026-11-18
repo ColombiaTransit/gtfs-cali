@@ -49,7 +49,22 @@ def test_snapshot_covers_every_decodable_route():
     assert (out.loc[out.route_id != "MIOCABLE", "route_type"] == "3").all()
 
 
+def test_variant_label_never_leaks_into_names():
+    import routes_from_codes as RFC
+    assert RFC.split_variante("Hábil Normal - ESTACIÓN SAN BOSCO - CAM") == ("hábil normal", "ESTACIÓN SAN BOSCO - CAM")
+    assert RFC.split_variante("Domingo Ciclovía \u2013 ESTACIÓN FLORA - OUTLET")[1] == "ESTACIÓN FLORA - OUTLET"   # en dash
+    assert RFC.split_variante("Domingo Ciclovía - Hábil Normal - X - Y") == ("domingo ciclovía", "X - Y")      # doubled label
+    rows = [{"route_code": "A01A", "variante": "Hábil/Normal: ESTACIÓN SAN BOSCO"},        # format we cannot parse
+            {"route_code": "A02", "variante": "Hábil Normal - TERMINAL"}]
+    names = RFC.long_names_from_listado(rows)
+    assert "A01A" not in names and names["A02"][0] == "TERMINAL"                      # a label is never published
+    for r in __import__("json").load(open(__import__("schedule_reference").newest_snapshot(), encoding="utf-8")):
+        n = RFC.long_names_from_listado([r]).get(r["route_code"].upper())
+        assert n is None or not RFC.STARTS_WITH_LABEL.match(n[0]), r
+
+
 if __name__ == "__main__":
+    test_variant_label_never_leaks_into_names()
     test_decode_and_encode_roundtrip(); test_undecodable_ids()
     test_variant_split_and_priority(); test_snapshot_covers_every_decodable_route()
     print("All test_route_codes.py tests passed.")
