@@ -285,9 +285,14 @@ names.
 `build/report/shape_assignment.csv` (status/reason per stop list; siur-placed
 lists have reason `siur fallback`). Tests: `test_shapes_from_rutas.py`.
 
-Known gaps: MIO Cable trips (16,320) have no shape; about a dozen routes
-(P47A, P40B, T52, P52D, A70, P30A, A17F, A33, P24B, P14A, A21, P21A) fit poorly
-and may keep their old shape; a GraphHopper last-resort source is not built.
+MIO Cable (gondola, 4 stations) is not in rutas or usable in siur; its shape
+comes from a static OpenStreetMap export (`data/miocable_osm.json`, Overpass
+JSON of the `aerialway=gondola` way), used for both directions (reason
+`osm static`). Refresh it by re-running the Overpass query for the gondola
+way in Cali and replacing the file.
+
+Known gaps: P14A and A21 keep their old shape for a few trips (36 in total);
+a GraphHopper last-resort source is not built.
 
 ## Variant report and feed guards
 

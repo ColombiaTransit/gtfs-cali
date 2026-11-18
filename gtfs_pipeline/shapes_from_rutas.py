@@ -142,6 +142,7 @@ def variants_from_features(features):
 
 
 SIUR_URL = "https://servicios.siur.com.co/buscarutas/api/recorrido.php"
+OSM_STATIC = {"MIOCABLE": os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "miocable_osm.json")}
 ALL_DAY = [(0, 1900)]
 
 
@@ -182,6 +183,31 @@ def variants_from_siur(code, lonlat):
         out.append({"fid": f"siur{n}", "code": code, "variante": "SIUR", "dia_vari": f"S{n}",
                     "windows": {"HABIL": ALL_DAY, "SABADO": ALL_DAY, "DOM_FEST": ALL_DAY},
                     "parts": [line, Line(list(reversed(line.lonlat)))]})
+    return out
+
+
+def variants_from_osm(code, path):
+    """Static OSM line (Overpass JSON export of the gondola way) as a pseudo variant; stop order picks the direction."""
+    import json
+    with open(path, encoding="utf-8") as f:
+        els = json.load(f)["elements"]
+    ways = [e for e in els if e.get("type") == "way" and e.get("geometry")]
+    if not ways:
+        return []
+    way = max(ways, key=lambda e: len(e["geometry"]))
+    line = Line([(g["lon"], g["lat"]) for g in way["geometry"]])
+    return [{"fid": f"osm{way.get('id', '')}", "code": code, "variante": "OSM", "dia_vari": "O1",
+             "windows": {"HABIL": ALL_DAY, "SABADO": ALL_DAY, "DOM_FEST": ALL_DAY},
+             "parts": [line, Line(list(reversed(line.lonlat)))]}]
+
+
+def static_variants():
+    out = []
+    for code, path in OSM_STATIC.items():
+        try:
+            out += variants_from_osm(code, path)
+        except Exception as e:
+            print(f"  static line {code} not usable ({type(e).__name__}: {e})")
     return out
 
 
@@ -393,7 +419,7 @@ def build(routes, trips, stop_times, stops, variants, service_daytype=None, fall
         row.update({"variant": v["variante"], "dia_vari": v["dia_vari"], "matched": f"{s['matched']}/{len(seq)}",
                     "mean_dist_m": round(s["mean_d"], 1), "misfit": s["misfit"],
                     "window_share": round(s["window_share"], 2), "margin": "" if margin is None else margin,
-                    "status": "applied", "reason": "siur fallback" if v["variante"] == "SIUR" else (("matched on " + v["code"] + " (" + sibling + ")") if sibling and v["code"] != code else "")})
+                    "status": "applied", "reason": {"SIUR": "siur fallback", "OSM": "osm static"}.get(v["variante"]) or (("matched on " + v["code"] + " (" + sibling + ")") if sibling and v["code"] != code else "")})
         report.append(row)
 
     rows = []
@@ -449,18 +475,20 @@ def main(clean_dir=None, report_dir=None, features=None):
                              usecols=["trip_id", "stop_id", "stop_sequence", "departure_time"])
     old = read("shapes.txt") if os.path.exists(os.path.join(clean_dir, "shapes.txt")) else None
     new_shapes, new_trips, rep = build(routes, trips, stop_times, stops, variants)
-    todo = sorted(set(rep.loc[rep["status"] != "applied", "route_short_name"].astype(str).str.upper()) - {""})
+    static = static_variants()
+    todo = sorted(set(rep.loc[rep["status"] != "applied", "route_short_name"].astype(str).str.upper()) - {""}
+                  - {v["code"] for v in static})
+    siur = {}
     if todo:                                    # second source for what rutas could not place (best-effort)
         try:
             siur = fetch_siur(todo)
         except Exception as e:
             print(f"siur not reachable ({type(e).__name__}: {e}) - skipping the fallback.")
-            siur = {}
-        extra = [v for c, ll in siur.items() for v in variants_from_siur(c, ll)]
-        if extra:
-            new_shapes, new_trips, rep = build(routes, trips, stop_times, stops, variants, fallback=extra)
-            print(f"siur fallback: {len(siur)}/{len(todo)} line(s) fetched, "
-                  f"{int((rep['reason'] == 'siur fallback').sum())} stop list(s) placed on them")
+    extra = static + [v for c, ll in siur.items() for v in variants_from_siur(c, ll)]
+    if extra:
+        new_shapes, new_trips, rep = build(routes, trips, stop_times, stops, variants, fallback=extra)
+        print(f"fallback lines: {len(static)} static, siur {len(siur)}/{len(todo)} fetched; "
+              f"{int(rep['reason'].isin(['siur fallback', 'osm static']).sum())} stop list(s) placed on them")
     os.makedirs(report_dir, exist_ok=True)
     rep.to_csv(os.path.join(report_dir, "shape_assignment.csv"), index=False)
     applied = rep[rep["status"] == "applied"]
