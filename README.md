@@ -256,6 +256,51 @@ python validate.py
 treat both as non-fatal. A full per-route audit trail (including which
 match method was used) is written to `build/report/route_enrichment.csv`.
 
+## Step 3.5 — `shapes_from_rutas.py`: real alignments as shapes
+
+`fix.py` only knows the stops, so its shapes are the stops joined by straight
+lines. This stage replaces them with the real alignments (best-effort; if the
+sources are unreachable the feed stays as it was).
+
+**Sources.** Primary: the `rutas` ArcGIS layer (item
+`b157f8746f0649339d3aba1d2dd0a3d5`, layer 0): one polyline per route variant
+(`VARIANTE` Normal/Ciclovia/Desvio/Larga/Corta, `DIA_VARI`, operating hours in
+`HABIL`/`SABADO`/`DOM_FEST`), both directions in one line, no direction field.
+Second source, only for stop lists rutas cannot place: siur
+(`servicios.siur.com.co/buscarutas/api/recorrido.php?linea=CODE`), which chains
+the line's variants/directions and has no variant or hours information.
+
+**Method.** Per distinct stop list (route x day type x direction) the stops are
+laid in order along each candidate polyline (dynamic programming, monotonic,
+candidates within 60 m, a few skips allowed). The variant with the fewest stops
+more than 40 m off the line wins; ties go to the variant whose hours contain
+the trips' departures (+/-15 min), then to Normal. The line is cut between the
+first and last stop; unmatched end/mid stops are joined by straight pieces.
+A stop list that fits no variant keeps its old shape (gate: matched share
+>= max(50 %, min(5, n)) and mean distance <= 40 m). Variants are therefore
+assigned per trip through `shape_id` - variant names are **not** put in trip
+names.
+
+`shape_id` = `{code}-{fid}-{first_stop}-{last_stop}-{n_stops}`. Output:
+`build/report/shape_assignment.csv` (status/reason per stop list; siur-placed
+lists have reason `siur fallback`). Tests: `test_shapes_from_rutas.py`.
+
+Known gaps: MIO Cable trips (16,320) have no shape; about a dozen routes
+(P47A, P40B, T52, P52D, A70, P30A, A17F, A33, P24B, P14A, A21, P21A) fit poorly
+and may keep their old shape; a GraphHopper last-resort source is not built.
+
+## Variant report and feed guards
+
+`variant_report.py` writes `build/report/variant_stop_patterns.csv`: per route,
+day type and direction, the distinct stop lists with trip counts, departure
+span, stops added/removed vs the dominant list and the share inside the
+Ciclovia window (informational, never changes the feed). Guards against source
+breakage: `schedule_reference.listado_problem` (live listadoRutas must cover
+>= 80 % of the snapshot's route codes, else the snapshot is used),
+`routes_from_codes` never lets a variant label end up in a long name, and
+`validity_override` raises on service_ids it does not know unless
+`VALIDITY_ALLOW_UNMAPPED=1`.
+
 ## Step 4 — `validate_routes_geometry.py`: does our reconstruction match reality?
 
 This answers the same question as `enrich_stops.py`'s spatial fallback, but
@@ -318,6 +363,8 @@ python download.py       # -> build/gtfs_raw/*.txt
 python enrich_stops.py   # -> patches stop_name into build/gtfs_raw/stops.txt (best-effort)
 python enrich_routes.py  # -> patches route_long_name into build/gtfs_raw/routes.txt (best-effort)
 python fix.py             # -> build/gtfs_clean/*.txt and build/gtfs.zip
+python variant_report.py  # -> build/report/variant_stop_patterns.csv
+python shapes_from_rutas.py  # -> real shapes from rutas/siur (best-effort)
 python validate.py        # -> build/report/validation_report.txt
 ```
 
