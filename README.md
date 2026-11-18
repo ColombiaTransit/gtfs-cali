@@ -294,6 +294,18 @@ way in Cali and replacing the file.
 Known gaps: P14A and A21 keep their old shape for a few trips (36 in total);
 a GraphHopper last-resort source is not built.
 
+## Fares (`fares.py`)
+
+The ArcGIS data has no fares, so `fix.py` writes `fare_attributes.txt` from
+the constants in `fares.py` when the source has none: one fare `general`,
+COP 3,500 per trip (in force since 2026-01-10 by district decree; Metro Cali
+bulletin). Update `FARE_PRICE`/`FARE_VALID_FROM` when a new decree changes it.
+Not from an official source (one secondary source, colombiamove.com guide,
+2026): the same fare for every route including MIO Cable (so no
+`fare_rules.txt`), unlimited transfers within 90 minutes of the first
+validation (`transfer_duration` 5400), and `payment_method` 1 (card only, no
+cash on board). Verify against Metro Cali when possible. Tests: `test_fares.py`.
+
 ## Variant report and feed guards
 
 `variant_report.py` writes `build/report/variant_stop_patterns.csv`: per route,
