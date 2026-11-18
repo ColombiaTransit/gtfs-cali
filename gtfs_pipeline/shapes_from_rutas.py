@@ -141,6 +141,66 @@ def variants_from_features(features):
     return out
 
 
+SIUR_URL = "https://servicios.siur.com.co/buscarutas/api/recorrido.php"
+ALL_DAY = [(0, 1900)]
+
+
+def split_rounds(lonlat, near=25.0, min_len=1000.0):
+    """siur's recorrido is the line's variants/directions chained: it passes its start point once per round.
+    Cut it at those passes. A line that never comes back is one round."""
+    a = np.asarray(lonlat, dtype=float)
+    x, y = xy(a[:, 0], a[:, 1])
+    d = np.hypot(x - x[0], y - y[0])
+    seg = np.concatenate([[0.0], np.cumsum(np.hypot(np.diff(x), np.diff(y)))])
+    cuts, i, n = [0], 1, len(a)
+    while i < n:
+        if d[i] < near and seg[i] - seg[cuts[-1]] > min_len:
+            j = i
+            while j + 1 < n and d[j + 1] < near:
+                j += 1
+            k = i + int(np.argmin(d[i:j + 1]))
+            cuts.append(k)
+            i = j + 1
+        else:
+            i += 1
+    if cuts[-1] != n - 1 and seg[-1] - seg[cuts[-1]] > min_len:
+        cuts.append(n - 1)
+    elif cuts[-1] != n - 1:
+        cuts[-1] = n - 1
+    if len(cuts) < 2:
+        return [list(map(tuple, a))]
+    return [list(map(tuple, a[cuts[k]:cuts[k + 1] + 1])) for k in range(len(cuts) - 1)]
+
+
+def variants_from_siur(code, lonlat):
+    """One pseudo variant per round of siur's recorrido; its hours are unknown, so it runs on every day type."""
+    out = []
+    for n, rd in enumerate(split_rounds(lonlat), start=1):
+        if len(rd) < 2:
+            continue
+        line = Line(rd)
+        out.append({"fid": f"siur{n}", "code": code, "variante": "SIUR", "dia_vari": f"S{n}",
+                    "windows": {"HABIL": ALL_DAY, "SABADO": ALL_DAY, "DOM_FEST": ALL_DAY},
+                    "parts": [line, Line(list(reversed(line.lonlat)))]})
+    return out
+
+
+def fetch_siur(codes, session=None, log=print):
+    """{code: [(lon, lat)]} from siur's recorrido.php; codes that cannot be fetched are left out."""
+    import requests
+    out = {}
+    for c in sorted(set(codes)):
+        try:
+            r = (session or requests).get(SIUR_URL, params={"linea": c}, timeout=30)
+            r.raise_for_status()
+            pts = [(float(p["longitud"]), float(p["latitud"])) for p in r.json()]
+            if len(pts) >= 2:
+                out[c] = pts
+        except Exception as e:
+            log(f"  siur {c}: not usable ({type(e).__name__})")
+    return out
+
+
 # ------------------------------------------------------------------------------ stop matching
 def match_stops(line, stops, key_prefix=""):
     """Lay `stops` [(stop_id, lon, lat)] in order along `line`.
@@ -261,12 +321,15 @@ def trip_minutes(t):
         return None
 
 
-def build(routes, trips, stop_times, stops, variants, service_daytype=None):
+def build(routes, trips, stop_times, stops, variants, service_daytype=None, fallback=None):
     """Returns (new_shapes_df, new_trips_df, report_df)."""
     service_daytype = VO.SERVICE_DAYTYPE if service_daytype is None else service_daytype
     by_code = defaultdict(list)
     for v in variants:
         by_code[v["code"]].append(v)
+    fallback_by_code = defaultdict(list)           # lines from a second source, tried only where rutas gives nothing
+    for v in fallback or []:
+        fallback_by_code[v["code"]].append(v)
     code_of = dict(zip(routes["route_id"], routes["route_short_name"].astype(str).str.upper()))
     pos = {r.stop_id: (float(r.stop_lon), float(r.stop_lat)) for r in stops.itertuples()}
 
@@ -288,11 +351,13 @@ def build(routes, trips, stop_times, stops, variants, service_daytype=None):
                "variant": "", "dia_vari": "", "matched": "", "mean_dist_m": "", "misfit": "", "window_share": "",
                "margin": "", "status": "kept old shape", "reason": ""}
         cand = by_code.get(code)
-        if not cand and len(code) >= 3:       # feed code T57 vs rutas code T57A: same line number, letter differs
+        if not cand and fallback_by_code.get(code):
+            cand = []                                   # rutas has nothing for this route: the second source decides
+        elif not cand and len(code) >= 3:       # feed code T57 vs rutas code T57A: same line number, letter differs
             cand = [v for c, vs in by_code.items() if c[:3] == code[:3] for v in vs]
             if cand:
                 row["reason"] = "rutas code differs (sibling variants tried)"
-        if not cand:
+        if not cand and not fallback_by_code.get(code):
             row["reason"] = "route not in rutas"
             report.append(row)
             continue
@@ -302,7 +367,13 @@ def build(routes, trips, stop_times, stops, variants, service_daytype=None):
             report.append(row)
             continue
         sibling = row["reason"]
-        v, s, margin, reason = choose_variant(cand, stp, list(g["minute"]), dt)
+        v, s, margin, reason = choose_variant(cand, stp, list(g["minute"]), dt) if cand else (None, None, None, "route not in rutas")
+        if v is None and fallback_by_code.get(code):
+            v, s, margin, reason2 = choose_variant(fallback_by_code[code], stp, list(g["minute"]), dt)
+            if v is not None:
+                sibling = "siur fallback"
+            else:
+                reason = f"{reason}; siur: {reason2}"
         if v is None:
             row["reason"] = reason
             report.append(row)
@@ -322,7 +393,7 @@ def build(routes, trips, stop_times, stops, variants, service_daytype=None):
         row.update({"variant": v["variante"], "dia_vari": v["dia_vari"], "matched": f"{s['matched']}/{len(seq)}",
                     "mean_dist_m": round(s["mean_d"], 1), "misfit": s["misfit"],
                     "window_share": round(s["window_share"], 2), "margin": "" if margin is None else margin,
-                    "status": "applied", "reason": ("matched on " + v["code"] + " (" + sibling + ")") if sibling and v["code"] != code else ""})
+                    "status": "applied", "reason": "siur fallback" if v["variante"] == "SIUR" else (("matched on " + v["code"] + " (" + sibling + ")") if sibling and v["code"] != code else "")})
         report.append(row)
 
     rows = []
@@ -378,6 +449,18 @@ def main(clean_dir=None, report_dir=None, features=None):
                              usecols=["trip_id", "stop_id", "stop_sequence", "departure_time"])
     old = read("shapes.txt") if os.path.exists(os.path.join(clean_dir, "shapes.txt")) else None
     new_shapes, new_trips, rep = build(routes, trips, stop_times, stops, variants)
+    todo = sorted(set(rep.loc[rep["status"] != "applied", "route_short_name"].astype(str).str.upper()) - {""})
+    if todo:                                    # second source for what rutas could not place (best-effort)
+        try:
+            siur = fetch_siur(todo)
+        except Exception as e:
+            print(f"siur not reachable ({type(e).__name__}: {e}) - skipping the fallback.")
+            siur = {}
+        extra = [v for c, ll in siur.items() for v in variants_from_siur(c, ll)]
+        if extra:
+            new_shapes, new_trips, rep = build(routes, trips, stop_times, stops, variants, fallback=extra)
+            print(f"siur fallback: {len(siur)}/{len(todo)} line(s) fetched, "
+                  f"{int((rep['reason'] == 'siur fallback').sum())} stop list(s) placed on them")
     os.makedirs(report_dir, exist_ok=True)
     rep.to_csv(os.path.join(report_dir, "shape_assignment.csv"), index=False)
     applied = rep[rep["status"] == "applied"]

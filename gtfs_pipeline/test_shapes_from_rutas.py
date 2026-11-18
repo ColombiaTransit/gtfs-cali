@@ -119,6 +119,31 @@ def test_rutas_unreachable_keeps_the_feed(tmp_path=None):
     assert S.main(clean_dir=d, report_dir=d, features=[]) is None       # too few variants: nothing is touched
 
 
+
+def test_split_rounds_and_siur_variants():
+    one = loop() + [(LON0, LAT0)]                         # closed round
+    two = one + one[1:]                                   # siur chains the round twice
+    rounds = S.split_rounds(two)
+    assert len(rounds) == 2
+    v = S.variants_from_siur("X1", one)
+    assert v and all(x["code"] == "X1" and x["variante"] == "SIUR" for x in v)
+
+
+def test_build_uses_siur_when_rutas_has_no_line():
+    routes = pd.DataFrame({"route_id": ["r1"], "route_short_name": ["X1"]})
+    lats = [LAT0 + 0.0021, LAT0 + 0.0052, LAT0 + 0.0093, LAT0 + 0.0154]
+    stops = pd.DataFrame({"stop_id": [f"s{i}" for i in range(4)], "stop_lon": [-76.5] * 4, "stop_lat": lats})
+    trips = pd.DataFrame({"trip_id": ["t1"], "route_id": ["r1"], "service_id": ["8099041"], "direction_id": ["0"]})
+    stop_times = pd.DataFrame({"trip_id": ["t1"] * 4, "stop_id": [f"s{i}" for i in range(4)],
+                               "stop_sequence": ["1", "2", "3", "4"], "departure_time": ["08:00:00"] * 4})
+    extra = S.variants_from_siur("X1", loop())
+    _, new_trips, rep = S.build(routes, trips, stop_times, stops, [], fallback=extra)
+    assert rep.iloc[0]["status"] == "applied" and rep.iloc[0]["reason"] == "siur fallback"
+    assert new_trips.iloc[0]["shape_id"]
+    _, _, rep2 = S.build(routes, trips, stop_times, stops, [])
+    assert rep2.iloc[0]["status"] != "applied"
+
+
 if __name__ == "__main__":
     test_parse_ranges_and_windows()
     test_stops_in_order_pick_the_right_direction()
@@ -127,4 +152,6 @@ if __name__ == "__main__":
     test_build_assigns_shapes_and_keeps_old_ones()
     test_sibling_route_code_is_tried()
     test_rutas_unreachable_keeps_the_feed()
+    test_split_rounds_and_siur_variants()
+    test_build_uses_siur_when_rutas_has_no_line()
     print("All test_shapes_from_rutas.py tests passed.")
